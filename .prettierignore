@@ -1,0 +1,10 @@
+/node_modules
+/admin/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+/prisma
