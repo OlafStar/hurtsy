@@ -1,6 +1,4 @@
-import {signOut} from 'next-auth/react';
-import {notFound} from 'next/navigation';
-import {useEffect} from 'react';
+import {redirect} from 'next/navigation';
 import {getCurrentUser} from '~lib/session';
 
 interface DashboardLayoutLayoutProps {
@@ -13,7 +11,7 @@ export default async function DashboardLayoutLayout({
     const user = await getCurrentUser();
 
     if (!user) {
-        return notFound();
+        return redirect('/login');
     }
     return (
         <div className="flex min-h-screen flex-col space-y-6">

@@ -1,5 +1,3 @@
-import {getServerSession} from 'next-auth/next';
-import {signOut} from 'next-auth/react';
 import {redirect} from 'next/navigation';
 import {authOptions} from '~lib/auth';
 import {getCurrentUser} from '~lib/session';
@@ -12,7 +10,7 @@ const DashboardPage = async () => {
     }
 
     console.log(user);
-    
+
     return <div></div>;
 };
 
