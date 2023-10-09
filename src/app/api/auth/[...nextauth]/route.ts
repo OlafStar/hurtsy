@@ -1,9 +1,7 @@
-import NextAuth from "next-auth/next";
-import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from 'bcrypt'
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import prismadb from "~lib/prismadb";
+import NextAuth from 'next-auth/next';
+import {authOptions} from '~lib/auth';
 
-export const authOptions = {
-  adapter: PrismaAdapter(prismadb)
-}
+//@ts-expect-error
+const handler = NextAuth(authOptions);
+
+export {handler as GET, handler as POST};
