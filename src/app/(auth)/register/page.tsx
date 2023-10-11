@@ -21,7 +21,7 @@ const RegisterPage = () => {
 
         const userInfo = await response.json();
         console.log(userInfo);
-        router.push('/login');
+        router.push(`/dashboard`);
     };
     return (
         <>

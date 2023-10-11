@@ -1,7 +1,15 @@
+import {redirect} from 'next/navigation';
+import {getCurrentUser} from '~lib/session';
+
 interface AuthLayoutProps {
     children: React.ReactNode;
 }
 
-export default function AuthLayout({children}: AuthLayoutProps) {
+export default async function AuthLayout({children}: AuthLayoutProps) {
+    const user = await getCurrentUser();
+
+    if (user) {
+        return redirect('/dashboard');
+    }
     return <div className="min-h-screen">{children}</div>;
 }
