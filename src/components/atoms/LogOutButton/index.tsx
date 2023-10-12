@@ -8,6 +8,8 @@ const LogOutButton = () => {
             onClick={() => {
                 signOut();
             }}
+            
+            className='h-10 bg-[#3360FF] rounded-full'
         >
             Log out
         </button>
