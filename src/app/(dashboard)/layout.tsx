@@ -1,7 +1,5 @@
 import {redirect} from 'next/navigation';
-import DashboardPageLink from '~components/atoms/DashboardPageLink';
-import LogOutButton from '~components/atoms/LogOutButton';
-import {dashboardNavigation} from '~config/dashboard';
+import DashboardNavigation from '~components/molecules/DashboardNavigation';
 import {getCurrentUser} from '~lib/session';
 
 interface DashboardLayoutLayoutProps {
@@ -19,16 +17,9 @@ export default async function DashboardLayoutLayout({
 
     return (
         <div className="flex min-h-screen flex-col space-y-6">
-            <div className="container grid flex-1 md:grid-cols-[auto_1fr]">
-                <aside className="hidden px-6 bg-white justify-between flex-col md:flex">
-                    <div className="gap-4 flex-col md:flex">
-                        {dashboardNavigation.map((item) => (
-                            <DashboardPageLink key={item.label} {...item} />
-                        ))}
-                    </div>
-                    <LogOutButton />
-                </aside>
-                <main className="flex w-full flex-1 flex-col overflow-hidden">
+            <div className="grid flex-1 md:grid-cols-[auto_1fr]">
+                <DashboardNavigation />
+                <main className="flex w-full flex-1 flex-col overflow-hidden bg-[#fafafa]">
                     {children}
                 </main>
             </div>

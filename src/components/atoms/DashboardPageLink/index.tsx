@@ -14,7 +14,7 @@ const DashboardPageLink = ({icon, href, label}: DashboardPageLinkProps) => {
         <Link href={href}>
             <ClientBackground href={href}>
                 {icon && <Image src={icon.src} width={icon.width} height={icon.height} alt={label} />}
-                <div className="flex items-center flex-grow">{label}</div>
+                <div className="flex items-center flex-grow text-sm">{label}</div>
             </ClientBackground>
         </Link>
     );

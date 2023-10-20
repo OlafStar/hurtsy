@@ -9,7 +9,7 @@ const LogOutButton = () => {
                 signOut();
             }}
             
-            className='h-10 bg-[#3360FF] rounded-full'
+            className='h-10 bg-[#3360FF] rounded-full text-sm text-white'
         >
             Log out
         </button>
