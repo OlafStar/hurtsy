@@ -11,7 +11,9 @@ type ClientBackgroundProps = {
 const ClientBackground = ({children, href}: ClientBackgroundProps) => {
     const pathname = usePathname();
     const isActive = href == pathname;
-    const activeClass = isActive ? 'bg-[rgba(217,217,217,0.2)] rounded-full font-bold' : '';
+    const activeClass = isActive
+        ? 'bg-[rgba(217,217,217,0.2)] rounded-full font-bold'
+        : '';
 
     return (
         <div
