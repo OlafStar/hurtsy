@@ -16,6 +16,9 @@ module.exports = {
             },
         },
         extend: {
+            gridTemplateColumns: {
+                'fit-1fr': 'fit-content(100%) 1fr',
+            },
             colors: {
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
