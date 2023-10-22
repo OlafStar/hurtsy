@@ -14,21 +14,12 @@ import {
     FormMessage,
 } from '~/components/ui/form';
 import {Input} from '~/components/ui/input';
-
-const formSchema = z.object({
-    companyName: z.string().min(2).max(50),
-    city: z.string().min(2).max(50),
-    phoneNumber: z.string().length(9),
-    website: z.string().url('Invalid website URL format'),
-    address: z.string().max(255),
-    postalCode: z.string().min(4).max(10),
-    country: z.string().min(2).max(50),
-    established: z.number().int().min(1900).max(new Date().getFullYear()),
-});
+import {companyCreationSchema} from '~validations/company';
+import {trpc} from '~app/_trpc/client';
 
 const CompanyForm = () => {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof companyCreationSchema>>({
+        resolver: zodResolver(companyCreationSchema),
         defaultValues: {
             companyName: '',
             city: '',
@@ -36,8 +27,17 @@ const CompanyForm = () => {
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+    const createCompanyMutation = trpc.createCompany.useMutation();
+
+    async function onSubmit(values: z.infer<typeof companyCreationSchema>) {
+        try {
+            const response = await createCompanyMutation.mutateAsync(values);
+
+            console.log('Company created:', response);
+            form.reset();
+        } catch (error) {
+            console.error('Error creating company:', error);
+        }
     }
 
     return (
@@ -160,14 +160,36 @@ const CompanyForm = () => {
                                 <FormControl>
                                     <Input
                                         type="number"
-                                        placeholder="2023"
+                                        min={1800}
                                         {...field}
+                                        onChange={(event) =>
+                                            field.onChange(+event.target.value)
+                                        }
                                     />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
+
+                    <FormField
+                        control={form.control}
+                        name="type"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel>Typ firmy</FormLabel>
+                                <FormControl>
+                                    <select {...field}>
+                                        <option value="Producent">Producent</option>
+                                        <option value="Factory">Factory</option>
+                                        <option value="Importer">Importer</option>
+                                    </select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
                     <Button type="submit">Submit</Button>
                 </form>
             </Form>

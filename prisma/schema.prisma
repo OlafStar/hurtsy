@@ -87,8 +87,8 @@ model Company {
 
 enum CompanyType {
   Producent
-  DomHandlowy
-  Fabryka
+  Importer
+  Factory
 }
 
 model Representative {
