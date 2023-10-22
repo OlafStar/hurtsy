@@ -1,19 +1,11 @@
 import React from 'react';
+import {CompanyTypeWeb} from '~types/company';
 
-const CompanyDashboardProfile = () => {
-    const companyProfile = {
-        companyName: 'Tech Solutions Ltd.',
-        city: 'Warsaw',
-        phoneNumber: '123456789',
-        website: 'https://techsolutions.com',
-        address: '123 Tech Street, Suite 456',
-        postalCode: '00-123',
-        country: 'Poland',
-        established: 2000,
-        description:
-            'Tech Solutions Ltd. provides innovative technology solutions to clients worldwide. With over two decades of experience, we pride ourselves on delivering the best in tech services.',
-    };
+type CompanyDashboardProfileProps = {
+    company: CompanyTypeWeb;
+};
 
+const CompanyDashboardProfile = ({company}: CompanyDashboardProfileProps) => {
     return (
         <div className="w-full max-w-xl mx-auto">
             <div className="p-6 bg-white rounded-xl">
@@ -25,50 +17,48 @@ const CompanyDashboardProfile = () => {
                         <div>Edytuj</div>
                     </div>
                 </div>
-                <h2 className="text-3xl font-semibold mb-8">
-                    {companyProfile.companyName}
-                </h2>
+                <h2 className="text-3xl font-semibold mb-8">{company.name}</h2>
                 <ul className="space-y-6 text-gray-800">
                     <li className="flex justify-between items-center">
                         <strong className="text-lg font-semibold">City</strong>
-                        <span>{companyProfile.city}</span>
+                        <span>{company.city}</span>
                     </li>
                     <li className="flex justify-between items-center">
                         <strong className="text-lg font-semibold">
                             Phone Number
                         </strong>
-                        <span>{companyProfile.phoneNumber}</span>
+                        <span>{company.phone}</span>
                     </li>
                     <li className="flex justify-between items-center">
                         <strong className="text-lg font-semibold">Website</strong>
                         <a
-                            href={companyProfile.website}
+                            href={company.website || ''}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-500 hover:underline"
                         >
-                            {companyProfile.website}
+                            {company.website}
                         </a>
                     </li>
                     <li className="flex justify-between items-center">
                         <strong className="text-lg font-semibold">Address</strong>
-                        <span>{companyProfile.address}</span>
+                        <span>{company.street}</span>
                     </li>
                     <li className="flex justify-between items-center">
                         <strong className="text-lg font-semibold">
                             Postal Code
                         </strong>
-                        <span>{companyProfile.postalCode}</span>
+                        <span>{company.postCode}</span>
                     </li>
                     <li className="flex justify-between items-center">
                         <strong className="text-lg font-semibold">Country</strong>
-                        <span>{companyProfile.country}</span>
+                        <span>{company.country}</span>
                     </li>
                     <li className="flex justify-between items-center">
                         <strong className="text-lg font-semibold">
                             Established
                         </strong>
-                        <span>{companyProfile.established}</span>
+                        <span>{company.establishment}</span>
                     </li>
                 </ul>
             </div>

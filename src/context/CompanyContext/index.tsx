@@ -1,29 +1,6 @@
 'use client';
-import {Company, CompanyType} from '@prisma/client';
-// CompanyContext.js
-import React, {
-    PropsWithChildren,
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-} from 'react';
-import {trpc} from '~app/_trpc/client';
-
-type CompanyTypeWeb = {
-    id: string;
-    userId: string;
-    name: string;
-    type: CompanyType;
-    mainProducts?: any;
-    city: string;
-    street: string;
-    postCode: string;
-    website?: string | null;
-    phone: string;
-    country: string;
-    establishment: number;
-};
+import React, {PropsWithChildren, createContext, useContext, useState} from 'react';
+import {CompanyTypeWeb} from '~types/company';
 
 const CompanyContext = createContext<{
     company: CompanyTypeWeb | null | undefined;
