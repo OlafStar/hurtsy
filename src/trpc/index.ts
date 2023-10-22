@@ -27,7 +27,7 @@ export const appRouter = router({
 
         return await prismadb.company.findUnique({
             where: {
-                id,
+                userId: id,
             },
         });
     }),
@@ -59,34 +59,20 @@ export const appRouter = router({
                 });
             }
 
-            // Create company in the database
-            // const company = await prismadb.company.create({
-            //     data: {
-            //         name: validatedInput.data.companyName,
-            //         city: validatedInput.data.city,
-            //         phone: validatedInput.data.phoneNumber,
-            //         website: validatedInput.data.website,
-            //         street: validatedInput.data.address,
-            //         postCode: validatedInput.data.postalCode,
-            //         country: validatedInput.data.country,
-            //         establishment: validatedInput.data.established,
-            //         type: validatedInput.data.type,
-            //         userId: ctx.user.id,
-            //     },
-            // });
-
-            const company = {
-                name: validatedInput.data.companyName,
-                city: validatedInput.data.city,
-                phone: validatedInput.data.phoneNumber,
-                website: validatedInput.data.website,
-                street: validatedInput.data.address,
-                postCode: validatedInput.data.postalCode,
-                country: validatedInput.data.country,
-                establishment: validatedInput.data.established,
-                type: validatedInput.data.type,
-                userId: ctx.user.id,
-            };
+            const company = await prismadb.company.create({
+                data: {
+                    name: validatedInput.data.companyName,
+                    city: validatedInput.data.city,
+                    phone: validatedInput.data.phoneNumber,
+                    website: validatedInput.data.website,
+                    street: validatedInput.data.address,
+                    postCode: validatedInput.data.postalCode,
+                    country: validatedInput.data.country,
+                    establishment: validatedInput.data.established,
+                    type: validatedInput.data.type,
+                    userId: ctx.user.id,
+                },
+            });
 
             console.log(company);
 

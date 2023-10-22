@@ -16,8 +16,15 @@ import {
 import {Input} from '~/components/ui/input';
 import {companyCreationSchema} from '~validations/company';
 import {trpc} from '~app/_trpc/client';
+import {useEffect} from 'react';
+import {useRouter} from 'next/navigation';
+import {DashboardRoutes} from '~types/AppRoutes';
+import {useCompanyContext} from '~context/CompanyContext';
 
 const CompanyForm = () => {
+    const {setCompany} = useCompanyContext();
+    const router = useRouter();
+
     const form = useForm<z.infer<typeof companyCreationSchema>>({
         resolver: zodResolver(companyCreationSchema),
         defaultValues: {
@@ -27,21 +34,23 @@ const CompanyForm = () => {
         },
     });
 
-    const createCompanyMutation = trpc.createCompany.useMutation();
+    const {mutateAsync} = trpc.createCompany.useMutation();
 
     async function onSubmit(values: z.infer<typeof companyCreationSchema>) {
         try {
-            const response = await createCompanyMutation.mutateAsync(values);
+            const response = await mutateAsync(values);
 
             console.log('Company created:', response);
+            setCompany(response);
             form.reset();
+            router.push(DashboardRoutes.YOUR_COMPANY);
         } catch (error) {
             console.error('Error creating company:', error);
         }
     }
 
     return (
-        <div>
+        <div className="p-4">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
                     <FormField
