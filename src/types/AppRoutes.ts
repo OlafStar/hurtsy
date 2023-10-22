@@ -7,3 +7,13 @@ export enum DashboardRoutes {
     MESSAGES = '/dashboard/messages',
     SETTINGS = '/dashboard/settings',
 }
+
+export enum CompanyRoutes {
+    ADD_COMPANY = '/dashboard/your-company/add-company',
+    EDIT_COMPANY = '/dashboard/your-company/edit-company',
+}
+
+export const AppRoutes = {
+    ...DashboardRoutes,
+    ...CompanyRoutes,
+};

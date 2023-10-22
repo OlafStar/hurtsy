@@ -1,3 +1,4 @@
+import CompanyForm from '~components/molecules/CompanyForm';
 import Messages from '~components/organisms/Dashboard/Messages';
 import Offers from '~components/organisms/Dashboard/Offers';
 import Plans from '~components/organisms/Dashboard/Plans';
@@ -6,34 +7,33 @@ import Representatives from '~components/organisms/Dashboard/Representatives';
 import Settings from '~components/organisms/Dashboard/Settings';
 import YourCompany from '~components/organisms/Dashboard/YourCompany';
 import {dashboardNavigation} from '~config/dashboard';
-import {DashboardRoutes} from '~types/AppRoutes';
+import {AppRoutes} from '~types/AppRoutes';
 
-export async function generateStaticParams() {
-    return dashboardNavigation.map((item) => ({
-        slug: item.href,
-    }));
-}
+// export async function generateStaticParams() {
+//     return dashboardNavigation.map((item) => ({
+//         slug: item.href,
+//     }));
+// }
 
-const Page = ({params: {slug}}: {params: {slug: DashboardRoutes}}) => {
-    const completeSlug = `/dashboard/${slug}` as DashboardRoutes;
-    if (!Object.values(DashboardRoutes).includes(completeSlug)) {
-        return <div>Invalid slug!</div>;
-    }
+const Page = ({params: {slug}}: {params: {slug: string[]}}) => {
+    const completeSlug = `/dashboard/${slug.join('/')}`;
 
     switch (completeSlug) {
-        case DashboardRoutes.YOUR_COMPANY:
+        case AppRoutes.YOUR_COMPANY:
             return <YourCompany />;
-        case DashboardRoutes.PRODUCTS:
+        case AppRoutes.ADD_COMPANY:
+            return <CompanyForm />;
+        case AppRoutes.PRODUCTS:
             return <Products />;
-        case DashboardRoutes.OFFERS:
+        case AppRoutes.OFFERS:
             return <Offers />;
-        case DashboardRoutes.REPRESENTATIVES:
+        case AppRoutes.REPRESENTATIVES:
             return <Representatives />;
-        case DashboardRoutes.PLANS:
+        case AppRoutes.PLANS:
             return <Plans />;
-        case DashboardRoutes.MESSAGES:
+        case AppRoutes.MESSAGES:
             return <Messages />;
-        case DashboardRoutes.SETTINGS:
+        case AppRoutes.SETTINGS:
             return <Settings />;
         default:
             return <div>Invalid slug!</div>;

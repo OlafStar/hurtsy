@@ -52,6 +52,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  company       Company?
 }
 
 model VerificationRequest {
@@ -64,3 +65,40 @@ model VerificationRequest {
 
   @@unique([identifier, token])
 }
+
+model Company {
+  id            String         @id @default(cuid())
+  userId        String         @unique
+  name          String
+  type          CompanyType
+  mainProducts  Json?
+  city          String
+  street        String
+  postCode      String
+  website       String?
+  phone         String
+  country       String
+  establishment Int
+  user          User           @relation(fields: [userId], references: [id])
+  representatives Representative[]
+
+  @@index([userId])
+}
+
+enum CompanyType {
+  Producent
+  DomHandlowy
+  Fabryka
+}
+
+model Representative {
+  id       String   @id @default(cuid())
+  companyId String
+  name     String
+  email    String   @unique
+  phone    String
+  company  Company  @relation(fields: [companyId], references: [id])
+  
+  @@index([companyId])
+}
+

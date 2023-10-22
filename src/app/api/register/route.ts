@@ -16,7 +16,6 @@ interface SignupRequestBody {
 export async function POST(request: NextRequest) {
     const body: SignupRequestBody = await request.json();
     const {name, email, password} = body.data;
-    console.log(body.data);
 
     if (!name || !email || !password) {
         return new NextResponse('Missing name, email, or password', {status: 400});

@@ -1,4 +1,6 @@
 import {Button} from '~components/ui/button';
+import Link from 'next/link';
+import {CompanyRoutes} from '~types/AppRoutes';
 
 const CompanyEmptyState = () => {
     return (
@@ -7,7 +9,9 @@ const CompanyEmptyState = () => {
                 <div className="text-2xl font-semibold text-center">
                     {'Stwórz profil firmy i zacznij promować swoje oferty'}
                 </div>
-                <Button>{'Stwórz'}</Button>
+                <Link href={CompanyRoutes.ADD_COMPANY}>
+                    <Button>{'Stwórz'}</Button>
+                </Link>
             </div>
         </div>
     );
