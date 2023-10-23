@@ -1,5 +1,6 @@
 import {redirect} from 'next/navigation';
 import DashboardNavigation from '~components/molecules/DashboardNavigation';
+import { Toaster } from '~components/ui/toaster';
 import { CompanyProvider } from '~context/CompanyContext';
 import {getCurrentUser} from '~lib/session';
 
@@ -26,6 +27,7 @@ export default async function DashboardLayoutLayout({
                     </main>
                 </div>
             </div>
+            <Toaster />
         </CompanyProvider>
     );
 }

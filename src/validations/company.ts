@@ -11,3 +11,27 @@ export const companyCreationSchema = z.object({
     established: z.number().int().min(1900).max(new Date().getFullYear()),
     type: z.enum(['Producent', 'Factory', 'Importer']),
 });
+
+export const representativeFormSchema = z.object({
+    name: z.string().min(2).max(50),
+    email: z.string().min(2).max(50),
+    phoneNumber: z.string().length(9),
+});
+
+export const representativeCreationSchema = z.object({
+    companyId: z.string(),
+    name: z.string().min(2).max(50),
+    email: z.string().min(2).max(50),
+    phoneNumber: z.string().length(9),
+});
+
+export const getCompanyRepresentativesInput = z.object({
+    companyId: z.string(),
+});
+
+export const representativeEditSchema = z.object({
+    id: z.string(),
+    name: z.string().min(2).max(50),
+    email: z.string().min(2).max(50),
+    phoneNumber: z.string().length(9),
+});

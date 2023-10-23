@@ -1,25 +1,15 @@
-import {getCurrentUser} from '~lib/session';
 import {publicProcedure, privateProcedure, router} from './trpc';
 import {TRPCError} from '@trpc/server';
+import {z} from 'zod';
 import prismadb from '~lib/prismadb';
-import {companyCreationSchema} from '~validations/company';
+import {
+    companyCreationSchema,
+    getCompanyRepresentativesInput,
+    representativeCreationSchema,
+    representativeEditSchema,
+} from '~validations/company';
 
 export const appRouter = router({
-    // authCallback: publicProcedure.query(async () => {
-    //     const user = await getCurrentUser();
-    //     //@TODO change name to id
-    //     if (!user?.name || user?.email) {
-    //         throw new TRPCError({code: 'UNAUTHORIZED'});
-    //     }
-    //     const dbUser = prismadb.user.findFirst({
-    //         where: {
-    //             email: user.email,
-    //         },
-    //     });
-    //     if (!dbUser) {
-    //     }
-    //     return {success: true};
-    // }),
     getUserCompany: privateProcedure.query(async ({ctx}) => {
         const {
             user: {id},
@@ -77,6 +67,122 @@ export const appRouter = router({
             console.log(company);
 
             return company;
+        }),
+    getCompanyRepresentatives: publicProcedure
+        .input(getCompanyRepresentativesInput)
+        .query(async ({input}) => {
+            return await prismadb.representative.findMany({
+                where: {
+                    companyId: input.companyId,
+                },
+            });
+        }),
+    createRepresentatives: privateProcedure
+        .input(representativeCreationSchema)
+        .mutation(async ({input, ctx}) => {
+            // Validate input
+            const validatedInput = representativeCreationSchema.safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const representative = await prismadb.representative.create({
+                data: {
+                    companyId: validatedInput.data.companyId,
+                    name: validatedInput.data.name,
+                    email: validatedInput.data.email,
+                    phone: validatedInput.data.phoneNumber,
+                },
+            });
+
+            console.log(representative);
+
+            return representative;
+        }),
+    editRepresentative: privateProcedure
+        .input(representativeEditSchema) // You would need to define this validation schema
+        .mutation(async ({input, ctx}) => {
+            // Validate input
+            const validatedInput = representativeEditSchema.safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            // Check if representative exists
+            const existingRepresentative = await prismadb.representative.findUnique({
+                where: {
+                    id: validatedInput.data.id,
+                },
+            });
+
+            if (!existingRepresentative) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'Representative not found.',
+                });
+            }
+
+            // Update the representative
+            const updatedRepresentative = await prismadb.representative.update({
+                where: {
+                    id: validatedInput.data.id,
+                },
+                data: {
+                    name: validatedInput.data.name,
+                    email: validatedInput.data.email,
+                    phone: validatedInput.data.phoneNumber,
+                },
+            });
+
+            console.log(updatedRepresentative);
+
+            return updatedRepresentative;
+        }),
+    deleteRepresentative: privateProcedure
+        .input(
+            z.object({
+                id: z.string(),
+            }),
+        )
+        .mutation(async ({input, ctx}) => {
+            const validatedInput = z
+                .object({
+                    id: z.string(),
+                })
+                .safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const existingRepresentative = await prismadb.representative.findUnique({
+                where: {
+                    id: validatedInput.data.id,
+                },
+            });
+
+            if (!existingRepresentative) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'Representative not found.',
+                });
+            }
+
+            await prismadb.representative.delete({
+                where: {
+                    id: validatedInput.data.id,
+                },
+            });
+
+            return {message: 'Representative deleted successfully.'};
         }),
 });
 

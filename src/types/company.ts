@@ -13,4 +13,12 @@ export type CompanyTypeWeb = {
     phone: string;
     country: string;
     establishment: number;
+}; 
+
+export type RepresentativeWeb = {
+    companyId: string;
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
 };
