@@ -10,8 +10,8 @@ const DeleteRepresentative = ({id}: {id: string}) => {
     const {company} = useUserCompany();
     const {refetch} = useCompanyRepresentatives(company?.id || '');
 
-    const handleDeleteRepresentative = () => {
-        mutateAsync({id});
+    const handleDeleteRepresentative = async () => {
+        await mutateAsync({id});
         refetch();
         toast({title: 'Success', description: 'Representative has beed deleted'});
     };
