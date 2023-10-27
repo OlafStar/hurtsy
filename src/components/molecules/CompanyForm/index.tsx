@@ -16,7 +16,6 @@ import {
 import {Input} from '~/components/ui/input';
 import {companyCreationSchema} from '~validations/company';
 import {trpc} from '~app/_trpc/client';
-import {useEffect} from 'react';
 import {useRouter} from 'next/navigation';
 import {DashboardRoutes} from '~types/AppRoutes';
 import {useCompanyContext} from '~context/CompanyContext';

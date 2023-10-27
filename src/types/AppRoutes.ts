@@ -13,7 +13,13 @@ export enum CompanyRoutes {
     EDIT_COMPANY = '/dashboard/your-company/edit-company',
 }
 
+export enum ProductRoutes {
+    ADD_PRODUCT = '/dashboard/products/add-product',
+    EDIT_PRODUCTS = '/dashboard/your-company/edit-company',
+}
+
 export const AppRoutes = {
     ...DashboardRoutes,
     ...CompanyRoutes,
+    ...ProductRoutes,
 };

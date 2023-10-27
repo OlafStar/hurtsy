@@ -8,6 +8,7 @@ import {
     representativeCreationSchema,
     representativeEditSchema,
 } from '~validations/company';
+import { productCreationSchema } from '~validations/product';
 
 export const appRouter = router({
     getUserCompany: privateProcedure.query(async ({ctx}) => {
@@ -183,6 +184,42 @@ export const appRouter = router({
             });
 
             return {message: 'Representative deleted successfully.'};
+        }),
+    createProduct: privateProcedure
+        .input(productCreationSchema)
+        .mutation(async ({input, ctx}) => {
+            // Validate input
+            const validatedInput = productCreationSchema.safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const product =
+            //  await prismadb.product.create({
+                // data:
+                 {
+                    name: validatedInput.data.name,
+                    description: validatedInput.data.description,
+                    mainImage: validatedInput.data.mainImage,
+                    images: validatedInput.data.images,
+                    category: {
+                        create: validatedInput.data.category,
+                    },
+                    prices: validatedInput.data.prices,
+                    deliveryPrice: validatedInput.data.deliveryPrice,
+                    customizations: validatedInput.data.customizations,
+                    customProperties: validatedInput.data.customProperties,
+                    companyId: validatedInput.data.companyId,
+                    representativeId: validatedInput.data.representativeId,
+                }
+            // });
+
+            console.log(product);
+
+            return product;
         }),
 });
 

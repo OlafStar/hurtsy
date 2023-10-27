@@ -66,39 +66,67 @@ model VerificationRequest {
   @@unique([identifier, token])
 }
 
-model Company {
-  id            String         @id @default(cuid())
-  userId        String         @unique
-  name          String
-  type          CompanyType
-  mainProducts  Json?
-  city          String
-  street        String
-  postCode      String
-  website       String?
-  phone         String
-  country       String
-  establishment Int
-  user          User           @relation(fields: [userId], references: [id])
-  representatives Representative[]
-
-  @@index([userId])
-}
-
 enum CompanyType {
   Producent
   Importer
   Factory
 }
 
-model Representative {
-  id       String   @id @default(cuid())
-  companyId String
-  name     String
-  email    String   @unique
-  phone    String
-  company  Company  @relation(fields: [companyId], references: [id])
-  
+model Product {
+  id                String   @id @default(cuid())
+  name              String
+  description       String?            // Optional
+  mainImage         String?            // Optional
+  images            Json               // Json type to represent a list of strings
+  category          ProductCategory    @relation(fields: [categoryId], references: [id])
+  categoryId        String
+  prices            Json               // Array of objects of price, minQuantity, maxQuantity
+  deliveryPrice     Float?             // Optional value
+  customizations    Json               // Array of customization objects with name and minQuantity
+  customProperties  Json               // Array of custom properties with name and value
+  companyId         String
+  representativeId  String
+  company           Company            @relation(fields: [companyId], references: [id])
+  representative    Representative     @relation(fields: [representativeId], references: [id])
+
   @@index([companyId])
+  @@index([categoryId])
+  @@index([representativeId])
 }
 
+model ProductCategory {
+  id           String   @id @default(cuid())
+  mainCategory String
+  subCategory  Json     // Json type to represent a list of strings
+  products     Product[]
+}
+
+model Company {
+  id               String          @id @default(cuid())
+  userId           String          @unique
+  name             String
+  type             CompanyType
+  mainProducts     Json?
+  city             String
+  street           String
+  postCode         String
+  website          String?
+  phone            String
+  country          String
+  establishment    Int
+  user             User            @relation(fields: [userId], references: [id])
+  representatives  Representative[]
+  products         Product[]
+  @@index([userId])
+}
+
+model Representative {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  email     String   @unique
+  phone     String
+  company   Company  @relation(fields: [companyId], references: [id])
+  products   Product[]
+  @@index([companyId])
+}

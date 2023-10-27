@@ -1,4 +1,5 @@
 import CompanyForm from '~components/molecules/CompanyForm';
+import ProductCreationForm from '~components/molecules/ProductCreationForm';
 import Messages from '~components/organisms/Dashboard/Messages';
 import Offers from '~components/organisms/Dashboard/Offers';
 import Plans from '~components/organisms/Dashboard/Plans';
@@ -25,6 +26,8 @@ const Page = ({params: {slug}}: {params: {slug: string[]}}) => {
             return <CompanyForm />;
         case AppRoutes.PRODUCTS:
             return <Products />;
+        case AppRoutes.ADD_PRODUCT:
+            return <ProductCreationForm />;
         case AppRoutes.OFFERS:
             return <Offers />;
         case AppRoutes.REPRESENTATIVES:
