@@ -1,5 +1,5 @@
 'use client';
-import {useFieldArray, useForm} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import * as z from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {
@@ -19,6 +19,7 @@ import {Input} from '~components/ui/input';
 import React, {useState} from 'react';
 import {Category, subCategoryEnums} from '~types/categories';
 import {CaretSortIcon, CheckIcon, PlusIcon} from '@radix-ui/react-icons';
+import dynamic from 'next/dynamic';
 
 import {Popover, PopoverContent, PopoverTrigger} from '~components/ui/popover';
 import {
@@ -43,34 +44,8 @@ const ProductCreationForm = () => {
         defaultValues: productFormDefaultValues,
     });
 
-    const {
-        fields: priceFields,
-        append: appendPrice,
-        remove: removePrice,
-    } = useFieldArray({
-        control: form.control,
-        name: 'prices',
-    });
-
-    const {
-        fields: customizationFields,
-        append: appendCustomization,
-        remove: removeCustomization,
-    } = useFieldArray({
-        control: form.control,
-        name: 'customizations',
-    });
-
-    const {
-        fields: customPropertiesFields,
-        append: appendCustomProperty,
-        remove: removeCustomProperty,
-    } = useFieldArray({
-        control: form.control,
-        name: 'customProperties',
-    });
-
     const {mutateAsync} = trpc.createProduct.useMutation(); // You'll need to define this
+    const Editor = dynamic(() => import('../Editor'), {ssr: false});
 
     async function onSubmit(values: z.infer<typeof productFormSchema>) {
         // try {
@@ -89,68 +64,14 @@ const ProductCreationForm = () => {
         <div className="p-4">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-8">
-                            
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({field}) => (
-                                    <FormItem>
-                                        <FormLabel>{'Nazwa produktu'}</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Nazwa produktu"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormDescription>
-                                            {
-                                                'Nazwa produktu dzięki której użytkownik znajdzie twój produkt'
-                                            }
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({field}) => (
-                                    <FormItem>
-                                        <FormLabel>Product Description</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Product description"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="mainImage"
-                                render={({field}) => (
-                                    <FormItem>
-                                        <FormLabel>Main Image URL</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="URL for main product image"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-
+                    <Button type="submit">Submit</Button>
+                    <div className="flex flex-col gap-4">
+                        <div className="flex gap-8">
                             <FormField
                                 control={form.control}
                                 name="category.mainCategory"
                                 render={({field}) => (
-                                    <FormItem>
+                                    <FormItem className="flex flex-col">
                                         <FormLabel>Main Category</FormLabel>
                                         <Popover>
                                             <PopoverTrigger asChild>
@@ -227,7 +148,6 @@ const ProductCreationForm = () => {
                                 )
                                     .filter((key) => isNaN(Number(key)))
                                     .map((key, index) => {
-                                        console.log(key);
                                         const subCatValue =
                                             subCategoryEnums[selectedMainCategory][
                                                 index
@@ -282,59 +202,108 @@ const ProductCreationForm = () => {
                                     })}
                             </div>
                         </div>
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>{'Nazwa produktu'}</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Nazwa produktu"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        {
+                                            'Nazwa produktu dzięki której użytkownik znajdzie twój produkt'
+                                        }
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                        <div className="flex flex-col gap-8 ">
-                            <FormFieldArray
-                                control={form.control}
-                                name="prices"
-                                defaultValue={{
-                                    price: 0,
-                                    minQuantity: 0,
-                                    maxQuantity: 0,
-                                }}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="deliveryPrice"
-                                render={({field}) => (
-                                    <FormItem>
-                                        <FormLabel>Delivery price</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Delivery price"
-                                                type="number"
-                                                min={0}
-                                                {...field}
-                                                onChange={(event) =>
-                                                    field.onChange(
-                                                        +event.target.value,
-                                                    )
-                                                }
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormFieldArray
-                                control={form.control}
-                                name="customizations"
-                                defaultValue={{
-                                    name: '',
-                                    minQuantity: 0,
-                                }}
-                            />
-                            <FormFieldArray
-                                control={form.control}
-                                name="customProperties"
-                                defaultValue={{
-                                    name: '',
-                                    value: '',
-                                }}
-                            />
-                        </div>
+                        <FormField
+                            control={form.control}
+                            name="mainImage"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Main Image URL</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="URL for main product image"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormFieldArray
+                            control={form.control}
+                            name="prices"
+                            defaultValue={{
+                                price: 0,
+                                minQuantity: 0,
+                                maxQuantity: 0,
+                            }}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="deliveryPrice"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Delivery price</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Delivery price"
+                                            type="number"
+                                            min={0}
+                                            {...field}
+                                            onChange={(event) =>
+                                                field.onChange(+event.target.value)
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormFieldArray
+                            control={form.control}
+                            name="customizations"
+                            defaultValue={{
+                                name: '',
+                                minQuantity: 0,
+                            }}
+                        />
+                        <FormFieldArray
+                            control={form.control}
+                            name="customProperties"
+                            defaultValue={{
+                                name: '',
+                                value: '',
+                            }}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Product Description</FormLabel>
+                                    <FormControl>
+                                        {/* <Input
+                                            placeholder="Product description"
+                                            {...field}
+                                        /> */}
+                                        <Editor />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
                     </div>
-                    <Button type="submit">Submit</Button>
                 </form>
             </Form>
         </div>

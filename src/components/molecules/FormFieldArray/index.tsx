@@ -46,7 +46,7 @@ const FormFieldArray = <
         name: name,
     });
     return (
-        <div className="flex flex-col outline outline-[#fafafa] rounded-xl overflow-hidden">
+        <div className="flex flex-col outline outline-[#fafafa] rounded-xl overflow-hidden w-fit">
             <div className="flex justify-between items-center bg-[#fafafa] pl-2">
                 <FormLabel>{name}</FormLabel>
                 <Button
@@ -64,7 +64,7 @@ const FormFieldArray = <
                             className="flex items-end gap-2"
                             key={`${field.id}-${index}`}
                         >
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className={`grid grid-cols-${Object.keys(defaultValue).length} gap-4`}>
                                 {Object.keys(defaultValue).map((key) => {
                                     const value = defaultValue[key];
                                     const inputType =

@@ -1,28 +1,30 @@
 import {z} from 'zod';
 
 export const productCreationSchema = z.object({
-    name: z.string(), //done
-    description: z.string().optional(), //done
-    mainImage: z.string().optional(), //done
+    name: z.string(),
+    description: z.string().optional(),
+    mainImage: z.string().optional(),
     images: z.array(z.string()).optional(),
     category: z.object({
-        mainCategory: z.string(), //done
-        subCategory: z.array(z.string()), //done
+        mainCategory: z.string(),
+        subCategory: z.array(z.string()),
     }),
     prices: z.array(
         z.object({
-            price: z.number(), //done
-            minQuantity: z.number(), //done
-            maxQuantity: z.number(), //done
+            price: z.number(),
+            minQuantity: z.number(),
+            maxQuantity: z.number(),
         }),
     ),
-    deliveryPrice: z.number().optional(), //done
-    customizations: z.array(
-        z.object({
-            name: z.string(), //done
-            minQuantity: z.number(), //done
-        }),
-    ).optional(),
+    deliveryPrice: z.number().optional(),
+    customizations: z
+        .array(
+            z.object({
+                name: z.string(),
+                minQuantity: z.number(),
+            }),
+        )
+        .optional(),
     customProperties: z.array(
         z.object({
             name: z.string(),
@@ -34,31 +36,34 @@ export const productCreationSchema = z.object({
 });
 
 export const productFormSchema = z.object({
-  name: z.string(), //done
-  description: z.string().optional(), //done
-  mainImage: z.string().optional(), //done
-  images: z.array(z.string()).optional(),
-  category: z.object({
-      mainCategory: z.string(), //done
-      subCategory: z.array(z.string()), //done
-  }),
-  prices: z.array(
-      z.object({
-          price: z.number(), //done
-          minQuantity: z.number(), //done
-          maxQuantity: z.number(), //done
-      }),
-  ),
-  deliveryPrice: z.number().optional(), //done
-  customizations: z.array(
-      z.object({
-          name: z.string(), //done
-          minQuantity: z.number(), //done
-      }),
-  ).optional(),
-  customProperties: z.array(
-      z.object({
-          name: z.string(),
-          value: z.string(),
-      }),
-  ),})
+    name: z.string().min(1),
+    description: z.string().optional(),
+    mainImage: z.string().optional(),
+    images: z.array(z.string()).optional(),
+    category: z.object({
+        mainCategory: z.string(),
+        subCategory: z.array(z.string()),
+    }),
+    prices: z.array(
+        z.object({
+            price: z.number(),
+            minQuantity: z.number(),
+            maxQuantity: z.number(),
+        }),
+    ),
+    deliveryPrice: z.number().optional(),
+    customizations: z
+        .array(
+            z.object({
+                name: z.string(),
+                minQuantity: z.number(),
+            }),
+        )
+        .optional(),
+    customProperties: z.array(
+        z.object({
+            name: z.string(),
+            value: z.string(),
+        }),
+    ),
+});
