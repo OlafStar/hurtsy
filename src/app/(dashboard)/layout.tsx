@@ -22,7 +22,7 @@ export default async function DashboardLayoutLayout({
             <div className="flex min-h-screen max-h-screen flex-col space-y-6 overflow-hidden">
                 <div className="grid flex-1 md:grid-cols-[auto_1fr] h-full overflow-hidden">
                     <DashboardNavigation />
-                    <main className="flex w-full flex-1 flex-col bg-[#fafafa] overflow-y-auto">
+                    <main className="flex w-full flex-1 flex-col bg-[#ffffff] overflow-y-auto">
                         {children}
                     </main>
                 </div>

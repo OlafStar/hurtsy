@@ -40,7 +40,7 @@ const RepresentativeForm = () => {
         try {
             const submitValues = {companyId: company?.id || '', ...values};
             const response = await mutateAsync(submitValues);
-            refetch();
+            await refetch();
             console.log('Representative created:', response);
             toast({
                 title: 'Success',

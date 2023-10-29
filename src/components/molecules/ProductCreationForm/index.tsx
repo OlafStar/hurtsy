@@ -18,7 +18,7 @@ import {Button} from '~components/ui/button';
 import {Input} from '~components/ui/input';
 import React, {useState} from 'react';
 import {Category, subCategoryEnums} from '~types/categories';
-import {CaretSortIcon, CheckIcon} from '@radix-ui/react-icons';
+import {CaretSortIcon, CheckIcon, PlusIcon} from '@radix-ui/react-icons';
 
 import {Popover, PopoverContent, PopoverTrigger} from '~components/ui/popover';
 import {
@@ -31,6 +31,7 @@ import {
 import {cn} from '~utils/shadcn';
 import {Checkbox} from '~components/ui/checkbox';
 import {productFormDefaultValues} from '~config/formDefaultValues';
+import FormFieldArray from '../FormFieldArray';
 
 const ProductCreationForm = () => {
     const [selectedMainCategory, setSelectedMainCategory] = useState('');
@@ -90,12 +91,13 @@ const ProductCreationForm = () => {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-8">
+                            
                             <FormField
                                 control={form.control}
                                 name="name"
                                 render={({field}) => (
                                     <FormItem>
-                                        <FormLabel>Nazwa produktu</FormLabel>
+                                        <FormLabel>{'Nazwa produktu'}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 placeholder="Nazwa produktu"
@@ -103,7 +105,9 @@ const ProductCreationForm = () => {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            Description for product name.
+                                            {
+                                                'Nazwa produktu dzięki której użytkownik znajdzie twój produkt'
+                                            }
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -278,102 +282,17 @@ const ProductCreationForm = () => {
                                     })}
                             </div>
                         </div>
-                        <div className="flex flex-col gap-8">
-                            <div className="flex gap-4 flex-col">
-                                {priceFields.map((field, index) => (
-                                    <div
-                                        className="flex gap-4"
-                                        key={`${field.id}-${index}`}
-                                    >
-                                        <FormField
-                                            control={form.control}
-                                            name={`prices.${index}.price`}
-                                            render={({field}) => (
-                                                <FormItem>
-                                                    <FormLabel>price</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="number"
-                                                            min={0}
-                                                            {...field}
-                                                            onChange={(event) =>
-                                                                field.onChange(
-                                                                    +event.target
-                                                                        .value,
-                                                                )
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`prices.${index}.minQuantity`}
-                                            render={({field}) => (
-                                                <FormItem>
-                                                    <FormLabel>
-                                                        minQuantity
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="number"
-                                                            min={0}
-                                                            {...field}
-                                                            onChange={(event) =>
-                                                                field.onChange(
-                                                                    +event.target
-                                                                        .value,
-                                                                )
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`prices.${index}.maxQuantity`}
-                                            render={({field}) => (
-                                                <FormItem>
-                                                    <FormLabel>
-                                                        maxQuantity
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="number"
-                                                            min={0}
-                                                            {...field}
-                                                            onChange={(event) =>
-                                                                field.onChange(
-                                                                    +event.target
-                                                                        .value,
-                                                                )
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                ))}
-                                <Button
-                                    type="button"
-                                    onClick={() =>
-                                        appendPrice({
-                                            price: 0,
-                                            minQuantity: 0,
-                                            maxQuantity: 0,
-                                        })
-                                    }
-                                >
-                                    Add price
-                                </Button>
-                            </div>
 
+                        <div className="flex flex-col gap-8 ">
+                            <FormFieldArray
+                                control={form.control}
+                                name="prices"
+                                defaultValue={{
+                                    price: 0,
+                                    minQuantity: 0,
+                                    maxQuantity: 0,
+                                }}
+                            />
                             <FormField
                                 control={form.control}
                                 name="deliveryPrice"
@@ -397,112 +316,22 @@ const ProductCreationForm = () => {
                                     </FormItem>
                                 )}
                             />
-
-                            <div className="flex gap-4 flex-col">
-                                {customizationFields.map((field, index) => (
-                                    <div
-                                        className="flex gap-4"
-                                        key={`${field.id}-${index}`}
-                                    >
-                                        <FormField
-                                            control={form.control}
-                                            name={`customizations.${index}.name`}
-                                            render={({field}) => (
-                                                <FormItem>
-                                                    <FormLabel>name</FormLabel>
-                                                    <FormControl>
-                                                        <Input {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`customizations.${index}.minQuantity`}
-                                            render={({field}) => (
-                                                <FormItem>
-                                                    <FormLabel>
-                                                        minQuantity
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="number"
-                                                            min={0}
-                                                            {...field}
-                                                            onChange={(event) =>
-                                                                field.onChange(
-                                                                    +event.target
-                                                                        .value,
-                                                                )
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                ))}
-                                <Button
-                                    type="button"
-                                    onClick={() =>
-                                        appendCustomization({
-                                            name: '',
-                                            minQuantity: 0,
-                                        })
-                                    }
-                                >
-                                    Add customization
-                                </Button>
-                            </div>
-
-                            <div className="flex gap-4 flex-col">
-                                {customPropertiesFields.map((field, index) => (
-                                    <div
-                                        className="flex gap-4"
-                                        key={`${field.id}-${index}`}
-                                    >
-                                        <FormField
-                                            control={form.control}
-                                            name={`customProperties.${index}.name`}
-                                            render={({field}) => (
-                                                <FormItem>
-                                                    <FormLabel>name</FormLabel>
-                                                    <FormControl>
-                                                        <Input {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`customProperties.${index}.value`}
-                                            render={({field}) => (
-                                                <FormItem>
-                                                    <FormLabel>value</FormLabel>
-                                                    <FormControl>
-                                                        <Input {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                ))}
-                                <Button
-                                    type="button"
-                                    onClick={() =>
-                                        appendCustomProperty({
-                                            name: '',
-                                            value: '',
-                                        })
-                                    }
-                                >
-                                    Add custom property
-                                </Button>
-                            </div>
+                            <FormFieldArray
+                                control={form.control}
+                                name="customizations"
+                                defaultValue={{
+                                    name: '',
+                                    minQuantity: 0,
+                                }}
+                            />
+                            <FormFieldArray
+                                control={form.control}
+                                name="customProperties"
+                                defaultValue={{
+                                    name: '',
+                                    value: '',
+                                }}
+                            />
                         </div>
                     </div>
                     <Button type="submit">Submit</Button>

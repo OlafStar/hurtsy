@@ -8,7 +8,7 @@ import {
     representativeCreationSchema,
     representativeEditSchema,
 } from '~validations/company';
-import { productCreationSchema } from '~validations/product';
+import {productCreationSchema} from '~validations/product';
 
 export const appRouter = router({
     getUserCompany: privateProcedure.query(async ({ctx}) => {
@@ -198,9 +198,9 @@ export const appRouter = router({
             }
 
             const product =
-            //  await prismadb.product.create({
+                //  await prismadb.product.create({
                 // data:
-                 {
+                {
                     name: validatedInput.data.name,
                     description: validatedInput.data.description,
                     mainImage: validatedInput.data.mainImage,
@@ -214,7 +214,7 @@ export const appRouter = router({
                     customProperties: validatedInput.data.customProperties,
                     companyId: validatedInput.data.companyId,
                     representativeId: validatedInput.data.representativeId,
-                }
+                };
             // });
 
             console.log(product);
