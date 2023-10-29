@@ -122,5 +122,17 @@ const mockProduct2: ProductWeb = {
 
 export const sampleProducts = [
     mockProduct1,
-    mockProduct2
+    mockProduct2,
+    mockProduct1,
+    mockProduct2,
+    mockProduct1,
+    mockProduct2,
+    mockProduct1,
+    mockProduct2,
+    mockProduct1,
+    mockProduct2,
 ];
+
+export async function getData(): Promise<ProductWeb[]> {
+    return sampleProducts;
+}

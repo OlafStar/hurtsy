@@ -17,13 +17,13 @@ module.exports = {
         },
         extend: {
             fontSize: {
-                'logo': "32px"
+                logo: '32px',
             },
             gridTemplateColumns: {
                 'fit-1fr': 'fit-content(100%) 1fr',
             },
             colors: {
-                mainBlue: "#3360FF",
+                mainBlue: '#3360FF',
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
                 ring: 'hsl(var(--ring))',

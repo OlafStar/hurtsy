@@ -1,11 +1,7 @@
 import {columns} from './sample-data';
 import {DataTable} from './data-table';
-import {ProductWeb, sampleProducts} from '~types/products';
 import {FC} from 'react';
-
-async function getData(): Promise<ProductWeb[]> {
-    return sampleProducts;
-}
+import {getData} from '~types/products';
 
 export type ProductsDataTableProps = {
     isPromoted?: boolean;
