@@ -11,6 +11,7 @@ import {
     FormMessage,
     FormItem,
 } from '~/components/ui/form';
+import {Dialog, DialogContent, DialogTrigger} from '~/components/ui/dialog';
 import {productFormSchema} from '~validations/product';
 import {trpc} from '~app/_trpc/client';
 import {useRouter} from 'next/navigation';
@@ -39,12 +40,16 @@ import '@blocknote/core/style.css';
 import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
 import UploadDropzone from '../UploadDropzone';
 import {useUploadS3} from '~hooks/useUploadS3';
+import {Progress} from '~components/ui/progress';
 
 const ProductCreationForm = () => {
     const [selectedMainCategory, setSelectedMainCategory] = useState('');
     const [editorState, setEditorState] = useState('');
     const [mainImage, setMainImage] = useState<File[]>([]);
     const [images, setImages] = useState<File[]>([]);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
 
     const {uploadImagesToS3} = useUploadS3();
 
@@ -68,9 +73,35 @@ const ProductCreationForm = () => {
 
     const {mutateAsync} = trpc.createProduct.useMutation();
 
+    const startSimulatedProgress = () => {
+        setUploadProgress(0);
+
+        const interval = setInterval(() => {
+            setUploadProgress((prevProgress) => {
+                if (prevProgress >= 95) {
+                    clearInterval(interval);
+                    return prevProgress;
+                }
+                return prevProgress + 5;
+            });
+        }, 500);
+
+        return interval;
+    };
+
     async function onSubmit(values: z.infer<typeof productFormSchema>) {
+        setIsOpen(true);
+        setIsUploading(true);
+        const progressInterval = startSimulatedProgress();
+
         const keys = await uploadImagesToS3([mainImage[0], ...images]);
         console.log(keys);
+
+        clearInterval(progressInterval);
+        setUploadProgress(100);
+
+        setIsUploading(false);
+        setIsOpen(false);
         // try {
         //     const response = await mutateAsync(values);
 
@@ -85,6 +116,21 @@ const ProductCreationForm = () => {
 
     return (
         <div className="p-4">
+            <Dialog
+                open={isOpen}
+                onOpenChange={(v) => {
+                    if (!v) {
+                        setIsOpen(v);
+                    }
+                }}
+            >
+                <DialogContent hideClose>
+                    <Progress
+                        value={uploadProgress}
+                        className="h-1 w-full bg-zinc-200"
+                    />
+                </DialogContent>
+            </Dialog>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
                     <Button type="submit">Submit</Button>
