@@ -19,7 +19,6 @@ import {Input} from '~components/ui/input';
 import React, {useEffect, useState} from 'react';
 import {Category, subCategoryEnums} from '~types/categories';
 import {CaretSortIcon, CheckIcon} from '@radix-ui/react-icons';
-import dynamic from 'next/dynamic';
 
 import {Popover, PopoverContent, PopoverTrigger} from '~components/ui/popover';
 import {
@@ -37,9 +36,13 @@ import {useBlockNote} from '@blocknote/react';
 import {BlockNoteEditor} from '@blocknote/core';
 import {BlockNoteView} from '@blocknote/react';
 import '@blocknote/core/style.css';
+import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
+import UploadDropzone from '../UploadDropzone';
 const ProductCreationForm = () => {
     const [selectedMainCategory, setSelectedMainCategory] = useState('');
     const [editorState, setEditorState] = useState('');
+    const [mainImage, setMainImage] = useState<File[]>([]);
+    const [images, setImages] = useState<File[]>([]);
 
     const editor: BlockNoteEditor = useBlockNote({
         initialContent: undefined,
@@ -51,6 +54,10 @@ const ProductCreationForm = () => {
     useEffect(() => {
         form.setValue('description', `${editorState}`);
     }, [editorState]);
+
+    useEffect(() => {
+        console.log(mainImage);
+    }, [mainImage]);
 
     const router = useRouter();
 
@@ -132,6 +139,10 @@ const ProductCreationForm = () => {
                                                                         );
                                                                         setSelectedMainCategory(
                                                                             cat as string,
+                                                                        );
+                                                                        form.setValue(
+                                                                            'category.subCategory',
+                                                                            [],
                                                                         );
                                                                     }}
                                                                 >
@@ -237,23 +248,43 @@ const ProductCreationForm = () => {
                                 </FormItem>
                             )}
                         />
+                        <div className="flex gap-4 h-[250px]">
+                            <div>
+                                {mainImage.length === 0 && (
+                                    <UploadDropzone
+                                        multiple={false}
+                                        setAcceptedImages={setMainImage}
+                                        className="w-[250px] h-[250px]"
+                                    />
+                                )}
 
-                        <FormField
-                            control={form.control}
-                            name="mainImage"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Main Image URL</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="URL for main product image"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
+                                {mainImage.map((item, index) => (
+                                    <img
+                                        key={index}
+                                        className="w-[250px] h-[250px] object-cover"
+                                        src={getImgBeforeUpload(item)}
+                                    />
+                                ))}
+                            </div>
 
+                            <div className="flex flex-col gap-2 flex-wrap">
+                                {images.map((item, index) => (
+                                    <img
+                                        key={index}
+                                        className="w-[121px] h-[121px] object-cover"
+                                        src={getImgBeforeUpload(item)}
+                                    />
+                                ))}
+                            </div>
+                            <div className="h-[250px] w-[250px]">
+                                <UploadDropzone
+                                    multiple={true}
+                                    files={images}
+                                    setAcceptedImages={setImages}
+                                    className="h-full w-full"
+                                />
+                            </div>
+                        </div>
                         <FormFieldArray
                             control={form.control}
                             name="prices"
@@ -309,10 +340,7 @@ const ProductCreationForm = () => {
                                     <FormLabel>Product Description</FormLabel>
                                     <FormControl>
                                         <div>
-                                            <BlockNoteView
-                                                {...field}
-                                                editor={editor}
-                                            />
+                                            <BlockNoteView editor={editor} />
                                         </div>
                                     </FormControl>
                                 </FormItem>
