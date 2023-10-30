@@ -38,11 +38,15 @@ import {BlockNoteView} from '@blocknote/react';
 import '@blocknote/core/style.css';
 import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
 import UploadDropzone from '../UploadDropzone';
+import {useUploadS3} from '~hooks/useUploadS3';
+
 const ProductCreationForm = () => {
     const [selectedMainCategory, setSelectedMainCategory] = useState('');
     const [editorState, setEditorState] = useState('');
     const [mainImage, setMainImage] = useState<File[]>([]);
     const [images, setImages] = useState<File[]>([]);
+
+    const {uploadImagesToS3} = useUploadS3();
 
     const editor: BlockNoteEditor = useBlockNote({
         initialContent: undefined,
@@ -55,10 +59,6 @@ const ProductCreationForm = () => {
         form.setValue('description', `${editorState}`);
     }, [editorState]);
 
-    useEffect(() => {
-        console.log(mainImage);
-    }, [mainImage]);
-
     const router = useRouter();
 
     const form = useForm<z.infer<typeof productFormSchema>>({
@@ -66,9 +66,11 @@ const ProductCreationForm = () => {
         defaultValues: productFormDefaultValues,
     });
 
-    const {mutateAsync} = trpc.createProduct.useMutation(); // You'll need to define this
+    const {mutateAsync} = trpc.createProduct.useMutation();
 
     async function onSubmit(values: z.infer<typeof productFormSchema>) {
+        const keys = await uploadImagesToS3([mainImage[0], ...images]);
+        console.log(keys);
         // try {
         //     const response = await mutateAsync(values);
 

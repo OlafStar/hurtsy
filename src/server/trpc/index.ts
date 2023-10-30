@@ -1,3 +1,4 @@
+import {GetObjectCommand, PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
 import {publicProcedure, privateProcedure, router} from './trpc';
 import {TRPCError} from '@trpc/server';
 import {z} from 'zod';
@@ -9,6 +10,9 @@ import {
     representativeEditSchema,
 } from '~validations/company';
 import {productCreationSchema} from '~validations/product';
+import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
+import {v4 as uuidv4} from 'uuid';
+import {s3} from '~server/s3/s3';
 
 export const appRouter = router({
     getUserCompany: privateProcedure.query(async ({ctx}) => {
@@ -221,6 +225,28 @@ export const appRouter = router({
 
             return product;
         }),
+    createPresignedUrl: privateProcedure.mutation(async ({ctx}) => {
+        const user = ctx.user;
+
+        if (!user || !user.id) {
+            throw new Error('Unauthorize');
+        }
+
+        const key = uuidv4();
+
+        const url = await getSignedUrl(
+            s3,
+            new PutObjectCommand({
+                Bucket: process.env.S3_BUCKET,
+                Key: key,
+            }),
+        );
+
+        return {
+            url,
+            key,
+        };
+    }),
 });
 
 export type AppRouter = typeof appRouter;
