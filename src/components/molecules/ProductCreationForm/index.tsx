@@ -16,9 +16,9 @@ import {trpc} from '~app/_trpc/client';
 import {useRouter} from 'next/navigation';
 import {Button} from '~components/ui/button';
 import {Input} from '~components/ui/input';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Category, subCategoryEnums} from '~types/categories';
-import {CaretSortIcon, CheckIcon, PlusIcon} from '@radix-ui/react-icons';
+import {CaretSortIcon, CheckIcon} from '@radix-ui/react-icons';
 import dynamic from 'next/dynamic';
 
 import {Popover, PopoverContent, PopoverTrigger} from '~components/ui/popover';
@@ -33,9 +33,24 @@ import {cn} from '~utils/shadcn';
 import {Checkbox} from '~components/ui/checkbox';
 import {productFormDefaultValues} from '~config/formDefaultValues';
 import FormFieldArray from '../FormFieldArray';
-
+import {useBlockNote} from '@blocknote/react';
+import {BlockNoteEditor} from '@blocknote/core';
+import {BlockNoteView} from '@blocknote/react';
+import '@blocknote/core/style.css';
 const ProductCreationForm = () => {
     const [selectedMainCategory, setSelectedMainCategory] = useState('');
+    const [editorState, setEditorState] = useState('');
+
+    const editor: BlockNoteEditor = useBlockNote({
+        initialContent: undefined,
+        onEditorContentChange: (editor) => {
+            setEditorState(JSON.stringify(editor.topLevelBlocks));
+        },
+    });
+
+    useEffect(() => {
+        form.setValue('description', `${editorState}`);
+    }, [editorState]);
 
     const router = useRouter();
 
@@ -45,7 +60,6 @@ const ProductCreationForm = () => {
     });
 
     const {mutateAsync} = trpc.createProduct.useMutation(); // You'll need to define this
-    const Editor = dynamic(() => import('../Editor'), {ssr: false});
 
     async function onSubmit(values: z.infer<typeof productFormSchema>) {
         // try {
@@ -294,11 +308,12 @@ const ProductCreationForm = () => {
                                 <FormItem>
                                     <FormLabel>Product Description</FormLabel>
                                     <FormControl>
-                                        {/* <Input
-                                            placeholder="Product description"
-                                            {...field}
-                                        /> */}
-                                        <Editor />
+                                        <div>
+                                            <BlockNoteView
+                                                {...field}
+                                                editor={editor}
+                                            />
+                                        </div>
                                     </FormControl>
                                 </FormItem>
                             )}
