@@ -1,13 +1,17 @@
 'use client';
 
 import Representative from '../Representative';
-import {useUserCompany} from '~hooks/useUserCompany';
-import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
+import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
+import {serverClient} from '~server/trpc/serverClient';
 
-const RepresentativesList = () => {
-    const {company} = useUserCompany();
+export type RepresentativesListProps = {
+    initialRepresentatives: Awaited<
+        ReturnType<(typeof serverClient)['getUserCompanyRepresentatives']>
+    >;
+};
 
-    const {representatives} = useCompanyRepresentatives(company?.id || '');
+const RepresentativesList = ({initialRepresentatives}: RepresentativesListProps) => {
+    const {representatives} = useUserCompanyRepresentatives(initialRepresentatives);
     return (
         <div className="w-full h-full bg-white rounded-xl p-6 flex flex-col gap-6">
             <div className="text-black text-2xl font-bold leading-normal">
@@ -15,7 +19,10 @@ const RepresentativesList = () => {
             </div>
             <div className="flex flex-col gap-4">
                 {representatives?.map((item) => (
-                    <Representative key={item.id} {...item} />
+                    <Representative
+                        key={item.id}
+                        {...item}
+                    />
                 ))}
             </div>
         </div>

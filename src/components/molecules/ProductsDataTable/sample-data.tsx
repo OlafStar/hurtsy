@@ -21,6 +21,9 @@ import {
     PriceWeb,
     ProductWeb,
 } from '~types/products';
+import {trpc} from '~app/_trpc/client';
+import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
+import {useToast} from '~components/ui/use-toast';
 
 export const columns: ColumnDef<ProductWeb>[] = [
     {
@@ -182,7 +185,9 @@ export const columns: ColumnDef<ProductWeb>[] = [
         id: 'actions',
         cell: ({row}) => {
             const product = row.original;
-
+            const {mutateAsync} = trpc.deleteProduct.useMutation();
+            const {refetch} = useUserCompanyProducts();
+            const {toast} = useToast();
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -192,15 +197,25 @@ export const columns: ColumnDef<ProductWeb>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>{"Akcje"}</DropdownMenuLabel>
+                        <DropdownMenuLabel>{'Akcje'}</DropdownMenuLabel>
                         <DropdownMenuItem
                             onClick={() => navigator.clipboard.writeText(product.id)}
                         >
                             Copy payment ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={async () => {
+                                await mutateAsync({id: product.id});
+                                await refetch();
+                                toast({
+                                    title: 'Succes',
+                                    description: 'Product has been deleted',
+                                });
+                            }}
+                        >
+                            Delete product
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );

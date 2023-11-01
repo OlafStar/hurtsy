@@ -7,7 +7,7 @@ import {privateProcedure, publicProcedure} from '../trpc';
 import {TRPCError} from '@trpc/server';
 import prismadb from '~lib/prismadb';
 import {z} from 'zod';
-import { getUserCompany } from '../utils/getUserCompany';
+import {getUserCompany} from '../utils/getUserCompany';
 
 export const representativesProcedures = {
     getCompanyRepresentatives: publicProcedure
@@ -19,6 +19,22 @@ export const representativesProcedures = {
                 },
             });
         }),
+    getUserCompanyRepresentatives: privateProcedure.query(async ({ctx}) => {
+        const company = await getUserCompany(ctx);
+
+        if (!company) {
+            throw new TRPCError({
+                code: 'NOT_FOUND',
+                message: 'Not found company for user',
+            });
+        }
+
+        return await prismadb.representative.findMany({
+            where: {
+                companyId: company.id,
+            },
+        });
+    }),
     createRepresentatives: privateProcedure
         .input(representativeFormSchema)
         .mutation(async ({input, ctx}) => {
@@ -31,7 +47,7 @@ export const representativesProcedures = {
                 });
             }
 
-            const company = await getUserCompany(ctx)
+            const company = await getUserCompany(ctx);
 
             if (!company) {
                 throw new TRPCError({

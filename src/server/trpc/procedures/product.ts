@@ -3,6 +3,7 @@ import {privateProcedure} from '../trpc';
 import {TRPCError} from '@trpc/server';
 import prismadb from '~lib/prismadb';
 import {getUserCompany} from '../utils/getUserCompany';
+import { z } from 'zod';
 
 export const productProcedures = {
     createProduct: privateProcedure
@@ -60,5 +61,61 @@ export const productProcedures = {
             console.log(product);
 
             return product;
+        }),
+    getUserCompanyProducts: privateProcedure.query(async ({ctx}) => {
+        const company = await getUserCompany(ctx);
+
+        if (!company) {
+            throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: 'Company dosent exist',
+            });
+        }
+
+        return prismadb.product.findMany({
+            where: {
+                companyId: company.id,
+            },
+        });
+    }),
+    deleteProduct: privateProcedure
+        .input(
+            z.object({
+                id: z.string(),
+            }),
+        )
+        .mutation(async ({input, ctx}) => {
+            const validatedInput = z
+                .object({
+                    id: z.string(),
+                })
+                .safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const existingProduct = await prismadb.product.findUnique({
+                where: {
+                    id: validatedInput.data.id,
+                },
+            });
+
+            if (!existingProduct) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'Product not found.',
+                });
+            }
+
+            await prismadb.product.delete({
+                where: {
+                    id: validatedInput.data.id,
+                },
+            });
+
+            return {message: 'Product deleted successfully.'};
         }),
 };

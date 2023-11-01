@@ -45,6 +45,7 @@ import {useUserCompany} from '~hooks/useUserCompany';
 import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
 import {useToast} from '~components/ui/use-toast';
 import {DashboardRoutes} from '~types/AppRoutes';
+import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 
 const ProductCreationForm = () => {
     const [selectedMainCategory, setSelectedMainCategory] = useState('');
@@ -58,6 +59,7 @@ const ProductCreationForm = () => {
     const {company} = useUserCompany();
     const {uploadImagesToS3} = useUploadS3();
     const {representatives} = useCompanyRepresentatives(company?.id || '');
+    const {refetch} = useUserCompanyProducts()
 
     const editor: BlockNoteEditor = useBlockNote({
         initialContent: undefined,
@@ -117,7 +119,7 @@ const ProductCreationForm = () => {
             };
 
             await mutateAsync(submitValues);
-
+            await refetch()
             clearInterval(progressInterval);
             setUploadProgress(100);
 

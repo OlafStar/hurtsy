@@ -3,10 +3,12 @@ import EditRepresentative from '../RepresentativeForm/EditRepresentative';
 import {RepresentativeWeb} from '~types/company';
 import DeleteRepresentative from '~components/atoms/DeleteRepresentative';
 import {useUserCompany} from '~hooks/useUserCompany';
+import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 
 const Representative = (props: RepresentativeWeb) => {
-    const {company} = useUserCompany();
     const {id, name, email, phone} = props;
+
+    const {company, isLoading} = useUserCompany();
     return (
         <div className="flex items-center gap-1">
             <div className="w-[64px] h-[64px] rounded-full bg-slate-400" />
@@ -29,26 +31,28 @@ const Representative = (props: RepresentativeWeb) => {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col gap-4 ml-12">
-                <Popover>
-                    <PopoverTrigger>
-                        <img src="/pen-to-square-solid.svg" />
-                    </PopoverTrigger>
-                    <PopoverContent>
-                        <EditRepresentative {...props} />
-                    </PopoverContent>
-                </Popover>
-                {!(name === company?.name) && (
+            {!isLoading && (
+                <div className="flex flex-col gap-4 ml-12">
                     <Popover>
                         <PopoverTrigger>
-                            <img src="/user-minus-solid.svg" />
+                            <img src="/pen-to-square-solid.svg" />
                         </PopoverTrigger>
                         <PopoverContent>
-                            <DeleteRepresentative id={id} />
+                            <EditRepresentative {...props} />
                         </PopoverContent>
                     </Popover>
-                )}
-            </div>
+                    {!(name === company?.name) && (
+                        <Popover>
+                            <PopoverTrigger>
+                                <img src="/user-minus-solid.svg" />
+                            </PopoverTrigger>
+                            <PopoverContent>
+                                <DeleteRepresentative id={id} />
+                            </PopoverContent>
+                        </Popover>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

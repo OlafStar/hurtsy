@@ -1,14 +1,21 @@
 import ProductTabs from '~components/molecules/ProductTabs';
 import ProductsDataTable from '~components/molecules/ProductsDataTable';
+import {serverClient} from '~server/trpc/serverClient';
 
-const Products = () => {
+const Products = async () => {
+    const initialProducts = await serverClient.getUserCompanyProducts();
     return (
         <div className="">
             <div className="p-4">
                 <ProductTabs
-                    promotedChildren={<ProductsDataTable isPromoted={true} />}
+                    promotedChildren={
+                        <ProductsDataTable
+                            initialProducts={initialProducts}
+                            isPromoted={true}
+                        />
+                    }
                 >
-                    <ProductsDataTable />
+                    <ProductsDataTable initialProducts={initialProducts} />
                 </ProductTabs>
             </div>
         </div>

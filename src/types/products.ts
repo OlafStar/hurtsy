@@ -22,13 +22,13 @@ export type CustomPropertiesWeb = {
 export type ProductWeb = {
     id: string;
     name: string;
-    description?: string;
-    mainImage?: string;
-    images?: string[];
-    category: CategoryWeb;
-    prices: PriceWeb[];
-    deliveryPrice?: number;
-    customizations?: CustomizationWeb[];
+    description?: string | null;
+    mainImage?: string | null;
+    images?: string[] | null;
+    category: CategoryWeb | null;
+    prices: PriceWeb[] | null;
+    deliveryPrice?: number | null;
+    customizations?: CustomizationWeb[] | null;
     customProperties: CustomPropertiesWeb[];
     companyId: string;
     representativeId: string;

@@ -15,14 +15,14 @@ import {
 import {Input} from '~/components/ui/input';
 import {representativeFormSchema} from '~validations/company';
 import {trpc} from '~app/_trpc/client';
-import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
 import {useUserCompany} from '~hooks/useUserCompany';
 import {useToast} from '~components/ui/use-toast';
 import {RepresentativeWeb} from '~types/company';
+import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 
 const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
     const {company} = useUserCompany();
-    const {refetch} = useCompanyRepresentatives(company?.id || '');
+    const {refetch} = useUserCompanyRepresentatives();
     const {toast} = useToast();
 
     const form = useForm<z.infer<typeof representativeFormSchema>>({

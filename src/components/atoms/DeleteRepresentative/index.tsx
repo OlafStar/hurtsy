@@ -1,14 +1,12 @@
 import {trpc} from '~app/_trpc/client';
 import {Button} from '~components/ui/button';
 import {useToast} from '~components/ui/use-toast';
-import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
-import {useUserCompany} from '~hooks/useUserCompany';
+import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 
 const DeleteRepresentative = ({id}: {id: string}) => {
     const {mutateAsync} = trpc.deleteRepresentative.useMutation();
     const {toast} = useToast();
-    const {company} = useUserCompany();
-    const {refetch} = useCompanyRepresentatives(company?.id || '');
+    const {refetch} = useUserCompanyRepresentatives();
 
     const handleDeleteRepresentative = async () => {
         await mutateAsync({id});
