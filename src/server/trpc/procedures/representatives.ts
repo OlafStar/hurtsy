@@ -10,6 +10,21 @@ import {z} from 'zod';
 import {getUserCompany} from '../utils/getUserCompany';
 
 export const representativesProcedures = {
+    getRepresentative: publicProcedure.input(z.string()).query(async ({input}) => {
+        const validatedInput = z.string().safeParse(input);
+
+        if (!validatedInput.success) {
+            throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: validatedInput.error.message,
+            });
+        }
+        return await prismadb.representative.findUnique({
+            where: {
+                id: validatedInput.data,
+            },
+        });
+    }),
     getCompanyRepresentatives: publicProcedure
         .input(getCompanyRepresentativesInput)
         .query(async ({input}) => {

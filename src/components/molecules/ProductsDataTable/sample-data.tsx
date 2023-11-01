@@ -186,6 +186,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
         cell: ({row}) => {
             const product = row.original;
             const {mutateAsync} = trpc.deleteProduct.useMutation();
+            const {mutateAsync: createProduct} = trpc.createProduct.useMutation();
             const {refetch} = useUserCompanyProducts();
             const {toast} = useToast();
             return (
@@ -215,6 +216,19 @@ export const columns: ColumnDef<ProductWeb>[] = [
                             }}
                         >
                             Delete product
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={async () => {
+                                //@ts-expect-error
+                                await createProduct(product);
+                                await refetch();
+                                toast({
+                                    title: 'Succes',
+                                    description: 'Product has been copied',
+                                });
+                            }}
+                        >
+                            Copy product
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

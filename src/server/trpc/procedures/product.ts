@@ -1,9 +1,9 @@
 import {productFormSchema} from '~validations/product';
-import {privateProcedure} from '../trpc';
+import {privateProcedure, publicProcedure} from '../trpc';
 import {TRPCError} from '@trpc/server';
 import prismadb from '~lib/prismadb';
 import {getUserCompany} from '../utils/getUserCompany';
-import { z } from 'zod';
+import {z} from 'zod';
 
 export const productProcedures = {
     createProduct: privateProcedure
@@ -117,5 +117,79 @@ export const productProcedures = {
             });
 
             return {message: 'Product deleted successfully.'};
+        }),
+    getProduct: publicProcedure.input(z.string()).query(async ({input}) => {
+        const validatedInput = z.string().safeParse(input);
+
+        if (!validatedInput.success) {
+            throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: validatedInput.error.message,
+            });
+        }
+
+        return prismadb.product.findFirst({
+            where: {
+                id: validatedInput.data,
+            },
+        });
+    }),
+    getProducts: publicProcedure
+        .input(
+            z.object({
+                search: z.string().optional(),
+                category: z.string().optional(),
+                subCategory: z.array(z.string()).optional(),
+            }),
+        )
+        .query(async ({input}) => {
+            let whereClause: any = {};
+
+            const validatedInput = z
+                .object({
+                    search: z.string().optional(),
+                    category: z.string().optional(),
+                    subCategory: z.array(z.string()).optional(),
+                })
+                .safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const {search, subCategory, category} = validatedInput.data;
+            // If search is provided, it will check for product name or description
+            if (search) {
+                whereClause.OR = [
+                    {name: {contains: search}},
+                    {description: {contains: search}},
+                ];
+            }
+
+            // If category is provided, it will filter by main category
+            if (category) {
+                whereClause.AND = {
+                    category: {
+                        path: '$.mainCategory',
+                        equals: category,
+                    },
+                };
+            }
+
+            // If subCategory is provided, it will filter by sub categories
+            if (subCategory) {
+                whereClause.AND = {
+                    category: {
+                        path: '$.subCategory',
+                        contains: subCategory,
+                    },
+                };
+            }
+
+            console.log(whereClause);
+
+            return await prismadb.product.findMany({where: whereClause});
         }),
 };

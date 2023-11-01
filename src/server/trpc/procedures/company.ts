@@ -1,10 +1,26 @@
 import prismadb from '~lib/prismadb';
-import {privateProcedure} from '../trpc';
-import { TRPCError } from '@trpc/server';
-import { companyCreationSchema } from '~validations/company';
-import { getUserCompany } from '../utils/getUserCompany';
+import {privateProcedure, publicProcedure} from '../trpc';
+import {TRPCError} from '@trpc/server';
+import {companyCreationSchema} from '~validations/company';
+import {getUserCompany} from '../utils/getUserCompany';
+import { z } from 'zod';
 
 export const companyProcedures = {
+    getCompany: publicProcedure.input(z.string()).query(async ({input}) => {
+        const validatedInput = z.string().safeParse(input);
+
+        if (!validatedInput.success) {
+            throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: validatedInput.error.message,
+            });
+        }
+        return await prismadb.company.findUnique({
+            where: {
+                id: validatedInput.data,
+            },
+        });
+    }),
     getUserCompany: privateProcedure.query(async ({ctx}) => {
         const {
             user: {id},
@@ -23,7 +39,7 @@ export const companyProcedures = {
                 user: {email},
             } = ctx;
 
-            const existingCompany = await getUserCompany(ctx)
+            const existingCompany = await getUserCompany(ctx);
 
             if (existingCompany) {
                 throw new TRPCError({

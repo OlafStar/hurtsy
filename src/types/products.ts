@@ -23,10 +23,10 @@ export type ProductWeb = {
     id: string;
     name: string;
     description?: string | null;
-    mainImage?: string | null;
+    mainImage: string;
     images?: string[] | null;
     category: CategoryWeb | null;
-    prices: PriceWeb[] | null;
+    prices: PriceWeb[];
     deliveryPrice?: number | null;
     customizations?: CustomizationWeb[] | null;
     customProperties: CustomPropertiesWeb[];

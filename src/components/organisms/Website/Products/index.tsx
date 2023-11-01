@@ -4,15 +4,20 @@ import ProductCard from '~components/molecules/ProductCard';
 import ProductsCompanySwitch from '~components/molecules/ProductsCompanySwitch';
 import PromotedProducts from '~components/molecules/PromotedProducts';
 import {SearchParamsType} from '~config/searchParams';
-import {getData} from '~types/products';
+import {serverClient} from '~server/trpc/serverClient';
+import {ProductWeb, getData} from '~types/products';
 
 type ProductsPageProps = {
     searchParams?: SearchParamsType;
 };
 
 const ProductsPage = async ({searchParams}: ProductsPageProps) => {
+    const data = await serverClient.getProducts({
+        search: searchParams?.search_query as string,
+        category: searchParams?.category as string,
+    });
+
     console.log(searchParams);
-    const data = await getData();
     return (
         <div className="flex pt-8">
             <Filters />
@@ -21,13 +26,15 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
                 <div className="flex flex-col gap-6">
                     {data.map((item, index) => (
                         <React.Fragment key={index}>
-                            <ProductCard {...item} />
-                            {data.length -1 > index && <div className="w-full h-[1px] bg-black opacity-10" />}
+                            <ProductCard {...(item as ProductWeb)} />
+                            {data.length - 1 > index && (
+                                <div className="w-full h-[1px] bg-black opacity-10" />
+                            )}
                         </React.Fragment>
                     ))}
                 </div>
             </div>
-            <PromotedProducts />
+            {/* <PromotedProducts /> */}
         </div>
     );
 };
