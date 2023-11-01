@@ -42,15 +42,6 @@ export const productProcedures = {
                     category: validatedInput.data.category,
                     prices: validatedInput.data.prices,
                     deliveryPrice: validatedInput.data.deliveryPrice,
-                    // customizations: {
-                    //     customizations:
-                    //         validatedInput.data.customizations.length > 0
-                    //             ? (validatedInput.data.customizations as {
-                    //                   minQuantity: number;
-                    //                   name: string;
-                    //               }[])
-                    //             : [],
-                    // },
                     customizations:
                         validatedInput.data.customizations.length > 0
                             ? (validatedInput.data.customizations as {
