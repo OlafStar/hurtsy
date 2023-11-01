@@ -22,11 +22,6 @@ export const representativeFormSchema = z.object({
     phoneNumber: phoneField,
 });
 
-export const representativeCreationSchema = z.object({
-    companyId: z.string(),
-    ...representativeFormSchema.shape,
-});
-
 export const getCompanyRepresentativesInput = z.object({
     companyId: z.string(),
 });

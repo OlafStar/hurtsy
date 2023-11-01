@@ -2,8 +2,10 @@ import {Popover, PopoverContent, PopoverTrigger} from '~/components/ui/popover';
 import EditRepresentative from '../RepresentativeForm/EditRepresentative';
 import {RepresentativeWeb} from '~types/company';
 import DeleteRepresentative from '~components/atoms/DeleteRepresentative';
+import {useUserCompany} from '~hooks/useUserCompany';
 
 const Representative = (props: RepresentativeWeb) => {
+    const {company} = useUserCompany();
     const {id, name, email, phone} = props;
     return (
         <div className="flex items-center gap-1">
@@ -36,14 +38,16 @@ const Representative = (props: RepresentativeWeb) => {
                         <EditRepresentative {...props} />
                     </PopoverContent>
                 </Popover>
-                <Popover>
-                    <PopoverTrigger>
-                        <img src="/user-minus-solid.svg" />
-                    </PopoverTrigger>
-                    <PopoverContent>
-                        <DeleteRepresentative id={id} />
-                    </PopoverContent>
-                </Popover>
+                {!(name === company?.name) && (
+                    <Popover>
+                        <PopoverTrigger>
+                            <img src="/user-minus-solid.svg" />
+                        </PopoverTrigger>
+                        <PopoverContent>
+                            <DeleteRepresentative id={id} />
+                        </PopoverContent>
+                    </Popover>
+                )}
             </div>
         </div>
     );

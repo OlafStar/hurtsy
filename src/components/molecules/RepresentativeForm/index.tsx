@@ -38,7 +38,7 @@ const RepresentativeForm = () => {
     async function onSubmit(values: z.infer<typeof representativeFormSchema>) {
         console.log(values);
         try {
-            const submitValues = {companyId: company?.id || '', ...values};
+            const submitValues = {...values};
             const response = await mutateAsync(submitValues);
             await refetch();
             console.log('Representative created:', response);

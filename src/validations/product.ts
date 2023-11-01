@@ -33,13 +33,8 @@ const baseProductSchema = {
     deliveryPrice: z.number().optional(),
     customizations: z.array(customizationSchema),
     customProperties: z.array(customPropertiesSchema),
+    representativeId: z.string().optional(),
 };
-
-export const productCreationSchema = z.object({
-    ...baseProductSchema,
-    companyId: z.string(),
-    representativeId: z.string(),
-});
 
 export const productFormSchema = z.object({
     ...baseProductSchema,

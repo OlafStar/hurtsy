@@ -41,6 +41,10 @@ import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
 import UploadDropzone from '../UploadDropzone';
 import {useUploadS3} from '~hooks/useUploadS3';
 import {Progress} from '~components/ui/progress';
+import {useUserCompany} from '~hooks/useUserCompany';
+import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
+import {useToast} from '~components/ui/use-toast';
+import {DashboardRoutes} from '~types/AppRoutes';
 
 const ProductCreationForm = () => {
     const [selectedMainCategory, setSelectedMainCategory] = useState('');
@@ -51,7 +55,9 @@ const ProductCreationForm = () => {
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
 
+    const {company} = useUserCompany();
     const {uploadImagesToS3} = useUploadS3();
+    const {representatives} = useCompanyRepresentatives(company?.id || '');
 
     const editor: BlockNoteEditor = useBlockNote({
         initialContent: undefined,
@@ -65,6 +71,7 @@ const ProductCreationForm = () => {
     }, [editorState]);
 
     const router = useRouter();
+    const {toast} = useToast();
 
     const form = useForm<z.infer<typeof productFormSchema>>({
         resolver: zodResolver(productFormSchema),
@@ -90,28 +97,38 @@ const ProductCreationForm = () => {
     };
 
     async function onSubmit(values: z.infer<typeof productFormSchema>) {
-        setIsOpen(true);
-        setIsUploading(true);
-        const progressInterval = startSimulatedProgress();
+        if (company) {
+            setIsOpen(true);
+            setIsUploading(true);
+            const progressInterval = startSimulatedProgress();
 
-        const keys = await uploadImagesToS3([mainImage[0], ...images]);
-        console.log(keys);
+            const keys = await uploadImagesToS3([mainImage[0], ...images]);
 
-        clearInterval(progressInterval);
-        setUploadProgress(100);
+            const companyRepresentative = representatives?.find(
+                (element) => element.name === company.name,
+            );
 
-        setIsUploading(false);
-        setIsOpen(false);
-        // try {
-        //     const response = await mutateAsync(values);
+            const submitValues = {
+                companyId: company?.id || '',
+                ...values,
+                representativeId: companyRepresentative?.id || '',
+                mainImage: keys[0],
+                images: keys.slice(1),
+            };
 
-        //     console.log('Product created:', response);
-        //     form.reset();
-        //     router.push(DashboardRoutes.PRODUCTS); // Assuming you have a PRODUCTS route
-        // } catch (error) {
-        //     console.error('Error creating product:', error);
-        // }
-        console.log(values);
+            await mutateAsync(submitValues);
+
+            clearInterval(progressInterval);
+            setUploadProgress(100);
+
+            setIsUploading(false);
+            setIsOpen(false);
+            toast({
+                title: 'Success',
+                description: 'Product has been edited',
+            });
+            router.push(DashboardRoutes.PRODUCTS);
+        }
     }
 
     return (
@@ -125,10 +142,12 @@ const ProductCreationForm = () => {
                 }}
             >
                 <DialogContent hideClose>
-                    <Progress
-                        value={uploadProgress}
-                        className="h-1 w-full bg-zinc-200"
-                    />
+                    {isUploading && (
+                        <Progress
+                            value={uploadProgress}
+                            className="h-1 w-full bg-zinc-200"
+                        />
+                    )}
                 </DialogContent>
             </Dialog>
             <Form {...form}>

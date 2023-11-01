@@ -78,8 +78,7 @@ model Product {
   description       String?            // Optional
   mainImage         String?            // Optional
   images            Json               // Json type to represent a list of strings
-  category          ProductCategory    @relation(fields: [categoryId], references: [id])
-  categoryId        String
+  category          Json   
   prices            Json               // Array of objects of price, minQuantity, maxQuantity
   deliveryPrice     Float?             // Optional value
   customizations    Json               // Array of customization objects with name and minQuantity
@@ -90,15 +89,7 @@ model Product {
   representative    Representative     @relation(fields: [representativeId], references: [id])
 
   @@index([companyId])
-  @@index([categoryId])
   @@index([representativeId])
-}
-
-model ProductCategory {
-  id           String   @id @default(cuid())
-  mainCategory String
-  subCategory  Json     // Json type to represent a list of strings
-  products     Product[]
 }
 
 model Company {

@@ -18,7 +18,7 @@ import {trpc} from '~app/_trpc/client';
 import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
 import {useUserCompany} from '~hooks/useUserCompany';
 import {useToast} from '~components/ui/use-toast';
-import { RepresentativeWeb } from '~types/company';
+import {RepresentativeWeb} from '~types/company';
 
 const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
     const {company} = useUserCompany();
@@ -29,7 +29,7 @@ const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
         resolver: zodResolver(representativeFormSchema),
         defaultValues: {
             name: name || '',
-            phoneNumber: phone  || '',
+            phoneNumber: phone || '',
             email: email || '',
         },
     });
@@ -57,22 +57,25 @@ const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
         <div className="p-4">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Imie i nazwisko</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Imie i nazwisko"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    {!(name === company?.name) && (
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Imie i nazwisko</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Imie i nazwisko"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+
                     <FormField
                         control={form.control}
                         name="email"
