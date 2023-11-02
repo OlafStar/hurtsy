@@ -21,7 +21,7 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
     console.log(searchParams);
     return (
         <div className="flex pt-8">
-            <Filters />
+            <Filters params={searchParams}/>
             <div className="flex flex-col align-end flex-1 px-4 gap-5">
                 <ProductsCompanySwitch />
                 <div className="flex flex-col gap-6">

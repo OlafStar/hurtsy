@@ -3,6 +3,10 @@ export enum SearchParams {
     IsPromoted = 'isPromoted',
     Category = 'category',
     SubCategory = 'subCategory',
+    MinQuantity = 'minQuantity',
+    DeliveryPrice = 'deliveryPrice',
+    CompanyType = 'companyType',
+    Price = 'price',
 }
 
 export type SearchParamsType = {
