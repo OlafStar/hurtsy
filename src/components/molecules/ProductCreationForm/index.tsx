@@ -55,7 +55,7 @@ type ProductCreationFormProps = {isEdit?: boolean; initialData?: ProductWeb};
 
 const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) => {
     const [selectedMainCategory, setSelectedMainCategory] = useState(
-        initialData ? initialData.category?.mainCategory as string : '',
+        initialData ? (initialData.category?.mainCategory as string) : '',
     );
     const [editorState, setEditorState] = useState('');
     const [mainImage, setMainImage] = useState<File[]>([]);
@@ -281,63 +281,61 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                                 )}
                             />
                             <div>
-                                {Object.keys(
-                                    subCategoryEnums[selectedMainCategory] || {},
-                                )
-                                    .filter((key) => isNaN(Number(key)))
-                                    .map((key, index) => {
-                                        const subCatValue =
-                                            subCategoryEnums[selectedMainCategory][
-                                                index
-                                            ];
-
-                                        return (
-                                            <FormField
-                                                key={index}
-                                                control={form.control}
-                                                name="category.subCategory"
-                                                render={({field}) => {
-                                                    return (
-                                                        <FormItem
-                                                            key={index}
-                                                            className="flex flex-row items-start space-x-3 space-y-0"
-                                                        >
-                                                            <FormControl>
-                                                                <Checkbox
-                                                                    checked={field.value?.includes(
-                                                                        subCatValue,
-                                                                    )}
-                                                                    onCheckedChange={(
-                                                                        checked,
-                                                                    ) => {
-                                                                        return checked
-                                                                            ? field.onChange(
-                                                                                  [
-                                                                                      ...field.value,
-                                                                                      subCatValue,
-                                                                                  ],
-                                                                              )
-                                                                            : field.onChange(
-                                                                                  field.value?.filter(
-                                                                                      (
-                                                                                          value,
-                                                                                      ) =>
-                                                                                          value !==
-                                                                                          subCatValue,
-                                                                                  ),
-                                                                              );
-                                                                    }}
-                                                                />
-                                                            </FormControl>
-                                                            <FormLabel className="font-normal">
-                                                                {subCatValue}
-                                                            </FormLabel>
-                                                        </FormItem>
-                                                    );
-                                                }}
-                                            />
-                                        );
-                                    })}
+                                {Object.entries(
+                                    subCategoryEnums[
+                                        selectedMainCategory
+                                            .charAt(0)
+                                            .toUpperCase() +
+                                            selectedMainCategory.slice(1)
+                                    ] || {},
+                                ).map(([key, value], index) => {
+                                    return (
+                                        <FormField
+                                            key={index}
+                                            control={form.control}
+                                            name="category.subCategory"
+                                            render={({field}) => {
+                                                return (
+                                                    <FormItem
+                                                        key={index}
+                                                        className="flex flex-row items-start space-x-3 space-y-0"
+                                                    >
+                                                        <FormControl>
+                                                            <Checkbox
+                                                                checked={field.value?.includes(
+                                                                    value,
+                                                                )}
+                                                                onCheckedChange={(
+                                                                    checked,
+                                                                ) => {
+                                                                    return checked
+                                                                        ? field.onChange(
+                                                                              [
+                                                                                  ...field.value,
+                                                                                  value,
+                                                                              ],
+                                                                          )
+                                                                        : field.onChange(
+                                                                              field.value?.filter(
+                                                                                  (
+                                                                                      catValue,
+                                                                                  ) =>
+                                                                                      catValue !==
+                                                                                      value,
+                                                                              ),
+                                                                          );
+                                                                }}
+                                                            />
+                                                        </FormControl>
+                                                        <FormLabel className="font-normal">
+                                                            {value}
+                                                        </FormLabel>
+                                                    </FormItem>
+                                                );
+                                            }}
+                                        />
+                                    );
+                                })}
                             </div>
                         </div>
                         <FormField

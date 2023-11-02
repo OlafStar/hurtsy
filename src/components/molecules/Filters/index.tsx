@@ -11,7 +11,7 @@ const Filters = ({params}: FiltersProps) => {
         <div className="relative">
             <div className="flex flex-col gap-4 sticky top-0">
                 <div className="text-xl font-bold">{'Filtry'}</div>
-                <FilterCategories />
+                <FilterCategories params={params} />
                 <FilterOrder params={params} />
             </div>
         </div>

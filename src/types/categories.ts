@@ -1,175 +1,175 @@
 export enum Category {
-    Footwear,
-    ApparelAndAccessories,
-    Automotive,
-    ElectronicsAndAppliances,
-    Animals,
-    OfficeAndAdvertising,
-    SportTourismAndHobby,
-    Construction,
-    Grocery,
-    Industry,
-    HealthAndBeauty,
-    Children,
-    HomeAndLiving,
-    GardenAndAgriculture,
-    Erotica,
-    Gadgets,
-    Art,
-    Entertainment,
-    ComputersAndElectronics,
+    Footwear = 'footwear',
+    ApparelAndAccessories = 'apparelAndAccessories',
+    Automotive = 'automotive',
+    ElectronicsAndAppliances = 'electronicsAndAppliances',
+    Animals = 'animals',
+    OfficeAndAdvertising = 'officeAndAdvertising',
+    SportTourismAndHobby = 'sportTourismAndHobby',
+    Construction = 'construction',
+    Grocery = 'grocery',
+    Industry = 'industry',
+    HealthAndBeauty = 'healthAndBeauty',
+    Children = 'children',
+    HomeAndLiving = 'homeAndLiving',
+    GardenAndAgriculture = 'gardenAndAgriculture',
+    Erotica = 'erotica',
+    Gadgets = 'gadgets',
+    Art = 'art',
+    Entertainment = 'entertainment',
+    ComputersAndElectronics = 'computersAndElectronics',
 }
 
 enum FootwearSub {
-    Sneakers,
-    Boots,
-    Sandals,
-    FormalShoes,
-    Slippers,
+    Sneakers = 'sneakers',
+    Boots = 'boots',
+    Sandals = 'sandals',
+    FormalShoes = 'formalShoes',
+    Slippers = 'slippers',
 }
 
 enum ApparelAndAccessoriesSub {
-    Clothing,
-    Jewelry,
-    Watches,
-    Hats,
-    Scarves,
+    Clothing = 'clothing',
+    Jewelry = 'jewelry',
+    Watches = 'watches',
+    Hats = 'hats',
+    Scarves = 'scarves',
 }
 
 enum AutomotiveSub {
-    Cars,
-    Motorcycles,
-    SpareParts,
-    CarCare,
-    ToolsAndEquipment,
+    Cars = 'cars',
+    Motorcycles = 'motorcycles',
+    SpareParts = 'spareParts',
+    CarCare = 'carCare',
+    ToolsAndEquipment = 'toolsAndEquipment',
 }
 
 enum ElectronicsAndAppliancesSub {
-    HomeAppliances,
-    AudioAndSound,
-    KitchenAppliances,
-    PersonalCareAppliances,
-    Cameras,
+    HomeAppliances = 'homeAppliances',
+    AudioAndSound = 'audioAndSound',
+    KitchenAppliances = 'kitchenAppliances',
+    PersonalCareAppliances = 'personalCareAppliances',
+    Cameras = 'cameras',
 }
 
 enum AnimalsSub {
-    Pets,
-    FarmAnimals,
-    PetFood,
-    PetToys,
-    PetCare,
+    Pets = 'pets',
+    FarmAnimals = 'farmAnimals',
+    PetFood = 'petFood',
+    PetToys = 'petToys',
+    PetCare = 'petCare',
 }
 
 enum OfficeAndAdvertisingSub {
-    Stationery,
-    OfficeFurniture,
-    PrintingServices,
-    PromotionalMaterials,
-    OfficeElectronics,
+    Stationery = 'stationery',
+    OfficeFurniture = 'officeFurniture',
+    PrintingServices = 'printingServices',
+    PromotionalMaterials = 'promotionalMaterials',
+    OfficeElectronics = 'officeElectronics',
 }
 
 enum SportTourismAndHobbySub {
-    SportingGoods,
-    TravelGear,
-    MusicalInstruments,
-    ArtAndCraft,
-    OutdoorRecreation,
+    SportingGoods = 'sportingGoods',
+    TravelGear = 'travelGear',
+    MusicalInstruments = 'musicalInstruments',
+    ArtAndCraft = 'artAndCraft',
+    OutdoorRecreation = 'outdoorRecreation',
 }
 
 enum ConstructionSub {
-    BuildingMaterials,
-    Tools,
-    HeavyMachinery,
-    SafetyEquipment,
-    Fixtures,
+    BuildingMaterials = 'buildingMaterials',
+    Tools = 'tools',
+    HeavyMachinery = 'heavyMachinery',
+    SafetyEquipment = 'safetyEquipment',
+    Fixtures = 'fixtures',
 }
 
 enum GrocerySub {
-    FruitsAndVegetables,
-    MeatAndPoultry,
-    DairyProducts,
-    Beverages,
-    Snacks,
+    FruitsAndVegetables = 'fruitsAndVegetables',
+    MeatAndPoultry = 'meatAndPoultry',
+    DairyProducts = 'dairyProducts',
+    Beverages = 'beverages',
+    Snacks = 'snacks',
 }
 
 enum IndustrySub {
-    Machinery,
-    RawMaterials,
-    IndustrialTools,
-    SafetyGear,
-    ManufacturingEquipment,
+    Machinery = 'machinery',
+    RawMaterials = 'rawMaterials',
+    IndustrialTools = 'industrialTools',
+    SafetyGear = 'safetyGear',
+    ManufacturingEquipment = 'manufacturingEquipment',
 }
 
 enum HealthAndBeautySub {
-    Skincare,
-    Makeup,
-    Haircare,
-    PerfumesAndFragrances,
-    WellnessProducts,
+    Skincare = 'skincare',
+    Makeup = 'makeup',
+    Haircare = 'haircare',
+    PerfumesAndFragrances = 'perfumesAndFragrances',
+    WellnessProducts = 'wellnessProducts',
 }
 
 enum ChildrenSub {
-    Toys,
-    BabyCare,
-    ChildrenClothing,
-    EducationalMaterials,
-    KidsFurniture,
+    Toys = 'toys',
+    BabyCare = 'babyCare',
+    ChildrenClothing = 'childrenClothing',
+    EducationalMaterials = 'educationalMaterials',
+    KidsFurniture = 'kidsFurniture',
 }
 
 enum HomeAndLivingSub {
-    Furniture,
-    HomeDecor,
-    Bedding,
-    Kitchenware,
-    Lighting,
+    Furniture = 'furniture',
+    HomeDecor = 'homeDecor',
+    Bedding = 'bedding',
+    Kitchenware = 'kitchenware',
+    Lighting = 'lighting',
 }
 
 enum GardenAndAgricultureSub {
-    Plants,
-    GardeningTools,
-    Seeds,
-    Fertilizers,
-    Pesticides,
+    Plants = 'plants',
+    GardeningTools = 'gardeningTools',
+    Seeds = 'seeds',
+    Fertilizers = 'fertilizers',
+    Pesticides = 'pesticides',
 }
 
 enum EroticaSub {
-    Lingerie,
-    AdultToys,
-    Literature,
-    DVDs,
-    Accessories,
+    Lingerie = 'lingerie',
+    AdultToys = 'adultToys',
+    Literature = 'literature',
+    DVDs = 'dvds',
+    Accessories = 'accessories',
 }
 
 enum GadgetsSub {
-    Smartwatches,
-    Drones,
-    VRHeadsets,
-    Wearables,
-    AudioGadgets,
+    Smartwatches = 'smartwatches',
+    Drones = 'drones',
+    VRHeadsets = 'vrHeadsets',
+    Wearables = 'wearables',
+    AudioGadgets = 'audioGadgets',
 }
 
 enum ArtSub {
-    Paintings,
-    Sculptures,
-    Photography,
-    Installations,
-    ArtSupplies,
+    Paintings = 'paintings',
+    Sculptures = 'sculptures',
+    Photography = 'photography',
+    Installations = 'installations',
+    ArtSupplies = 'artSupplies',
 }
 
 enum EntertainmentSub {
-    MoviesAndSeries,
-    Music,
-    Books,
-    BoardGames,
-    ConcertAndEventTickets,
+    MoviesAndSeries = 'moviesAndSeries',
+    Music = 'music',
+    Books = 'books',
+    BoardGames = 'boardGames',
+    ConcertAndEventTickets = 'concertAndEventTickets',
 }
 
 enum ComputersAndElectronicsSub {
-    Laptops,
-    Desktops,
-    ComputerAccessories,
-    StorageDevices,
-    Networking,
+    Laptops = 'laptops',
+    Desktops = 'desktops',
+    ComputerAccessories = 'computerAccessories',
+    StorageDevices = 'storageDevices',
+    Networking = 'networking',
 }
 
 type SubCategoryEnum = {

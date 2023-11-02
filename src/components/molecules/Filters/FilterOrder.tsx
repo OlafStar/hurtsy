@@ -23,15 +23,21 @@ const FilterOrder = ({params}: FilterOrderProps) => {
     );
 
     const handleMinQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setMinQuantity(e.target.value);
+        if (e.target.value === '' || /^[0-9]+$/.test(e.target.value)) {
+            setMinQuantity(e.target.value);
+        }
     };
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPrice(e.target.value);
+        if (e.target.value === '' || /^[0-9]+$/.test(e.target.value)) {
+            setPrice(e.target.value);
+        }
     };
 
     const handleDeliveryPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDeliveryPrice(e.target.value);
+        if (e.target.value === '' || /^[0-9]+$/.test(e.target.value)) {
+            setDeliveryPrice(e.target.value);
+        }
     };
 
     const handleCompanyTypeChange = (value: CompanyType) => {

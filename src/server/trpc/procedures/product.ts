@@ -1,10 +1,14 @@
-import {editProductFormSchema, productFormSchema} from '~validations/product';
+import {
+    editProductFormSchema,
+    getProductFilterSchema,
+    productFormSchema,
+} from '~validations/product';
 import {privateProcedure, publicProcedure} from '../trpc';
 import {TRPCError} from '@trpc/server';
 import prismadb from '~lib/prismadb';
 import {getUserCompany} from '../utils/getUserCompany';
 import {z} from 'zod';
-
+import {Prisma} from '@prisma/client';
 export const productProcedures = {
     createProduct: privateProcedure
         .input(productFormSchema)
@@ -222,23 +226,11 @@ export const productProcedures = {
         });
     }),
     getProducts: publicProcedure
-        .input(
-            z.object({
-                search: z.string().optional(),
-                category: z.string().optional(),
-                subCategory: z.string().optional(),
-            }),
-        )
+        .input(getProductFilterSchema)
         .query(async ({input}) => {
             let whereClause: any = {};
 
-            const validatedInput = z
-                .object({
-                    search: z.string().optional(),
-                    category: z.string().optional(),
-                    subCategory: z.string().optional(),
-                })
-                .safeParse(input);
+            const validatedInput = getProductFilterSchema.safeParse(input);
             if (!validatedInput.success) {
                 throw new TRPCError({
                     code: 'BAD_REQUEST',

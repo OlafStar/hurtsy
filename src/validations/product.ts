@@ -46,3 +46,10 @@ export const editProductFormSchema = z.object({
     name: z.string().min(1),
     id: z.string(),
 });
+
+export const getProductFilterSchema = z.object({
+    search: z.string().optional(),
+    category: z.string().optional(),
+    subCategory: z.string().optional(),
+    price: z.number().optional(),
+});

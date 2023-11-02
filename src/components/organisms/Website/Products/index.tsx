@@ -16,12 +16,15 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
         search: searchParams?.search_query as string,
         category: searchParams?.category as string,
         subCategory: searchParams?.subCategory as string,
+        price: searchParams?.price
+            ? parseFloat(searchParams?.price as string)
+            : undefined,
     });
 
     console.log(searchParams);
     return (
         <div className="flex pt-8">
-            <Filters params={searchParams}/>
+            <Filters params={searchParams} />
             <div className="flex flex-col align-end flex-1 px-4 gap-5">
                 <ProductsCompanySwitch />
                 <div className="flex flex-col gap-6">

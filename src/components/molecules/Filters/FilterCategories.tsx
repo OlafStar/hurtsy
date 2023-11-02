@@ -15,15 +15,17 @@ import {Button} from '~components/ui/button';
 import {cn} from '~utils/shadcn';
 import {CheckIcon} from 'lucide-react';
 import {useAddSearchParams} from '~hooks/useAddSearchParams';
-import {SearchParams} from '~config/searchParams';
+import {SearchParams, SearchParamsType} from '~config/searchParams';
 
-const FilterCategories = () => {
-    const {currentSearchParams, updateParams} = useAddSearchParams();
+type FilterCategoriesProps = {
+    params?: SearchParamsType;
+};
 
-    const test = currentSearchParams.get(SearchParams.Category);
+const FilterCategories = ({params}: FilterCategoriesProps) => {
+    const {updateParams} = useAddSearchParams();
 
-    const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(
-        undefined,
+    const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+        params?.category ? (params?.category as string) : undefined,
     );
 
     useEffect(() => {
@@ -45,7 +47,9 @@ const FilterCategories = () => {
                                 !selectedCategory && 'text-muted-foreground',
                             )}
                         >
-                            {selectedCategory || test ? test : 'Znajdz kategorie'}
+                            {selectedCategory || params?.category
+                                ? params?.category
+                                : 'Znajdz kategorie'}
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                     </PopoverTrigger>
@@ -55,56 +59,52 @@ const FilterCategories = () => {
                             <CommandInput placeholder="Search category..." />
                             <CommandEmpty>No category found.</CommandEmpty>
                             <CommandGroup className="overflow-scroll">
-                                {Object.values(Category)
-                                    .filter((value) => typeof value === 'string')
-                                    .map((cat) => (
-                                        <CommandItem
-                                            value={cat as string}
-                                            key={cat}
-                                            onSelect={() => {
-                                                setSelectedCategory(cat as Category);
-                                            }}
-                                        >
-                                            <CheckIcon
-                                                className={cn(
-                                                    'mr-2 h-4 w-4',
-                                                    cat === selectedCategory ||
-                                                        cat === test
-                                                        ? 'opacity-100'
-                                                        : 'opacity-0',
-                                                )}
-                                            />
-                                            {cat}
-                                        </CommandItem>
-                                    ))}
+                                {Object.entries(Category).map(([key, cat]) => (
+                                    <CommandItem
+                                        value={cat as string}
+                                        key={cat}
+                                        onSelect={() => {
+                                            setSelectedCategory(cat as string);
+                                        }}
+                                    >
+                                        <CheckIcon
+                                            className={cn(
+                                                'mr-2 h-4 w-4',
+                                                cat === selectedCategory ||
+                                                    cat === params?.category
+                                                    ? 'opacity-100'
+                                                    : 'opacity-0',
+                                            )}
+                                        />
+                                        {cat}
+                                    </CommandItem>
+                                ))}
                             </CommandGroup>
                         </Command>
                     </PopoverContent>
                 </Popover>
                 <div className="flex-col flex gap-2">
                     {selectedCategory &&
-                        Object.keys(subCategoryEnums[selectedCategory] || {})
-                            .filter((key) => isNaN(Number(key)))
-                            .map((key, index) => {
-                                const subCatValue =
-                                    subCategoryEnums[selectedCategory][index];
-
-                                return (
-                                    <div
-                                        key={index}
-                                        className={`flex text-xs items-center cursor-pointer ${
-                                            currentSearchParams.get(
-                                                SearchParams.SubCategory,
-                                            ) === subCatValue && 'font-bold'
-                                        }`}
-                                        onClick={() => {
-                                            updateParams({subCategory: subCatValue});
-                                        }}
-                                    >
-                                        {subCatValue}
-                                    </div>
-                                );
-                            })}
+                        Object.entries(
+                            subCategoryEnums[
+                                selectedCategory.charAt(0).toUpperCase() +
+                                    selectedCategory.slice(1)
+                            ] || {},
+                        ).map(([key, value], index) => {
+                            return (
+                                <div
+                                    key={index}
+                                    className={`flex text-xs items-center cursor-pointer ${
+                                        params?.subCategory === value && 'font-bold'
+                                    }`}
+                                    onClick={() => {
+                                        updateParams({subCategory: value});
+                                    }}
+                                >
+                                    {value}
+                                </div>
+                            );
+                        })}
                 </div>
             </div>
         </>
