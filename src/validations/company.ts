@@ -8,6 +8,7 @@ export const companyCreationSchema = z.object({
     companyName: stringField(2, 50),
     city: stringField(2, 50),
     phoneNumber: phoneField,
+    image: z.string().optional(),
     website: z.string().url('Invalid website URL format').optional(),
     address: z.string().max(255),
     postalCode: stringField(4, 10),

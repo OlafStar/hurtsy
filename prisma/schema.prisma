@@ -101,6 +101,7 @@ model Company {
   city             String
   street           String
   postCode         String
+  image            String?
   website          String?
   phone            String
   country          String

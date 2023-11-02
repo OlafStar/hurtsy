@@ -127,7 +127,7 @@ const ProductCreationForm = () => {
             setIsOpen(false);
             toast({
                 title: 'Success',
-                description: 'Product has been edited',
+                description: 'Product has been created',
             });
             router.push(DashboardRoutes.PRODUCTS);
         }

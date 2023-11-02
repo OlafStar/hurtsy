@@ -3,7 +3,7 @@ import {privateProcedure, publicProcedure} from '../trpc';
 import {TRPCError} from '@trpc/server';
 import {companyCreationSchema} from '~validations/company';
 import {getUserCompany} from '../utils/getUserCompany';
-import { z } from 'zod';
+import {z} from 'zod';
 
 export const companyProcedures = {
     getCompany: publicProcedure.input(z.string()).query(async ({input}) => {
@@ -61,6 +61,7 @@ export const companyProcedures = {
                     name: validatedInput.data.companyName,
                     city: validatedInput.data.city,
                     phone: validatedInput.data.phoneNumber,
+                    image: validatedInput.data.image,
                     website: validatedInput.data.website,
                     street: validatedInput.data.address,
                     postCode: validatedInput.data.postalCode,
@@ -81,6 +82,43 @@ export const companyProcedures = {
             });
 
             console.log(company);
+
+            return company;
+        }),
+    editCompany: privateProcedure
+        .input(companyCreationSchema)
+        .mutation(async ({input, ctx}) => {
+            const {
+                user: {email, id},
+            } = ctx;
+
+            // Validate input
+            const validatedInput = companyCreationSchema.safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const company = await prismadb.company.update({
+                data: {
+                    name: validatedInput.data.companyName,
+                    city: validatedInput.data.city,
+                    phone: validatedInput.data.phoneNumber,
+                    image: validatedInput.data.image,
+                    website: validatedInput.data.website,
+                    street: validatedInput.data.address,
+                    postCode: validatedInput.data.postalCode,
+                    country: validatedInput.data.country,
+                    establishment: validatedInput.data.established,
+                    type: validatedInput.data.type,
+                    userId: id,
+                },
+                where: {
+                    userId: id,
+                },
+            });
 
             return company;
         }),

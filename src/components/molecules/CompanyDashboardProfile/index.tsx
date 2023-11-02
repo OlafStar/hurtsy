@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import React from 'react';
+import {AppRoutes} from '~types/AppRoutes';
 import {CompanyTypeWeb} from '~types/company';
 
 type CompanyDashboardProfileProps = {
@@ -10,11 +12,13 @@ const CompanyDashboardProfile = ({company}: CompanyDashboardProfileProps) => {
         <div className="w-full max-w-xl mx-auto">
             <div className="p-6 bg-white rounded-xl">
                 <div className="flex justify-between">
-                    <div className="w-40 h-40 bg-cyan-200 mb-4" />
+                    <img
+                        src={company.image || ''}
+                        alt={'company-logo'}
+                        className="w-40 h-40 bg-cyan-200 mb-4 object-contain"
+                    />
                     <div className="space-y-1">
-                        <div>Edytuj</div>
-                        <div>Edytuj</div>
-                        <div>Edytuj</div>
+                        <Link href={AppRoutes.EDIT_COMPANY}>Edytuj</Link>
                     </div>
                 </div>
                 <h2 className="text-3xl font-semibold mb-8">{company.name}</h2>
