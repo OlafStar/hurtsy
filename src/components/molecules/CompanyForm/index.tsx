@@ -28,6 +28,7 @@ import {useToast} from '~components/ui/use-toast';
 import {Dialog, DialogContent} from '~components/ui/dialog';
 import {Progress} from '~components/ui/progress';
 import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
+import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 
 type CompanyFormProps = {
     isEdit?: boolean;
@@ -40,7 +41,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-    const {refetch: refetchRepresentative} = useCompanyRepresentatives(initialData?.id || '');
+    const {refetch: refetchRepresentative} = useUserCompanyRepresentatives();
     const {setCompany} = useCompanyContext();
     const {uploadImageToS3} = useUploadS3();
     const router = useRouter();
@@ -103,7 +104,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                     const response = await editCompany({...values});
                     setCompany(response);
                 }
-                await refetchRepresentative()
+                await refetchRepresentative();
             } else {
                 if (mainImage.length > 0) {
                     const key = await uploadImageToS3(mainImage[0]);

@@ -124,15 +124,27 @@ export const companyProcedures = {
                 },
             });
 
-            await prismadb.representative.update({
-                where: {
-                    id: companyRepresentative?.id,
-                },
-                data: {
-                    name: validatedInput.data.companyName,
-                    image: validatedInput.data.image,
-                },
-            });
+            if (companyRepresentative) {
+                await prismadb.representative.update({
+                    where: {
+                        id: companyRepresentative?.id,
+                    },
+                    data: {
+                        name: validatedInput.data.companyName,
+                        image: validatedInput.data.image,
+                    },
+                });
+            } else {
+                await prismadb.representative.create({
+                    data: {
+                        companyId: existingCompany.id,
+                        name: validatedInput.data.companyName,
+                        email: email as string,
+                        phone: validatedInput.data.phoneNumber,
+                        image: validatedInput.data.image,
+                    },
+                });
+            }
 
             const company = await prismadb.company.update({
                 data: {

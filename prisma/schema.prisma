@@ -101,7 +101,7 @@ model Representative {
   id        String   @id @default(cuid())
   companyId String
   name      String
-  email     String   @unique
+  email     String  
   phone     String
   image      String?
   company   Company  @relation(fields: [companyId], references: [id])
