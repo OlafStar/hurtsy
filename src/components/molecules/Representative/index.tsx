@@ -3,17 +3,20 @@ import EditRepresentative from '../RepresentativeForm/EditRepresentative';
 import {RepresentativeWeb} from '~types/company';
 import DeleteRepresentative from '~components/atoms/DeleteRepresentative';
 import {useUserCompany} from '~hooks/useUserCompany';
-import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 
 const Representative = (props: RepresentativeWeb) => {
-    const {id, name, email, phone} = props;
+    const {id, name, email, phone, image} = props;
 
     const {company, isLoading} = useUserCompany();
 
     console.log(company);
     return (
         <div className="flex items-center gap-1">
-            <div className="w-[64px] h-[64px] rounded-full bg-slate-400" />
+            <img
+                src={image || ''}
+                alt={`${company?.name}-${name}`}
+                className="w-[64px] h-[64px] rounded-full bg-slate-400"
+            />
             <div className="flex flex-col gap-1">
                 <div className="text-sm leading-[14px]">{name}</div>
                 <div className="flex gap-1">

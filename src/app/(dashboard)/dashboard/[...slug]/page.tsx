@@ -1,3 +1,4 @@
+import {RedirectType, redirect} from 'next/navigation';
 import CompanyForm from '~components/molecules/CompanyForm';
 import CompanyEditForm from '~components/molecules/CompanyForm/CompanyEditForm';
 import ProductCreationForm from '~components/molecules/ProductCreationForm';
@@ -9,7 +10,8 @@ import Representatives from '~components/organisms/Dashboard/Representatives';
 import Settings from '~components/organisms/Dashboard/Settings';
 import YourCompany from '~components/organisms/Dashboard/YourCompany';
 import {dashboardNavigation} from '~config/dashboard';
-import {AppRoutes} from '~types/AppRoutes';
+import {serverClient} from '~server/trpc/serverClient';
+import {AppRoutes, DashboardRoutes} from '~types/AppRoutes';
 
 // export async function generateStaticParams() {
 //     return dashboardNavigation.map((item) => ({
@@ -17,8 +19,17 @@ import {AppRoutes} from '~types/AppRoutes';
 //     }));
 // }
 
-const Page = ({params: {slug}}: {params: {slug: string[]}}) => {
+const Page = async ({params: {slug}}: {params: {slug: string[]}}) => {
     const completeSlug = `/dashboard/${slug.join('/')}`;
+    const company = await serverClient.getUserCompany();
+
+    if (
+        !company &&
+        completeSlug != AppRoutes.ADD_COMPANY &&
+        completeSlug != AppRoutes.PLANS
+    ) {
+        redirect(AppRoutes.ADD_COMPANY, RedirectType.push);
+    }
 
     switch (completeSlug) {
         case AppRoutes.YOUR_COMPANY:

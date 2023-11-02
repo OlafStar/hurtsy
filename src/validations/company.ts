@@ -21,6 +21,7 @@ export const representativeFormSchema = z.object({
     name: stringField(2, 50),
     email: stringField(2, 50),
     phoneNumber: phoneField,
+    image: z.string().optional(),
 });
 
 export const getCompanyRepresentativesInput = z.object({

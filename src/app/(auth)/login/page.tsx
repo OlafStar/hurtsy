@@ -15,9 +15,6 @@ const RegisterPage = () => {
             ...data,
             redirect: false,
         });
-        // if (response?.error) {
-        //     console.log(response?.error);
-        // }
 
         if (response?.ok) {
             router.push(`/dashboard`);

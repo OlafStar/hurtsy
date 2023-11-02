@@ -15,14 +15,18 @@ import {
 import {Input} from '~/components/ui/input';
 import {representativeFormSchema} from '~validations/company';
 import {trpc} from '~app/_trpc/client';
-import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
-import {useUserCompany} from '~hooks/useUserCompany';
 import {useToast} from '~components/ui/use-toast';
+import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
+import UploadDropzone from '../UploadDropzone';
+import {useState} from 'react';
+import {useUploadS3} from '~hooks/useUploadS3';
+import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 
 const RepresentativeForm = () => {
-    const {company} = useUserCompany();
-    const {refetch} = useCompanyRepresentatives(company?.id || '');
     const {toast} = useToast();
+    const [mainImage, setMainImage] = useState<File[]>([]);
+    const {uploadImageToS3} = useUploadS3();
+    const {refetch} = useUserCompanyRepresentatives();
 
     const form = useForm<z.infer<typeof representativeFormSchema>>({
         resolver: zodResolver(representativeFormSchema),
@@ -38,7 +42,8 @@ const RepresentativeForm = () => {
     async function onSubmit(values: z.infer<typeof representativeFormSchema>) {
         console.log(values);
         try {
-            const submitValues = {...values};
+            const key = await uploadImageToS3(mainImage[0]);
+            const submitValues = {...values, image: key};
             const response = await mutateAsync(submitValues);
             await refetch();
             console.log('Representative created:', response);
@@ -56,6 +61,23 @@ const RepresentativeForm = () => {
         <div className="p-4">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+                    <div>
+                        {mainImage.length === 0 && (
+                            <UploadDropzone
+                                multiple={false}
+                                setAcceptedImages={setMainImage}
+                                className="w-[250px] h-[250px]"
+                            />
+                        )}
+
+                        {mainImage.map((item, index) => (
+                            <img
+                                key={index}
+                                className="w-[250px] h-[250px] object-cover"
+                                src={getImgBeforeUpload(item)}
+                            />
+                        ))}
+                    </div>
                     <FormField
                         control={form.control}
                         name="name"

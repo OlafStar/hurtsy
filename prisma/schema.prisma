@@ -103,6 +103,7 @@ model Representative {
   name      String
   email     String   @unique
   phone     String
+  image      String?
   company   Company  @relation(fields: [companyId], references: [id])
   products   Product[]
   @@index([companyId])

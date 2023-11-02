@@ -72,12 +72,20 @@ export const companyProcedures = {
                 },
             });
 
+            if (!company) {
+                throw new TRPCError({
+                    code: 'INTERNAL_SERVER_ERROR',
+                    message: 'Error with creating company',
+                });
+            }
+
             await prismadb.representative.create({
                 data: {
                     companyId: company.id,
                     name: company.name,
                     email: email as string,
                     phone: validatedInput.data.phoneNumber,
+                    image: validatedInput.data.image,
                 },
             });
 
@@ -122,6 +130,7 @@ export const companyProcedures = {
                 },
                 data: {
                     name: validatedInput.data.companyName,
+                    image: validatedInput.data.image,
                 },
             });
 

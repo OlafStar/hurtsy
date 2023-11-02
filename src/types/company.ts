@@ -22,4 +22,5 @@ export type RepresentativeWeb = {
     name: string;
     email: string;
     phone: string;
+    image: string | undefined | null;
 };

@@ -2,16 +2,23 @@ import Link from 'next/link';
 import {DashboardRoutes} from '~types/AppRoutes';
 import ClientBackground from './ClientBackground';
 import Image from 'next/image';
+import {cn} from '~utils/shadcn';
 
 type DashboardPageLinkProps = {
     icon?: any;
     href: DashboardRoutes;
     label: string;
+    classname?: string;
 };
 
-const DashboardPageLink = ({icon, href, label}: DashboardPageLinkProps) => {
+const DashboardPageLink = ({
+    icon,
+    href,
+    label,
+    classname,
+}: DashboardPageLinkProps) => {
     return (
-        <Link href={href}>
+        <Link href={href} className={`${cn(classname)}`}>
             <ClientBackground href={href}>
                 {icon && (
                     <Image

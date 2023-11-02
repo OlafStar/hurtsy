@@ -77,6 +77,7 @@ export const representativesProcedures = {
                     name: validatedInput.data.name,
                     email: validatedInput.data.email,
                     phone: validatedInput.data.phoneNumber,
+                    image: validatedInput.data.image,
                 },
             });
 
@@ -139,6 +140,7 @@ export const representativesProcedures = {
                     name: validatedInput.data.name,
                     email: validatedInput.data.email,
                     phone: validatedInput.data.phoneNumber,
+                    image: validatedInput.data.image,
                 },
             });
 
