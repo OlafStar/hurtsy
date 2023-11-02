@@ -226,7 +226,7 @@ export const productProcedures = {
             z.object({
                 search: z.string().optional(),
                 category: z.string().optional(),
-                subCategory: z.array(z.string()).optional(),
+                subCategory: z.string().optional(),
             }),
         )
         .query(async ({input}) => {
@@ -236,7 +236,7 @@ export const productProcedures = {
                 .object({
                     search: z.string().optional(),
                     category: z.string().optional(),
-                    subCategory: z.array(z.string()).optional(),
+                    subCategory: z.string().optional(),
                 })
                 .safeParse(input);
             if (!validatedInput.success) {
@@ -270,7 +270,7 @@ export const productProcedures = {
                 whereClause.AND = {
                     category: {
                         path: '$.subCategory',
-                        contains: subCategory,
+                        array_contains: subCategory,
                     },
                 };
             }

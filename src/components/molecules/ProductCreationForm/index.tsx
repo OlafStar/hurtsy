@@ -54,7 +54,9 @@ import {ProductWeb} from '~types/products';
 type ProductCreationFormProps = {isEdit?: boolean; initialData?: ProductWeb};
 
 const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) => {
-    const [selectedMainCategory, setSelectedMainCategory] = useState('');
+    const [selectedMainCategory, setSelectedMainCategory] = useState(
+        initialData ? initialData.category?.mainCategory as string : '',
+    );
     const [editorState, setEditorState] = useState('');
     const [mainImage, setMainImage] = useState<File[]>([]);
     const [images, setImages] = useState<File[]>([]);

@@ -16,9 +16,11 @@ import {Button} from '~components/ui/button';
 import {cn} from '~utils/shadcn';
 import {CheckIcon} from 'lucide-react';
 import {useAddSearchParams} from '~hooks/useAddSearchParams';
+import {useSearchParams} from 'next/navigation';
+import {SearchParams} from '~config/searchParams';
 
 const Filters = () => {
-    const setParams = useAddSearchParams();
+    const {updateParams} = useAddSearchParams();
 
     const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(
         undefined,
@@ -26,7 +28,7 @@ const Filters = () => {
 
     useEffect(() => {
         if (selectedCategory) {
-            setParams({category: selectedCategory});
+            updateParams({category: selectedCategory}, [SearchParams.SubCategory]);
         }
     }, [selectedCategory]);
 
@@ -90,7 +92,10 @@ const Filters = () => {
                                 return (
                                     <div
                                         key={index}
-                                        className="flex gap-1 items-center"
+                                        className="flex gap-1 items-center cursor-pointer"
+                                        onClick={() => {
+                                            updateParams({subCategory: subCatValue});
+                                        }}
                                     >
                                         {subCatValue}
                                     </div>

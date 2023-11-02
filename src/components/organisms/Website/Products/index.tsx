@@ -15,6 +15,7 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
     const data = await serverClient.getProducts({
         search: searchParams?.search_query as string,
         category: searchParams?.category as string,
+        subCategory: searchParams?.subCategory as string,
     });
 
     console.log(searchParams);
