@@ -11,11 +11,17 @@ const RegisterPage = () => {
     });
     const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await signIn('credentials', {
+        const response = await signIn('credentials', {
             ...data,
             redirect: false,
         });
-        router.push(`/dashboard`);
+        // if (response?.error) {
+        //     console.log(response?.error);
+        // }
+
+        if (response?.ok) {
+            router.push(`/dashboard`);
+        }
     };
     return (
         <>

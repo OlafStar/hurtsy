@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import prismadb from '~lib/prismadb';
 import {NextResponse} from 'next/server';
 import {NextRequest} from 'next/server';
+import { randomUUID } from 'crypto';
 
 //initialize prisma if needed
 
@@ -40,6 +41,13 @@ export async function POST(request: NextRequest) {
             hashedPassword,
         },
     });
+
+    // const token = await prismadb.activateToken.create({
+    //     data: {
+    //         userId: user.id,
+    //         token: `${randomUUID()}${randomUUID()}`.replace(/-/g, ''),
+    //     },
+    // });
 
     return NextResponse.json(user);
 }

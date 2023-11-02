@@ -35,6 +35,10 @@ export const authOptions: NextAuthOptions = {
                     return null;
                 }
 
+                // if (!user.active) {
+                //     throw new Error('User is not active');
+                // }
+
                 const passwordsMatch = await bcrypt.compare(
                     credentials.password,
                     user.hashedPassword,
