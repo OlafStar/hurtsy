@@ -9,6 +9,8 @@ const Representative = (props: RepresentativeWeb) => {
     const {id, name, email, phone} = props;
 
     const {company, isLoading} = useUserCompany();
+
+    console.log(company);
     return (
         <div className="flex items-center gap-1">
             <div className="w-[64px] h-[64px] rounded-full bg-slate-400" />

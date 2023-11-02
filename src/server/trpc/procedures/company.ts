@@ -101,6 +101,30 @@ export const companyProcedures = {
                 });
             }
 
+            const existingCompany = await getUserCompany(ctx);
+
+            if (!existingCompany) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'Company not found',
+                });
+            }
+
+            const companyRepresentative = await prismadb.representative.findFirst({
+                where: {
+                    name: existingCompany.name,
+                },
+            });
+
+            await prismadb.representative.update({
+                where: {
+                    id: companyRepresentative?.id,
+                },
+                data: {
+                    name: validatedInput.data.companyName,
+                },
+            });
+
             const company = await prismadb.company.update({
                 data: {
                     name: validatedInput.data.companyName,
