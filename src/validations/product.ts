@@ -40,3 +40,9 @@ export const productFormSchema = z.object({
     ...baseProductSchema,
     name: z.string().min(1),
 });
+
+export const editProductFormSchema = z.object({
+    ...baseProductSchema,
+    name: z.string().min(1),
+    id: z.string(),
+});

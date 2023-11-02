@@ -24,7 +24,8 @@ import {
 import {trpc} from '~app/_trpc/client';
 import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 import {useToast} from '~components/ui/use-toast';
-
+import {useRouter} from 'next/navigation';
+import {AppRoutes} from '~types/AppRoutes';
 export const columns: ColumnDef<ProductWeb>[] = [
     {
         id: 'select',
@@ -189,6 +190,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
             const {mutateAsync: createProduct} = trpc.createProduct.useMutation();
             const {refetch} = useUserCompanyProducts();
             const {toast} = useToast();
+            const router = useRouter();
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -203,6 +205,15 @@ export const columns: ColumnDef<ProductWeb>[] = [
                             onClick={() => navigator.clipboard.writeText(product.id)}
                         >
                             Copy payment ID
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() =>
+                                router.push(
+                                    `${AppRoutes.EDIT_PRODUCTS}/${product.id}`,
+                                )
+                            }
+                        >
+                            Edytuj
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem

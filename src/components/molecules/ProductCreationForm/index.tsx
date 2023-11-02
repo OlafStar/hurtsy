@@ -31,7 +31,10 @@ import {
 } from '~components/ui/command';
 import {cn} from '~utils/shadcn';
 import {Checkbox} from '~components/ui/checkbox';
-import {productFormDefaultValues} from '~config/formDefaultValues';
+import {
+    generateDefaultValues,
+    productFormDefaultValues,
+} from '~config/formDefaultValues';
 import FormFieldArray from '../FormFieldArray';
 import {useBlockNote} from '@blocknote/react';
 import {BlockNoteEditor} from '@blocknote/core';
@@ -46,8 +49,11 @@ import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
 import {useToast} from '~components/ui/use-toast';
 import {DashboardRoutes} from '~types/AppRoutes';
 import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
+import {ProductWeb} from '~types/products';
 
-const ProductCreationForm = () => {
+type ProductCreationFormProps = {isEdit?: boolean; initialData?: ProductWeb};
+
+const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) => {
     const [selectedMainCategory, setSelectedMainCategory] = useState('');
     const [editorState, setEditorState] = useState('');
     const [mainImage, setMainImage] = useState<File[]>([]);
@@ -59,7 +65,7 @@ const ProductCreationForm = () => {
     const {company} = useUserCompany();
     const {uploadImagesToS3} = useUploadS3();
     const {representatives} = useCompanyRepresentatives(company?.id || '');
-    const {refetch} = useUserCompanyProducts()
+    const {refetch} = useUserCompanyProducts();
 
     const editor: BlockNoteEditor = useBlockNote({
         initialContent: undefined,
@@ -77,10 +83,14 @@ const ProductCreationForm = () => {
 
     const form = useForm<z.infer<typeof productFormSchema>>({
         resolver: zodResolver(productFormSchema),
-        defaultValues: productFormDefaultValues,
+        defaultValues:
+            isEdit && initialData
+                ? generateDefaultValues(initialData)
+                : productFormDefaultValues,
     });
 
     const {mutateAsync} = trpc.createProduct.useMutation();
+    const {mutateAsync: editProduct} = trpc.editProduct.useMutation();
 
     const startSimulatedProgress = () => {
         setUploadProgress(0);
@@ -104,22 +114,54 @@ const ProductCreationForm = () => {
             setIsUploading(true);
             const progressInterval = startSimulatedProgress();
 
-            const keys = await uploadImagesToS3([mainImage[0], ...images]);
-
             const companyRepresentative = representatives?.find(
                 (element) => element.name === company.name,
             );
 
-            const submitValues = {
-                companyId: company?.id || '',
-                ...values,
-                representativeId: companyRepresentative?.id || '',
-                mainImage: keys[0],
-                images: keys.slice(1),
-            };
+            if (isEdit && initialData) {
+                if ([...mainImage, ...images].length > 0) {
+                    const keys = await uploadImagesToS3([mainImage[0], ...images]);
+                    const submitValues = {
+                        companyId: company?.id || '',
+                        ...values,
+                        representativeId: companyRepresentative?.id || '',
+                        mainImage: keys[0],
+                        images: keys.slice(1),
+                        id: initialData.id,
+                    };
+                    await editProduct(submitValues);
+                } else {
+                    const submitValues = {
+                        companyId: company?.id || '',
+                        ...values,
+                        representativeId: companyRepresentative?.id || '',
+                        id: initialData.id,
+                    };
+                    await editProduct(submitValues);
+                }
+            } else {
+                if ([...mainImage, ...images].length > 0) {
+                    const keys = await uploadImagesToS3([...mainImage, ...images]);
+                    const submitValues = {
+                        companyId: company?.id || '',
+                        ...values,
+                        representativeId: companyRepresentative?.id || '',
+                        mainImage: keys[0],
+                        images: keys.slice(1),
+                    };
 
-            await mutateAsync(submitValues);
-            await refetch()
+                    await mutateAsync(submitValues);
+                } else {
+                    const submitValues = {
+                        companyId: company?.id || '',
+                        ...values,
+                        representativeId: companyRepresentative?.id || '',
+                    };
+                    await mutateAsync(submitValues);
+                }
+            }
+
+            await refetch();
             clearInterval(progressInterval);
             setUploadProgress(100);
 
@@ -127,7 +169,7 @@ const ProductCreationForm = () => {
             setIsOpen(false);
             toast({
                 title: 'Success',
-                description: 'Product has been created',
+                description: `Product has been ${isEdit ? 'editted' : 'created'}`,
             });
             router.push(DashboardRoutes.PRODUCTS);
         }
@@ -319,21 +361,22 @@ const ProductCreationForm = () => {
                         />
                         <div className="flex gap-4 h-[250px]">
                             <div>
-                                {mainImage.length === 0 && (
-                                    <UploadDropzone
-                                        multiple={false}
-                                        setAcceptedImages={setMainImage}
-                                        className="w-[250px] h-[250px]"
-                                    />
-                                )}
-
-                                {mainImage.map((item, index) => (
-                                    <img
-                                        key={index}
-                                        className="w-[250px] h-[250px] object-cover"
-                                        src={getImgBeforeUpload(item)}
-                                    />
-                                ))}
+                                <>
+                                    {mainImage.length === 0 && (
+                                        <UploadDropzone
+                                            multiple={false}
+                                            setAcceptedImages={setMainImage}
+                                            className="w-[250px] h-[250px]"
+                                        />
+                                    )}
+                                    {mainImage.map((item, index) => (
+                                        <img
+                                            key={index}
+                                            className="w-[250px] h-[250px] object-cover"
+                                            src={getImgBeforeUpload(item)}
+                                        />
+                                    ))}
+                                </>
                             </div>
 
                             <div className="flex flex-col gap-2 flex-wrap">

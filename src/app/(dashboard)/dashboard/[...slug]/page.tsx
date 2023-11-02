@@ -2,6 +2,7 @@ import {RedirectType, redirect} from 'next/navigation';
 import CompanyForm from '~components/molecules/CompanyForm';
 import CompanyEditForm from '~components/molecules/CompanyForm/CompanyEditForm';
 import ProductCreationForm from '~components/molecules/ProductCreationForm';
+import ProductEditForm from '~components/molecules/ProductCreationForm/CompanyEditForm';
 import Messages from '~components/organisms/Dashboard/Messages';
 import Offers from '~components/organisms/Dashboard/Offers';
 import Plans from '~components/organisms/Dashboard/Plans';
@@ -23,6 +24,8 @@ const Page = async ({params: {slug}}: {params: {slug: string[]}}) => {
     const completeSlug = `/dashboard/${slug.join('/')}`;
     const company = await serverClient.getUserCompany();
 
+    console.log(completeSlug);
+
     if (
         !company &&
         completeSlug != AppRoutes.ADD_COMPANY &&
@@ -42,6 +45,8 @@ const Page = async ({params: {slug}}: {params: {slug: string[]}}) => {
             return <Products />;
         case AppRoutes.ADD_PRODUCT:
             return <ProductCreationForm />;
+        case `${AppRoutes.EDIT_PRODUCTS}/${slug[2]}`:
+            return <ProductEditForm id={slug[2]} />;
         case AppRoutes.OFFERS:
             return <Offers />;
         case AppRoutes.REPRESENTATIVES:
