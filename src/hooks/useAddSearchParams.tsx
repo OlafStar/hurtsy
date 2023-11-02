@@ -12,10 +12,8 @@ export function useAddSearchParams() {
     ) => {
         const searchParams = new URLSearchParams(currentSearchParams);
 
-        // Delete params if keys are provided
         keysToDelete?.forEach((key) => searchParams.delete(key));
 
-        // Set new params
         Object.entries(newParams).forEach(([key, value]) => {
             searchParams.set(key, String(value));
         });
@@ -25,5 +23,5 @@ export function useAddSearchParams() {
         router.replace(newSearch ? `${path}?${newSearch}` : path);
     };
 
-    return {updateParams};
+    return {currentSearchParams, updateParams};
 }

@@ -20,7 +20,9 @@ import {useSearchParams} from 'next/navigation';
 import {SearchParams} from '~config/searchParams';
 
 const Filters = () => {
-    const {updateParams} = useAddSearchParams();
+    const {currentSearchParams, updateParams} = useAddSearchParams();
+
+    const test = currentSearchParams.get(SearchParams.Category);
 
     const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(
         undefined,
@@ -35,6 +37,7 @@ const Filters = () => {
     return (
         <div className="flex flex-col gap-4">
             <div className="text-xl font-bold">{'Filtry'}</div>
+            <div className="text-sm font-bold">{'Kategorie'}</div>
             <div className="flex flex-col gap-4">
                 <Popover>
                     <PopoverTrigger asChild>
@@ -46,7 +49,7 @@ const Filters = () => {
                                 !selectedCategory && 'text-muted-foreground',
                             )}
                         >
-                            {selectedCategory || 'Select category'}
+                            {selectedCategory || test}
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                     </PopoverTrigger>
@@ -69,7 +72,8 @@ const Filters = () => {
                                             <CheckIcon
                                                 className={cn(
                                                     'mr-2 h-4 w-4',
-                                                    cat === selectedCategory
+                                                    cat === selectedCategory ||
+                                                        cat === test
                                                         ? 'opacity-100'
                                                         : 'opacity-0',
                                                 )}
