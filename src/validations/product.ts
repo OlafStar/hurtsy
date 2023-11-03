@@ -54,4 +54,5 @@ export const getProductFilterSchema = z.object({
     deliveryPrice: z.number().optional(),
     price: z.number().optional(),
     companyType: z.array(z.string()).optional(),
+    companyId: z.string().optional(),
 });

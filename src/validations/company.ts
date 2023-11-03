@@ -32,3 +32,10 @@ export const representativeEditSchema = z.object({
     id: z.string(),
     ...representativeFormSchema.shape,
 });
+
+export const getCompaniesFilterSchema = z.object({
+    search: z.string().optional(),
+    category: z.string().optional(),
+    subCategory: z.string().optional(),
+    companyType: z.array(z.string()).optional(),
+});

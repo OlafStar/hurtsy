@@ -2,6 +2,7 @@ import {ChevronRight} from 'lucide-react';
 import React from 'react';
 import ProductCompany from '~components/molecules/ProductCompany';
 import ProductPageInfo from '~components/molecules/ProductPageInfo';
+import {CompanyTypeWeb} from '~types/company';
 import {ProductWeb} from '~types/products';
 
 const ProductPage = ({
@@ -13,8 +14,8 @@ const ProductPage = ({
     deliveryPrice,
     customizations,
     images,
-    companyId,
     representativeId,
+    company,
 }: ProductWeb) => {
     return (
         <div className="pt-8">
@@ -49,7 +50,7 @@ const ProductPage = ({
                     </div>
                     <div className="flex-1 max-w-[270px]">
                         <ProductCompany
-                            companyId={companyId}
+                            company={company as CompanyTypeWeb}
                             representativeId={representativeId}
                         />
                     </div>

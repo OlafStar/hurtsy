@@ -1,9 +1,10 @@
 import prismadb from '~lib/prismadb';
 import {privateProcedure, publicProcedure} from '../trpc';
 import {TRPCError} from '@trpc/server';
-import {companyCreationSchema} from '~validations/company';
+import {companyCreationSchema, getCompaniesFilterSchema} from '~validations/company';
 import {getUserCompany} from '../utils/getUserCompany';
 import {z} from 'zod';
+import {CategoryWeb} from '~types/products';
 
 export const companyProcedures = {
     getCompany: publicProcedure.input(z.string()).query(async ({input}) => {
@@ -89,7 +90,6 @@ export const companyProcedures = {
                 },
             });
 
-
             return company;
         }),
     editCompany: privateProcedure
@@ -165,5 +165,132 @@ export const companyProcedures = {
             });
 
             return company;
+        }),
+    getCompanyCategories: publicProcedure
+        .input(z.string())
+        .query(async ({input}) => {
+            const validatedInput = z.string().safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const companyId = validatedInput.data;
+
+            const productsCategories = (await prismadb.product.findMany({
+                where: {
+                    companyId: companyId,
+                },
+                select: {
+                    category: true,
+                },
+            })) as Array<{category: CategoryWeb}>;
+
+            const createCategoryIdentifier = (category: CategoryWeb) =>
+                category.mainCategory.toLowerCase();
+
+            const categoriesMap = new Map<string, CategoryWeb>();
+
+            productsCategories.forEach((product) => {
+                const category = product.category;
+                const identifier = createCategoryIdentifier(category);
+                const existingCategory = categoriesMap.get(identifier);
+
+                if (existingCategory) {
+                    existingCategory.subCategory = Array.from(
+                        new Set([
+                            ...existingCategory.subCategory,
+                            ...category.subCategory,
+                        ]),
+                    );
+                } else {
+                    categoriesMap.set(identifier, {
+                        mainCategory: category.mainCategory,
+                        subCategory: Array.from(new Set(category.subCategory)),
+                    });
+                }
+            });
+
+            return Array.from(categoriesMap.values());
+        }),
+
+    getCompanies: publicProcedure
+        .input(getCompaniesFilterSchema)
+        .query(async ({input}) => {
+            let whereClause: any = {};
+
+            const validatedInput = getCompaniesFilterSchema.safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const {search, subCategory, category, companyType} = validatedInput.data;
+
+            // Initialize the AND array to hold all AND conditions
+            whereClause.AND = [];
+
+            // If search is provided, it will check for product name or description
+            if (search) {
+                whereClause.OR = [
+                    {name: {contains: search}},
+                    {products: {some: {name: {contains: search}}}},
+                    {products: {some: {description: {contains: search}}}},
+                ];
+            }
+
+            // If category is provided, it will filter by main category
+            if (category) {
+                whereClause.AND.push({
+                    products: {
+                        some: {
+                            category: {
+                                path: '$.mainCategory',
+                                equals: category,
+                            },
+                        },
+                    },
+                });
+            }
+
+            // If subCategory is provided, it will filter by sub categories
+            if (subCategory) {
+                whereClause.AND.push({
+                    products: {
+                        some: {
+                            category: {
+                                path: '$.subCategory',
+                                array_contains: subCategory,
+                            },
+                        },
+                    },
+                });
+            }
+
+            if (companyType) {
+                console.log(companyType);
+                whereClause.AND.push({
+                    type: {
+                        in: companyType,
+                    },
+                });
+            }
+
+            if (whereClause.AND.length === 0) {
+                delete whereClause.AND;
+            }
+
+            return await prismadb.company.findMany({
+                where: whereClause,
+                include: {
+                    products: {
+                        take: 3,
+                    },
+                },
+            });
         }),
 };

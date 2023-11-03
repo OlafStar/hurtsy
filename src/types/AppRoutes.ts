@@ -18,8 +18,14 @@ export enum ProductRoutes {
     EDIT_PRODUCTS = '/dashboard/products/edit-product',
 }
 
+export enum WebsiteRoutes {
+    WEB_COMPANIES = '/companies',
+    WEB_PRODUCTS = '/products'
+}
+
 export const AppRoutes = {
     ...DashboardRoutes,
     ...CompanyRoutes,
     ...ProductRoutes,
+    ...WebsiteRoutes,
 };

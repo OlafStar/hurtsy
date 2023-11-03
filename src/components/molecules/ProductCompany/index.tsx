@@ -1,16 +1,13 @@
 import {serverClient} from '~server/trpc/serverClient';
 import ServerRepresentative from '../Representative/ServerRepresentative';
+import {CompanyTypeWeb} from '~types/company';
 
 type ProductCompanyProps = {
-    companyId: string;
+    company: CompanyTypeWeb;
     representativeId: string;
 };
 
-const ProductCompany = async ({
-    companyId,
-    representativeId,
-}: ProductCompanyProps) => {
-    const company = await serverClient.getCompany(companyId);
+const ProductCompany = async ({company, representativeId}: ProductCompanyProps) => {
     const representative = await serverClient.getRepresentative(representativeId);
     return (
         <div className="flex flex-col gap-8">

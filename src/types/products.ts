@@ -1,3 +1,5 @@
+import { CompanyTypeWeb } from "./company";
+
 export type CategoryWeb = {
     mainCategory: string;
     subCategory: string[];
@@ -32,6 +34,7 @@ export type ProductWeb = {
     customProperties: CustomPropertiesWeb[];
     companyId: string;
     representativeId: string;
+    company?: CompanyTypeWeb;
 };
 
 const mockProduct1: ProductWeb = {

@@ -1,18 +1,22 @@
 'use client';
 
 import {CompanyType} from '@prisma/client';
+import {usePathname} from 'next/navigation';
 import {useState} from 'react';
 import {Button} from '~components/ui/button';
 import {Checkbox} from '~components/ui/checkbox';
 import {Input} from '~components/ui/input';
 import {SearchParams, SearchParamsType} from '~config/searchParams';
 import {useAddSearchParams} from '~hooks/useAddSearchParams';
+import {AppRoutes} from '~types/AppRoutes';
 
 type FilterOrderProps = {
     params?: SearchParamsType;
 };
 
 const FilterOrder = ({params}: FilterOrderProps) => {
+    const path = usePathname();
+
     const {updateParams} = useAddSearchParams();
 
     const [minQuantity, setMinQuantity] = useState(params?.minQuantity || '');
@@ -50,33 +54,38 @@ const FilterOrder = ({params}: FilterOrderProps) => {
 
     return (
         <>
-            <div className="text-sm font-bold">{'Zamówienie'}</div>
-            <div className="flex-col flex gap-2">
-                <div className="flex flex-col gap-1">
-                    <div className="text-xs">{'Min'}</div>
-                    <Input
-                        className="text-xs h-6"
-                        value={minQuantity}
-                        onChange={handleMinQuantityChange}
-                    />
-                </div>
-                <div className="flex flex-col gap-1">
-                    <div className="text-xs">{'Cena'}</div>
-                    <Input
-                        className="text-xs h-6"
-                        value={price}
-                        onChange={handlePriceChange}
-                    />
-                </div>
-                <div className="flex flex-col gap-1">
-                    <div className="text-xs">{'Cena dostawy'}</div>
-                    <Input
-                        className="text-xs h-6"
-                        value={deliveryPrice}
-                        onChange={handleDeliveryPriceChange}
-                    />
-                </div>
-            </div>
+            {path !== AppRoutes.COMPANIES && (
+                <>
+                    <div className="text-sm font-bold">{'Zamówienie'}</div>
+
+                    <div className="flex-col flex gap-2">
+                        <div className="flex flex-col gap-1">
+                            <div className="text-xs">{'Min'}</div>
+                            <Input
+                                className="text-xs h-6"
+                                value={minQuantity}
+                                onChange={handleMinQuantityChange}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <div className="text-xs">{'Cena'}</div>
+                            <Input
+                                className="text-xs h-6"
+                                value={price}
+                                onChange={handlePriceChange}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <div className="text-xs">{'Cena dostawy'}</div>
+                            <Input
+                                className="text-xs h-6"
+                                value={deliveryPrice}
+                                onChange={handleDeliveryPriceChange}
+                            />
+                        </div>
+                    </div>
+                </>
+            )}
             <div className="text-sm font-bold">{'Sprzedawca'}</div>
             <div className="flex-col flex gap-2">
                 {Object.entries(CompanyType).map(([key, value], index) => (

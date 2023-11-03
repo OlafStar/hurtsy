@@ -7,6 +7,7 @@ export enum SearchParams {
     DeliveryPrice = 'deliveryPrice',
     CompanyType = 'companyType',
     Price = 'price',
+    CompanyID = 'companyId'
 }
 
 export type SearchParamsType = {

@@ -7,6 +7,7 @@ const ProductCard = ({
     prices,
     customProperties,
     id,
+    company,
 }: ProductWeb) => {
     const allPrices = prices.map((p) => p.price);
     const allMinQuantities = prices.map((p) => p.minQuantity);
@@ -32,7 +33,7 @@ const ProductCard = ({
                             gridTemplateRows: 'repeat(2, auto)',
                             gridAutoFlow: 'column',
                             gridAutoColumns: 'max-content',
-                            columnGap: '16px'
+                            columnGap: '16px',
                         }}
                     >
                         {customProperties.map((item, index) => (
@@ -43,9 +44,7 @@ const ProductCard = ({
                         ))}
                     </div>
                     <div className="w-full h-[1px] bg-black opacity-10" />
-                    <div className="text-xs opacity-50">
-                        {'Sample company sp. z.o.o'}
-                    </div>
+                    <div className="text-xs opacity-50">{company?.name}</div>
                 </div>
             </div>
         </Link>

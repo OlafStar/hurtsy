@@ -1,49 +1,39 @@
 import React from 'react';
+import CompanyCard from '~components/molecules/CompanyCard';
 import Filters from '~components/molecules/Filters';
 import ProductCard from '~components/molecules/ProductCard';
 import ProductsCompanySwitch from '~components/molecules/ProductsCompanySwitch';
-import PromotedProducts from '~components/molecules/PromotedProducts';
 import {SearchParamsType} from '~config/searchParams';
 import {serverClient} from '~server/trpc/serverClient';
-import {PriceWeb, ProductWeb, getData} from '~types/products';
-import {filterProducts} from '~utils/filterProduct';
+import {CompanyTypeWeb} from '~types/company';
+import {ProductWeb} from '~types/products';
 
-type ProductsPageProps = {
+type CompaniesPageProps = {
     searchParams?: SearchParamsType;
 };
 
-const ProductsPage = async ({searchParams}: ProductsPageProps) => {
-    const data = await serverClient.getProducts({
+const CompaniesPage = async ({searchParams}: CompaniesPageProps) => {
+    const data = await serverClient.getCompanies({
         search: searchParams?.search_query as string,
         category: searchParams?.category as string,
         subCategory: searchParams?.subCategory as string,
-        deliveryPrice: searchParams?.deliveryPrice
-            ? parseFloat(searchParams?.deliveryPrice as string)
-            : undefined,
         companyType:
             typeof searchParams?.companyType === 'string'
                 ? [searchParams?.companyType]
                 : searchParams?.companyType,
-        companyId: searchParams?.companyId as string,
     });
 
-    const filters = {
-        price: searchParams?.price
-            ? parseFloat(searchParams?.price as string)
-            : undefined,
-        minQuantity: searchParams?.price
-            ? parseInt(searchParams?.minQuantity as string)
-            : undefined,
-    };
+    console.log(data);
+
     return (
         <div className="flex pt-8">
             <Filters params={searchParams} />
             <div className="flex flex-col align-end flex-1 px-4 gap-5">
                 <ProductsCompanySwitch />
                 <div className="flex flex-col gap-6">
-                    {filterProducts(data, filters).map((item, index) => (
+                    {data.map((item, index) => (
                         <React.Fragment key={index}>
-                            <ProductCard {...(item as ProductWeb)} />
+                            <CompanyCard {...(item as CompanyTypeWeb)} />
                             {data.length - 1 > index && (
                                 <div className="w-full h-[1px] bg-black opacity-10" />
                             )}
@@ -56,4 +46,4 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
     );
 };
 
-export default ProductsPage;
+export default CompaniesPage;

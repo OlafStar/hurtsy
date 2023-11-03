@@ -234,7 +234,7 @@ export const productProcedures = {
                 });
             }
 
-            const {search, subCategory, category, companyType, deliveryPrice} =
+            const {search, subCategory, category, companyType, deliveryPrice, companyId} =
                 validatedInput.data;
 
             // Initialize the AND array to hold all AND conditions
@@ -277,11 +277,20 @@ export const productProcedures = {
             }
 
             if (companyType) {
-                console.log(companyType);
                 whereClause.AND.push({
                     company: {
                         type: {
                             in: companyType, 
+                        },
+                    },
+                });
+            }
+
+            if (companyId) {
+                whereClause.AND.push({
+                    company: {
+                        id: {
+                            equals: companyId, 
                         },
                     },
                 });
