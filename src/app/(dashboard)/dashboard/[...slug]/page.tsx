@@ -24,7 +24,6 @@ const Page = async ({params: {slug}}: {params: {slug: string[]}}) => {
     const completeSlug = `/dashboard/${slug.join('/')}`;
     const company = await serverClient.getUserCompany();
 
-    console.log(completeSlug);
 
     if (
         !company &&

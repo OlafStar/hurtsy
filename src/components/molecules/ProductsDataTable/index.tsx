@@ -20,7 +20,6 @@ const ProductsDataTable: FC<ProductsDataTableProps> = ({
 }) => {
     const {products} = useUserCompanyProducts(initialProducts);
 
-    console.log(products);
 
     return (
         <div>

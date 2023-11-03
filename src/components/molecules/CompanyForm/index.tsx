@@ -89,7 +89,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
     };
 
     async function onSubmit(values: z.infer<typeof companyCreationSchema>) {
-        console.log(values);
         try {
             setIsOpen(true);
             setIsUploading(true);

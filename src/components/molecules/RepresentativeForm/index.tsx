@@ -40,13 +40,11 @@ const RepresentativeForm = () => {
     const {mutateAsync} = trpc.createRepresentatives.useMutation();
 
     async function onSubmit(values: z.infer<typeof representativeFormSchema>) {
-        console.log(values);
         try {
             const key = await uploadImageToS3(mainImage[0]);
             const submitValues = {...values, image: key};
             const response = await mutateAsync(submitValues);
             await refetch();
-            console.log('Representative created:', response);
             toast({
                 title: 'Success',
                 description: 'Representative has been created',

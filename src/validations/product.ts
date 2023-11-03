@@ -51,5 +51,7 @@ export const getProductFilterSchema = z.object({
     search: z.string().optional(),
     category: z.string().optional(),
     subCategory: z.string().optional(),
+    deliveryPrice: z.number().optional(),
     price: z.number().optional(),
+    companyType: z.array(z.string()).optional(),
 });

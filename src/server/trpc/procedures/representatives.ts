@@ -81,8 +81,6 @@ export const representativesProcedures = {
                 },
             });
 
-            console.log(representative);
-
             return representative;
         }),
     editRepresentative: privateProcedure
@@ -143,8 +141,6 @@ export const representativesProcedures = {
                     image: validatedInput.data.image,
                 },
             });
-
-            console.log(updatedRepresentative);
 
             return updatedRepresentative;
         }),

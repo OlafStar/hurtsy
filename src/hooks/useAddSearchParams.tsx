@@ -31,7 +31,6 @@ export function useAddSearchParams() {
         });
 
         const newSearch = searchParams.toString();
-        console.log(newSearch);
         router.replace(newSearch ? `${path}?${newSearch}` : path);
     };
 

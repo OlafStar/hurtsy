@@ -9,7 +9,6 @@ const Representative = (props: RepresentativeWeb) => {
 
     const {company, isLoading} = useUserCompany();
 
-    console.log(company);
     return (
         <div className="flex items-center gap-1">
             <img

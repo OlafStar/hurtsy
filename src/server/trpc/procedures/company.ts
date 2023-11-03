@@ -89,7 +89,6 @@ export const companyProcedures = {
                 },
             });
 
-            console.log(company);
 
             return company;
         }),

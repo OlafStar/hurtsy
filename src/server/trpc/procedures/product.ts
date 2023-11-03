@@ -8,7 +8,7 @@ import {TRPCError} from '@trpc/server';
 import prismadb from '~lib/prismadb';
 import {getUserCompany} from '../utils/getUserCompany';
 import {z} from 'zod';
-import {Prisma} from '@prisma/client';
+
 export const productProcedures = {
     createProduct: privateProcedure
         .input(productFormSchema)
@@ -61,8 +61,6 @@ export const productProcedures = {
                         defaultRepresentative[0].id,
                 },
             });
-
-            console.log(product);
 
             return product;
         }),
@@ -120,8 +118,6 @@ export const productProcedures = {
                         defaultRepresentative[0].id,
                 },
             });
-
-            console.log(product);
 
             return product;
         }),
@@ -238,7 +234,12 @@ export const productProcedures = {
                 });
             }
 
-            const {search, subCategory, category} = validatedInput.data;
+            const {search, subCategory, category, companyType, deliveryPrice} =
+                validatedInput.data;
+
+            // Initialize the AND array to hold all AND conditions
+            whereClause.AND = [];
+
             // If search is provided, it will check for product name or description
             if (search) {
                 whereClause.OR = [
@@ -249,26 +250,52 @@ export const productProcedures = {
 
             // If category is provided, it will filter by main category
             if (category) {
-                whereClause.AND = {
+                whereClause.AND.push({
                     category: {
                         path: '$.mainCategory',
                         equals: category,
                     },
-                };
+                });
             }
 
             // If subCategory is provided, it will filter by sub categories
             if (subCategory) {
-                whereClause.AND = {
+                whereClause.AND.push({
                     category: {
                         path: '$.subCategory',
                         array_contains: subCategory,
                     },
-                };
+                });
             }
 
-            console.log(whereClause);
+            if (deliveryPrice) {
+                whereClause.AND.push({
+                    deliveryPrice: {
+                        lte: deliveryPrice,
+                    },
+                });
+            }
 
-            return await prismadb.product.findMany({where: whereClause});
+            if (companyType) {
+                console.log(companyType);
+                whereClause.AND.push({
+                    company: {
+                        type: {
+                            in: companyType, 
+                        },
+                    },
+                });
+            }
+
+            if (whereClause.AND.length === 0) {
+                delete whereClause.AND;
+            }
+
+            return await prismadb.product.findMany({
+                where: whereClause,
+                include: {
+                    company: true,
+                },
+            });
         }),
 };

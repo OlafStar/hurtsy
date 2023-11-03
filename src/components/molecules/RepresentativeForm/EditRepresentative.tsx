@@ -37,12 +37,10 @@ const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
     const {mutateAsync} = trpc.editRepresentative.useMutation();
 
     async function onSubmit(values: z.infer<typeof representativeFormSchema>) {
-        console.log(values);
         try {
             const submitValues = {id: id, ...values};
             const response = await mutateAsync(submitValues);
             refetch();
-            console.log('Representative edited:', response);
             toast({
                 title: 'Success',
                 description: 'Representative has been edited',
