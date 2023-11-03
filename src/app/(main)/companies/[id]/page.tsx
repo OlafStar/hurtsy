@@ -13,7 +13,12 @@ async function Page({
     const company = await serverClient.getCompany(params.id);
 
     if (company) {
-        return <CompanyPage searchParams={searchParams} {...(company as CompanyTypeWeb)} />;
+        return (
+            <CompanyPage
+                searchParams={searchParams}
+                {...(company as CompanyTypeWeb)}
+            />
+        );
     }
 }
 

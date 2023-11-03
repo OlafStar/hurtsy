@@ -13,9 +13,10 @@ import {
 } from '~components/ui/command';
 import {Button} from '~components/ui/button';
 import {cn} from '~utils/shadcn';
-import {CheckIcon} from 'lucide-react';
+import {CheckIcon, DeleteIcon} from 'lucide-react';
 import {useAddSearchParams} from '~hooks/useAddSearchParams';
 import {SearchParams, SearchParamsType} from '~config/searchParams';
+import ClearFilterButton from '~components/atoms/ClearFilterButton';
 
 type FilterCategoriesProps = {
     params?: SearchParamsType;
@@ -35,7 +36,12 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
     }, [selectedCategory]);
     return (
         <>
-            <div className="text-sm font-bold">{'Kategorie'}</div>
+            <div className="flex justify-between text-sm font-bold">
+                <div>{'Kategorie'}</div>
+                <ClearFilterButton paramsToDelete={[SearchParams.Category, SearchParams.SubCategory]}>
+                    {'Wyczyść'}
+                </ClearFilterButton>
+            </div>
             <div className="flex flex-col gap-4">
                 <Popover>
                     <PopoverTrigger asChild>
@@ -94,14 +100,23 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
                             return (
                                 <div
                                     key={index}
-                                    className={`flex text-xs items-center cursor-pointer ${
+                                    className={`flex text-xs items-center cursor-pointer justify-between ${
                                         params?.subCategory === value && 'font-bold'
                                     }`}
                                     onClick={() => {
                                         updateParams({subCategory: value});
                                     }}
                                 >
-                                    {value}
+                                    <div>{value}</div>
+                                    {value === params?.subCategory && (
+                                        <ClearFilterButton
+                                            paramsToDelete={[
+                                                SearchParams.SubCategory,
+                                            ]}
+                                        >
+                                            {'Wyczyść'}
+                                        </ClearFilterButton>
+                                    )}
                                 </div>
                             );
                         })}

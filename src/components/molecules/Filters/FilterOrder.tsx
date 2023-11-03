@@ -3,6 +3,7 @@
 import {CompanyType} from '@prisma/client';
 import {usePathname} from 'next/navigation';
 import {useState} from 'react';
+import ClearFilterButton from '~components/atoms/ClearFilterButton';
 import {Button} from '~components/ui/button';
 import {Checkbox} from '~components/ui/checkbox';
 import {Input} from '~components/ui/input';
@@ -54,13 +55,21 @@ const FilterOrder = ({params}: FilterOrderProps) => {
 
     return (
         <>
-            {path !== AppRoutes.COMPANIES && (
+            {path !== AppRoutes.WEB_COMPANIES && (
                 <>
                     <div className="text-sm font-bold">{'Zamówienie'}</div>
 
                     <div className="flex-col flex gap-2">
                         <div className="flex flex-col gap-1">
-                            <div className="text-xs">{'Min'}</div>
+                            <div className="flex justify-between text-xs">
+                                <div>{'Min'}</div>
+                                <ClearFilterButton
+                                    paramsToDelete={[SearchParams.MinQuantity]}
+                                    className="text-xs leading-none"
+                                >
+                                    {'Wyczyść'}
+                                </ClearFilterButton>
+                            </div>
                             <Input
                                 className="text-xs h-6"
                                 value={minQuantity}
@@ -68,7 +77,15 @@ const FilterOrder = ({params}: FilterOrderProps) => {
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <div className="text-xs">{'Cena'}</div>
+                            <div className="flex justify-between text-xs">
+                                <div>{'Cena'}</div>
+                                <ClearFilterButton
+                                    paramsToDelete={[SearchParams.Price]}
+                                    className="text-xs leading-none"
+                                >
+                                    {'Wyczyść'}
+                                </ClearFilterButton>
+                            </div>
                             <Input
                                 className="text-xs h-6"
                                 value={price}
@@ -76,7 +93,15 @@ const FilterOrder = ({params}: FilterOrderProps) => {
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <div className="text-xs">{'Cena dostawy'}</div>
+                            <div className="flex justify-between text-xs">
+                                <div>{'Cena dostawy'}</div>
+                                <ClearFilterButton
+                                    paramsToDelete={[SearchParams.DeliveryPrice]}
+                                    className="text-xs leading-none"
+                                >
+                                    {'Wyczyść'}
+                                </ClearFilterButton>
+                            </div>
                             <Input
                                 className="text-xs h-6"
                                 value={deliveryPrice}

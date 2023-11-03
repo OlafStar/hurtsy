@@ -1,5 +1,6 @@
 import React from 'react';
 import CategoriesButton from '~components/atoms/CategoriesButton';
+import ClearFilterButton from '~components/atoms/ClearFilterButton';
 import CompanyPageHeader from '~components/molecules/CompanyPageHeader';
 import CompanyProductCard from '~components/molecules/CompanyProductCard';
 import {SearchParamsType} from '~config/searchParams';
@@ -8,11 +9,11 @@ import {CompanyTypeWeb} from '~types/company';
 import {ProductWeb} from '~types/products';
 
 const CompanyPage: React.FC<
-    CompanyTypeWeb & {searchParams: SearchParamsType}
+    CompanyTypeWeb & {searchParams?: SearchParamsType}
 > = async (props) => {
     const product = (await serverClient.getProducts({
         companyId: props.id,
-        category: props.searchParams.category as string,
+        category: props.searchParams?.category as string | undefined,
     })) as ProductWeb[];
     const categories = await serverClient.getCompanyCategories(props.id);
 
@@ -30,6 +31,13 @@ const CompanyPage: React.FC<
                         </div>
                         <div className="flex gap-16">
                             <div className="flex flex-col gap-4">
+                                <ClearFilterButton
+                                    paramsToDelete={'all'}
+                                    buttonProps={{variant: 'link'}}
+                                    className='w-fit p-0 self-end'
+                                >
+                                    {'Usuń filtry'}
+                                </ClearFilterButton>
                                 {categories.map((item) => (
                                     <CategoriesButton
                                         key={item.mainCategory}
