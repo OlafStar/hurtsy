@@ -47,6 +47,7 @@ import {DashboardRoutes} from '~types/AppRoutes';
 import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 import {ProductWeb} from '~types/products';
 import Tiptap from '~components/atoms/TipTap';
+import AddImage from '~components/atoms/AddImage';
 
 type ProductCreationFormProps = {isEdit?: boolean; initialData?: ProductWeb};
 
@@ -55,8 +56,12 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
         initialData ? (initialData.category?.mainCategory as string) : '',
     );
     const [editorState, setEditorState] = useState('');
-    const [mainImage, setMainImage] = useState<File[]>([]);
-    const [images, setImages] = useState<File[]>([]);
+    const [mainImage, setMainImage] = useState<Array<File | string>>(
+        isEdit && initialData?.mainImage ? [initialData.mainImage] : [],
+    );
+    const [images, setImages] = useState<Array<File | string>>(
+        isEdit && initialData?.images ? initialData.images : [],
+    );
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -163,6 +168,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                 title: 'Success',
                 description: `Product has been ${isEdit ? 'editted' : 'created'}`,
             });
+            router.refresh();
             router.push(DashboardRoutes.PRODUCTS);
         }
     }
@@ -351,41 +357,71 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                         />
                         <div className="flex gap-4 h-[250px]">
                             <div>
-                                <>
-                                    {mainImage.length === 0 && (
-                                        <UploadDropzone
-                                            multiple={false}
-                                            setAcceptedImages={setMainImage}
-                                            className="w-[250px] h-[250px]"
-                                        />
-                                    )}
-                                    {mainImage.map((item, index) => (
+                                {isEdit &&
+                                initialData?.mainImage &&
+                                mainImage.length > 0 ? (
+                                    typeof mainImage[0] !== 'string' ? (
                                         <img
-                                            key={index}
                                             className="w-[250px] h-[250px] object-cover"
-                                            src={getImgBeforeUpload(item)}
+                                            src={getImgBeforeUpload(mainImage[0])}
+                                            onClick={() => setMainImage([])}
                                         />
-                                    ))}
-                                </>
+                                    ) : (
+                                        <img
+                                            className="w-[250px] h-[250px] object-cover"
+                                            src={mainImage[0]}
+                                            onClick={() => setMainImage([])}
+                                        />
+                                    )
+                                ) : (
+                                    <AddImage
+                                        multiple={false}
+                                        onAcceptedImage={setMainImage}
+                                    />
+                                )}
                             </div>
 
                             <div className="flex flex-col gap-2 flex-wrap">
-                                {images.map((item, index) => (
-                                    <img
-                                        key={index}
-                                        className="w-[121px] h-[121px] object-cover"
-                                        src={getImgBeforeUpload(item)}
-                                    />
-                                ))}
+                                {images.map((item, index) => {
+                                    if (typeof item !== 'string') {
+                                        return (
+                                            <img
+                                                key={index}
+                                                className="w-[121px] h-[121px] object-cover"
+                                                src={getImgBeforeUpload(item)}
+                                                onClick={() => {
+                                                    const filteredImages =
+                                                        images.filter(
+                                                            (_, filterIndex) =>
+                                                                filterIndex !==
+                                                                index,
+                                                        );
+                                                    setImages(filteredImages);
+                                                }}
+                                            />
+                                        );
+                                    }
+                                    return (
+                                        <img
+                                            key={index}
+                                            className="w-[121px] h-[121px] object-cover"
+                                            src={item}
+                                            onClick={() => {
+                                                const filteredImages = images.filter(
+                                                    (_, filterIndex) =>
+                                                        filterIndex !== index,
+                                                );
+                                                setImages(filteredImages);
+                                            }}
+                                        />
+                                    );
+                                })}
                             </div>
-                            <div className="h-[250px] w-[250px]">
-                                <UploadDropzone
-                                    multiple={true}
-                                    files={images}
-                                    setAcceptedImages={setImages}
-                                    className="h-full w-full"
-                                />
-                            </div>
+                            <AddImage
+                                multiple={true}
+                                currentState={images}
+                                onAcceptedImage={setImages}
+                            />
                         </div>
                         <FormFieldArray
                             control={form.control}

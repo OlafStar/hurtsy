@@ -3,11 +3,12 @@
 import Dropzone from 'react-dropzone';
 import {Cloud} from 'lucide-react';
 import {cn} from '~utils/shadcn';
+import {Dispatch, SetStateAction} from 'react';
 
 type UploadDropzoneProps = {
     multiple: boolean;
-    setAcceptedImages: React.Dispatch<React.SetStateAction<File[]>>;
-    files?: File[];
+    setAcceptedImages: Dispatch<SetStateAction<(string | File)[]>>;
+    files?: Array<string | File>;
     className?: string;
 };
 
@@ -22,8 +23,8 @@ const UploadDropzone = ({
             multiple={multiple}
             onDrop={async (acceptedFile) => {
                 setAcceptedImages(
-                    multiple
-                        ? [...(files as File[]), ...acceptedFile]
+                    multiple && files && files?.length > 0
+                        ? [...files, ...acceptedFile]
                         : [...acceptedFile],
                 );
             }}

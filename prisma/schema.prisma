@@ -34,6 +34,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   active         Boolean         @default(false)
+  images        Images[]
   activateTokens ActivateToken[]
   sessions      Session[]
   company       Company?
@@ -107,4 +108,13 @@ model Representative {
   company   Company  @relation(fields: [companyId], references: [id])
   products   Product[]
   @@index([companyId])
+}
+
+model Images {
+  id String @id @default(uuid())
+  url String
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }

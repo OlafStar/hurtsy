@@ -29,6 +29,7 @@ import {Dialog, DialogContent} from '~components/ui/dialog';
 import {Progress} from '~components/ui/progress';
 import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
 import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
+import AddImage from '~components/atoms/AddImage';
 
 type CompanyFormProps = {
     isEdit?: boolean;
@@ -36,7 +37,9 @@ type CompanyFormProps = {
 };
 
 const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
-    const [mainImage, setMainImage] = useState<File[]>([]);
+    const [mainImage, setMainImage] = useState<Array<File | string>>(
+        isEdit && initialData?.image ? [initialData.image] : [],
+    );
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -95,9 +98,18 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
             const progressInterval = startSimulatedProgress();
 
             if (isEdit) {
-                if (mainImage.length > 0) {
+                if (mainImage.length > 0 && typeof mainImage[0] !== 'string') {
                     const key = await uploadImageToS3(mainImage[0]);
                     const response = await editCompany({...values, image: key});
+                    setCompany(response);
+                } else if (
+                    mainImage.length > 0 &&
+                    typeof mainImage[0] === 'string'
+                ) {
+                    const response = await editCompany({
+                        ...values,
+                        image: mainImage[0],
+                    });
                     setCompany(response);
                 } else {
                     const response = await editCompany({...values});
@@ -105,7 +117,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                 }
                 await refetchRepresentative();
             } else {
-                if (mainImage.length > 0) {
+                if (mainImage.length > 0 && typeof mainImage[0] !== 'string') {
                     const key = await uploadImageToS3(mainImage[0]);
                     const response = await mutateAsync({...values, image: key});
                     setCompany(response);
@@ -125,6 +137,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                 title: 'Success',
                 description: `Product has been ${isEdit ? 'edited' : 'created'}`,
             });
+            router.refresh()
             router.push(DashboardRoutes.YOUR_COMPANY);
         } catch (error) {
             console.error('Error creating company:', error);
@@ -153,26 +166,25 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
                     <div>
-                        {isEdit && initialData?.image ? (
-                            <img src={initialData.image} alt="company-logo" />
+                        {isEdit && initialData?.image && mainImage.length > 0 ? (
+                            typeof mainImage[0] !== 'string' ? (
+                                <img
+                                    className="w-[250px] h-[250px] object-cover"
+                                    src={getImgBeforeUpload(mainImage[0])}
+                                    onClick={() => setMainImage([])}
+                                />
+                            ) : (
+                                <img
+                                    className="w-[250px] h-[250px] object-cover"
+                                    src={mainImage[0]}
+                                    onClick={() => setMainImage([])}
+                                />
+                            )
                         ) : (
-                            <>
-                                {mainImage.length === 0 && (
-                                    <UploadDropzone
-                                        multiple={false}
-                                        setAcceptedImages={setMainImage}
-                                        className="w-[250px] h-[250px]"
-                                    />
-                                )}
-
-                                {mainImage.map((item, index) => (
-                                    <img
-                                        key={index}
-                                        className="w-[250px] h-[250px] object-cover"
-                                        src={getImgBeforeUpload(item)}
-                                    />
-                                ))}
-                            </>
+                            <AddImage
+                                multiple={false}
+                                onAcceptedImage={setMainImage}
+                            />
                         )}
                     </div>
 

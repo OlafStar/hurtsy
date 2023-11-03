@@ -21,12 +21,15 @@ import UploadDropzone from '../UploadDropzone';
 import {useState} from 'react';
 import {useUploadS3} from '~hooks/useUploadS3';
 import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
+import AddImage from '~components/atoms/AddImage';
+import { useRouter } from 'next/navigation';
 
 const RepresentativeForm = () => {
     const {toast} = useToast();
-    const [mainImage, setMainImage] = useState<File[]>([]);
+    const [mainImage, setMainImage] = useState<Array<File | string>>([]);
     const {uploadImageToS3} = useUploadS3();
     const {refetch} = useUserCompanyRepresentatives();
+    const router = useRouter()
 
     const form = useForm<z.infer<typeof representativeFormSchema>>({
         resolver: zodResolver(representativeFormSchema),
@@ -41,15 +44,22 @@ const RepresentativeForm = () => {
 
     async function onSubmit(values: z.infer<typeof representativeFormSchema>) {
         try {
-            const key = await uploadImageToS3(mainImage[0]);
-            const submitValues = {...values, image: key};
-            const response = await mutateAsync(submitValues);
+            if (typeof mainImage[0] !== 'string') {
+                const key = await uploadImageToS3(mainImage[0]);
+                const submitValues = {...values, image: key};
+                await mutateAsync(submitValues);
+            } else {
+                const submitValues = {...values, image: mainImage[0]};
+                await mutateAsync(submitValues);
+            }
             await refetch();
             toast({
                 title: 'Success',
                 description: 'Representative has been created',
             });
             form.reset();
+            setMainImage([]);
+            router.refresh();
         } catch (error) {
             console.error('Error creating representative:', error);
         }
@@ -60,21 +70,26 @@ const RepresentativeForm = () => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
                     <div>
-                        {mainImage.length === 0 && (
-                            <UploadDropzone
+                        {mainImage.length > 0 ? (
+                            typeof mainImage[0] !== 'string' ? (
+                                <img
+                                    className="w-[250px] h-[250px] object-cover"
+                                    src={getImgBeforeUpload(mainImage[0])}
+                                    onClick={() => setMainImage([])}
+                                />
+                            ) : (
+                                <img
+                                    className="w-[250px] h-[250px] object-cover"
+                                    src={mainImage[0]}
+                                    onClick={() => setMainImage([])}
+                                />
+                            )
+                        ) : (
+                            <AddImage
                                 multiple={false}
-                                setAcceptedImages={setMainImage}
-                                className="w-[250px] h-[250px]"
+                                onAcceptedImage={setMainImage}
                             />
                         )}
-
-                        {mainImage.map((item, index) => (
-                            <img
-                                key={index}
-                                className="w-[250px] h-[250px] object-cover"
-                                src={getImgBeforeUpload(item)}
-                            />
-                        ))}
                     </div>
                     <FormField
                         control={form.control}
