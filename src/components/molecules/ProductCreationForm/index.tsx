@@ -36,10 +36,6 @@ import {
     productFormDefaultValues,
 } from '~config/formDefaultValues';
 import FormFieldArray from '../FormFieldArray';
-import {useBlockNote} from '@blocknote/react';
-import {BlockNoteEditor} from '@blocknote/core';
-import {BlockNoteView} from '@blocknote/react';
-import '@blocknote/core/style.css';
 import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
 import UploadDropzone from '../UploadDropzone';
 import {useUploadS3} from '~hooks/useUploadS3';
@@ -50,6 +46,7 @@ import {useToast} from '~components/ui/use-toast';
 import {DashboardRoutes} from '~types/AppRoutes';
 import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 import {ProductWeb} from '~types/products';
+import Tiptap from '~components/atoms/TipTap';
 
 type ProductCreationFormProps = {isEdit?: boolean; initialData?: ProductWeb};
 
@@ -68,13 +65,6 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
     const {uploadImagesToS3} = useUploadS3();
     const {representatives} = useCompanyRepresentatives(company?.id || '');
     const {refetch} = useUserCompanyProducts();
-
-    const editor: BlockNoteEditor = useBlockNote({
-        initialContent: undefined,
-        onEditorContentChange: (editor) => {
-            setEditorState(JSON.stringify(editor.topLevelBlocks));
-        },
-    });
 
     useEffect(() => {
         form.setValue('description', `${editorState}`);
@@ -452,7 +442,15 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                                     <FormLabel>Product Description</FormLabel>
                                     <FormControl>
                                         <div>
-                                            <BlockNoteView editor={editor} />
+                                            <Tiptap
+                                                description={
+                                                    isEdit &&
+                                                    initialData?.description
+                                                        ? initialData.description
+                                                        : field.name
+                                                }
+                                                onChange={field.onChange}
+                                            />
                                         </div>
                                     </FormControl>
                                 </FormItem>

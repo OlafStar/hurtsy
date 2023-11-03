@@ -60,7 +60,7 @@ enum CompanyType {
 model Product {
   id                String   @id @default(cuid())
   name              String
-  description       String?            // Optional
+  description       String?            @db.Text// Optional
   mainImage         String?            // Optional
   images            Json               // Json type to represent a list of strings
   category          Json   

@@ -16,10 +16,11 @@ const ProductPage = ({
     images,
     representativeId,
     company,
+    description,
 }: ProductWeb) => {
     return (
         <div className="pt-8">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-8">
                 <div className="flex gap-1">
                     <div className="text-xs">{category?.mainCategory}</div>
                     {category?.subCategory.length && (
@@ -55,6 +56,17 @@ const ProductPage = ({
                         />
                     </div>
                 </div>
+                {description && (
+                    <div className="flex flex-col gap-6">
+                        <div className="font-bold text-2xl">{'Opis'}</div>
+                        <div
+                            className="max-w-[887px]"
+                            dangerouslySetInnerHTML={{
+                                __html: description ? description : '',
+                            }}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );
