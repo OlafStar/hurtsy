@@ -24,7 +24,10 @@ const ClearFilterButton: React.FC<ClearFilterButtonProps> = ({
     useEffect(() => {
         if (paramsToDelete === 'all') {
             const hasOtherParams = Array.from(currentSearchParams.keys()).some(
-                (param) => param !== SearchParams.SearchQuery,
+                (param) =>
+                    param !== SearchParams.SearchQuery &&
+                    param !== SearchParams.PageSize &&
+                    param !== SearchParams.PagePagination,
             );
             setShowButton(hasOtherParams);
         } else {
@@ -38,7 +41,10 @@ const ClearFilterButton: React.FC<ClearFilterButtonProps> = ({
     const handleClearFilters = () => {
         if (paramsToDelete === 'all') {
             const allParams = Object.values(SearchParams).filter(
-                (param) => param !== SearchParams.SearchQuery,
+                (param) =>
+                    param !== SearchParams.SearchQuery &&
+                    param !== SearchParams.PageSize &&
+                    param !== SearchParams.PagePagination,
             );
             deleteParam(allParams);
         } else {

@@ -38,4 +38,5 @@ export const getCompaniesFilterSchema = z.object({
     category: z.string().optional(),
     subCategory: z.string().optional(),
     companyType: z.array(z.string()).optional(),
+    pagination: z.object({page: z.number(), pageSize: z.number()}),
 });

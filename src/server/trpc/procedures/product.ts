@@ -234,8 +234,15 @@ export const productProcedures = {
                 });
             }
 
-            const {search, subCategory, category, companyType, deliveryPrice, companyId} =
-                validatedInput.data;
+            const {
+                search,
+                subCategory,
+                category,
+                companyType,
+                deliveryPrice,
+                companyId,
+                pagination: {page, pageSize},
+            } = validatedInput.data;
 
             // Initialize the AND array to hold all AND conditions
             whereClause.AND = [];
@@ -280,7 +287,7 @@ export const productProcedures = {
                 whereClause.AND.push({
                     company: {
                         type: {
-                            in: companyType, 
+                            in: companyType,
                         },
                     },
                 });
@@ -290,7 +297,7 @@ export const productProcedures = {
                 whereClause.AND.push({
                     company: {
                         id: {
-                            equals: companyId, 
+                            equals: companyId,
                         },
                     },
                 });
@@ -300,11 +307,29 @@ export const productProcedures = {
                 delete whereClause.AND;
             }
 
-            return await prismadb.product.findMany({
+            const skip = (page - 1) * pageSize;
+
+            const totalProduct = await prismadb.product.count({
+                where: whereClause,
+            });
+
+            const products = await prismadb.product.findMany({
                 where: whereClause,
                 include: {
                     company: true,
                 },
+                skip: skip,
+                take: pageSize,
             });
+
+            const isLastPage = skip + pageSize >= totalProduct;
+
+            return {
+                products,
+                currentPage: page,
+                isLastPage,
+                totalProduct,
+                totalPages: Math.ceil(totalProduct / pageSize),
+            };
         }),
 };

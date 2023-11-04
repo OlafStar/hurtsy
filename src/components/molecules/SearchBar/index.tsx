@@ -64,7 +64,7 @@ const SearchBar = () => {
                     className="bg-mainBlue rounded-none"
                     onClick={() => {
                         router.push(
-                            `/${currentSearch}/?${SearchParams.SearchQuery}=${searchValue}`,
+                            `/${currentSearch}/?${SearchParams.SearchQuery}=${searchValue}&${SearchParams.PagePagination}=1&${SearchParams.PageSize}=10`,
                         );
                     }}
                 >

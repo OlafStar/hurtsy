@@ -55,4 +55,5 @@ export const getProductFilterSchema = z.object({
     price: z.number().optional(),
     companyType: z.array(z.string()).optional(),
     companyId: z.string().optional(),
+    pagination: z.object({page: z.number(), pageSize: z.number()})
 });

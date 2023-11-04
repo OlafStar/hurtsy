@@ -7,7 +7,9 @@ export enum SearchParams {
     DeliveryPrice = 'deliveryPrice',
     CompanyType = 'companyType',
     Price = 'price',
-    CompanyID = 'companyId'
+    CompanyID = 'companyId',
+    PagePagination = 'page',
+    PageSize = 'pageSize',
 }
 
 export type SearchParamsType = {

@@ -1,5 +1,6 @@
 import React from 'react';
 import Filters from '~components/molecules/Filters';
+import Pagination from '~components/molecules/Pagination';
 import ProductCard from '~components/molecules/ProductCard';
 import ProductsCompanySwitch from '~components/molecules/ProductsCompanySwitch';
 import PromotedProducts from '~components/molecules/PromotedProducts';
@@ -13,19 +14,28 @@ type ProductsPageProps = {
 };
 
 const ProductsPage = async ({searchParams}: ProductsPageProps) => {
-    const data = await serverClient.getProducts({
-        search: searchParams?.search_query as string,
-        category: searchParams?.category as string,
-        subCategory: searchParams?.subCategory as string,
-        deliveryPrice: searchParams?.deliveryPrice
-            ? parseFloat(searchParams?.deliveryPrice as string)
-            : undefined,
-        companyType:
-            typeof searchParams?.companyType === 'string'
-                ? [searchParams?.companyType]
-                : searchParams?.companyType,
-        companyId: searchParams?.companyId as string,
-    });
+    const {products, currentPage, isLastPage, totalProduct, totalPages} =
+        await serverClient.getProducts({
+            search: searchParams?.search_query as string,
+            category: searchParams?.category as string,
+            subCategory: searchParams?.subCategory as string,
+            deliveryPrice: searchParams?.deliveryPrice
+                ? parseFloat(searchParams?.deliveryPrice as string)
+                : undefined,
+            companyType:
+                typeof searchParams?.companyType === 'string'
+                    ? [searchParams?.companyType]
+                    : searchParams?.companyType,
+            companyId: searchParams?.companyId as string,
+            pagination: {
+                page: searchParams?.page
+                    ? parseInt(searchParams?.page as string)
+                    : 1,
+                pageSize: searchParams?.pageSize
+                    ? parseInt(searchParams?.pageSize as string)
+                    : 10,
+            },
+        });
 
     const filters = {
         price: searchParams?.price
@@ -36,22 +46,35 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
             : undefined,
     };
     return (
-        <div className="flex pt-8">
-            <Filters params={searchParams} />
-            <div className="flex flex-col align-end flex-1 px-4 gap-5">
-                <ProductsCompanySwitch />
-                <div className="flex flex-col gap-6">
-                    {filterProducts(data, filters).map((item, index) => (
-                        <React.Fragment key={index}>
-                            <ProductCard {...(item as ProductWeb)} />
-                            {data.length - 1 > index && (
-                                <div className="w-full h-[1px] bg-black opacity-10" />
-                            )}
-                        </React.Fragment>
-                    ))}
+        <div className="flex flex-col gap-8">
+            <div className="flex pt-8">
+                <Filters params={searchParams} />
+                <div className="flex flex-col align-end flex-1 px-4 gap-5">
+                    <ProductsCompanySwitch />
+                    <div className="flex flex-col gap-6">
+                        {filterProducts(products, filters).map((item, index) => (
+                            <React.Fragment key={index}>
+                                <ProductCard {...(item as ProductWeb)} />
+                                {products.length - 1 > index && (
+                                    <div className="w-full h-[1px] bg-black opacity-10" />
+                                )}
+                            </React.Fragment>
+                        ))}
+                    </div>
                 </div>
+                {/* <PromotedProducts /> */}
             </div>
-            {/* <PromotedProducts /> */}
+            {totalPages > 1 && (
+                <Pagination
+                    {...{
+                        currentPage,
+                        totalPages,
+                        pageSize: searchParams?.pageSize
+                            ? (searchParams?.pageSize as string)
+                            : '10',
+                    }}
+                />
+            )}
         </div>
     );
 };

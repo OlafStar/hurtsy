@@ -229,7 +229,13 @@ export const companyProcedures = {
                 });
             }
 
-            const {search, subCategory, category, companyType} = validatedInput.data;
+            const {
+                search,
+                subCategory,
+                category,
+                companyType,
+                pagination: {page, pageSize},
+            } = validatedInput.data;
 
             // Initialize the AND array to hold all AND conditions
             whereClause.AND = [];
@@ -284,13 +290,31 @@ export const companyProcedures = {
                 delete whereClause.AND;
             }
 
-            return await prismadb.company.findMany({
+            const skip = (page - 1) * pageSize;
+
+            const totalCompanies = await prismadb.company.count({
+                where: whereClause,
+            });
+
+            const companies = await prismadb.company.findMany({
                 where: whereClause,
                 include: {
                     products: {
                         take: 3,
                     },
                 },
+                skip: skip,
+                take: pageSize,
             });
+
+            const isLastPage = skip + pageSize >= totalCompanies;
+
+            return {
+                companies,
+                currentPage: page,
+                isLastPage,
+                totalCompanies,
+                totalPages: Math.ceil(totalCompanies / pageSize),
+            };
         }),
 };
