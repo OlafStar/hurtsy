@@ -13,10 +13,11 @@ import {
 } from '~components/ui/command';
 import {Button} from '~components/ui/button';
 import {cn} from '~utils/shadcn';
-import {CheckIcon, DeleteIcon} from 'lucide-react';
+import {CheckIcon, DeleteIcon, XIcon} from 'lucide-react';
 import {useAddSearchParams} from '~hooks/useAddSearchParams';
 import {SearchParams, SearchParamsType} from '~config/searchParams';
 import ClearFilterButton from '~components/atoms/ClearFilterButton';
+import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
 type FilterCategoriesProps = {
     params?: SearchParamsType;
@@ -29,16 +30,23 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
         params?.category ? (params?.category as string) : undefined,
     );
 
-    useEffect(() => {
-        if (selectedCategory) {
-            updateParams({category: selectedCategory}, [SearchParams.SubCategory]);
-        }
-    }, [selectedCategory]);
+    // useEffect(() => {
+    //     if (selectedCategory) {
+    //         updateParams({category: selectedCategory}, [SearchParams.SubCategory]);
+    //     }
+
+    //     console.log(selectedCategory);
+    // }, [selectedCategory, params?.category]);
     return (
         <>
             <div className="flex justify-between text-sm font-bold">
                 <div>{'Kategorie'}</div>
-                <ClearFilterButton paramsToDelete={[SearchParams.Category, SearchParams.SubCategory]}>
+                <ClearFilterButton
+                    paramsToDelete={[
+                        SearchParams.Category,
+                        SearchParams.SubCategory,
+                    ]}
+                >
                     {'Wyczyść'}
                 </ClearFilterButton>
             </div>
@@ -53,8 +61,11 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
                                 !selectedCategory && 'text-muted-foreground',
                             )}
                         >
-                            {selectedCategory || params?.category
-                                ? params?.category
+                            {params?.category
+                                ? translateEnumValueToPolish(
+                                      (params?.category as string) ||
+                                          (selectedCategory as string),
+                                  )
                                 : 'Znajdz kategorie'}
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
@@ -69,20 +80,22 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
                                     <CommandItem
                                         value={cat as string}
                                         key={cat}
-                                        onSelect={() => {
-                                            setSelectedCategory(cat as string);
+                                        onSelect={(e) => {
+                                            updateParams({category: cat}, [
+                                                SearchParams.SubCategory,
+                                            ]);
+                                            setSelectedCategory(cat);
                                         }}
                                     >
                                         <CheckIcon
                                             className={cn(
                                                 'mr-2 h-4 w-4',
-                                                cat === selectedCategory ||
-                                                    cat === params?.category
+                                                cat === params?.category
                                                     ? 'opacity-100'
                                                     : 'opacity-0',
                                             )}
                                         />
-                                        {cat}
+                                        {translateEnumValueToPolish(cat)}
                                     </CommandItem>
                                 ))}
                             </CommandGroup>
@@ -91,6 +104,7 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
                 </Popover>
                 <div className="flex-col flex gap-2">
                     {selectedCategory &&
+                        params?.category &&
                         Object.entries(
                             subCategoryEnums[
                                 selectedCategory.charAt(0).toUpperCase() +
@@ -103,18 +117,21 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
                                     className={`flex text-xs items-center cursor-pointer justify-between ${
                                         params?.subCategory === value && 'font-bold'
                                     }`}
-                                    onClick={() => {
-                                        updateParams({subCategory: value});
-                                    }}
                                 >
-                                    <div>{value}</div>
+                                    <div
+                                        onClick={() => {
+                                            updateParams({subCategory: value});
+                                        }}
+                                    >
+                                        {translateEnumValueToPolish(value)}
+                                    </div>
                                     {value === params?.subCategory && (
                                         <ClearFilterButton
                                             paramsToDelete={[
                                                 SearchParams.SubCategory,
                                             ]}
                                         >
-                                            {'Wyczyść'}
+                                            <XIcon className="w-4 h-4" />
                                         </ClearFilterButton>
                                     )}
                                 </div>

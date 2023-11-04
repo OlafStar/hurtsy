@@ -26,6 +26,8 @@ import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 import {useToast} from '~components/ui/use-toast';
 import {useRouter} from 'next/navigation';
 import {AppRoutes} from '~types/AppRoutes';
+import {parseNumberToCurrency} from '~utils/parseNumberToCurrency';
+import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 export const columns: ColumnDef<ProductWeb>[] = [
     {
         id: 'select',
@@ -65,12 +67,12 @@ export const columns: ColumnDef<ProductWeb>[] = [
             return <DataTableColumnHeader column={column} title="Nazwa" />;
         },
     },
-    {
-        accessorKey: 'description',
-        header: ({column}) => {
-            return <DataTableColumnHeader column={column} title="Opis" />;
-        },
-    },
+    // {
+    //     accessorKey: 'description',
+    //     header: ({column}) => {
+    //         return <DataTableColumnHeader column={column} title="Opis" />;
+    //     },
+    // },
     {
         accessorKey: 'category',
         header: ({column}) => {
@@ -80,10 +82,17 @@ export const columns: ColumnDef<ProductWeb>[] = [
             const categories: CategoryWeb = row.getValue('category');
             return (
                 <div className="flex flex-col gap-1">
-                    <div>{categories.mainCategory}</div>
-                    <div className="flex gap-1">
+                    <div className="font-medium">
+                        {translateEnumValueToPolish(categories.mainCategory)}
+                    </div>
+                    <div className="flex flex-col gap-1">
                         {categories.subCategory.map((item, index) => (
-                            <div key={`${item}-${index}`}>{item}</div>
+                            <div
+                                key={`${item}-${index}`}
+                                className="text-xs whitespace-nowrap text-ellipsis opacity-50"
+                            >
+                                {translateEnumValueToPolish(item)}
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -104,7 +113,12 @@ export const columns: ColumnDef<ProductWeb>[] = [
                             key={index}
                             className="flex flex-col gap-1 flex-shrink-0 flex-nowrap whitespace-nowrap"
                         >
-                            <div>{`Cena: ${item.price}`}</div>
+                            <div className="flex gap-1">
+                                <div>{`Cena: `}</div>
+                                <div className="font-bold">{`${parseNumberToCurrency(
+                                    item.price,
+                                )}`}</div>
+                            </div>
                             <div className="flex gap-1 flex-shrink-0 flex-nowrap whitespace-nowrap">
                                 <div>{`Min szt: ${item.minQuantity}`}</div>
                                 <div>{`Max szt: ${item.maxQuantity}`}</div>
@@ -121,13 +135,11 @@ export const columns: ColumnDef<ProductWeb>[] = [
             return <DataTableColumnHeader column={column} title="Cena dostawy" />;
         },
         cell: ({row}) => {
-            const amount = parseFloat(row.getValue('deliveryPrice'));
-            const formatted = new Intl.NumberFormat('pl-PL', {
-                style: 'currency',
-                currency: 'PLN',
-            }).format(amount);
-
-            return <div className="font-medium">{formatted}</div>;
+            return (
+                <div className="font-medium">
+                    {parseNumberToCurrency(row.getValue('deliveryPrice'))}
+                </div>
+            );
         },
     },
     {
@@ -147,9 +159,9 @@ export const columns: ColumnDef<ProductWeb>[] = [
             return (
                 <div className="flex flex-col gap-3">
                     {customizations?.map((item, index) => (
-                        <div key={index} className="flex  gap-1">
+                        <div key={index} className="flex flex-col gap-1">
                             <div>{`${item.name}`}</div>
-                            <div>{`Min szt: ${item.minQuantity}`}</div>
+                            <div className="text-xs opacity-50">{`Min szt: ${item.minQuantity}`}</div>
                         </div>
                     ))}
                 </div>
@@ -171,11 +183,11 @@ export const columns: ColumnDef<ProductWeb>[] = [
             const customizations: CustomPropertiesWeb[] | undefined =
                 row.getValue('customProperties');
             return (
-                <div className="flex flex-col gap-3">
+                <div className="text-xs flex flex-col gap-1">
                     {customizations?.map((item, index) => (
                         <div key={index} className="flex gap-1">
-                            <div>{`${item.name}`}</div>
-                            <div>{`${item.value}`}</div>
+                            <div>{`${item.name}:`}</div>
+                            <div className='font-medium'>{`${item.value}`}</div>
                         </div>
                     ))}
                 </div>

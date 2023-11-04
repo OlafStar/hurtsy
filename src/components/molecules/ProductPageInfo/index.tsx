@@ -1,5 +1,6 @@
 import {ProductWeb} from '~types/products';
 import ProductImageGallery from '../ProductImageGallery';
+import { parseNumberToCurrency } from '~utils/parseNumberToCurrency';
 
 type ProductPageInfoProp = Omit<
     ProductWeb,
@@ -26,7 +27,7 @@ const ProductPageInfo = ({
                     {prices.map((item, index) => (
                         <div key={index} className="flex flex-col gap-1">
                             <div className="font-bold text-mainBlue">
-                                {item.price}
+                                {parseNumberToCurrency(item.price)}
                             </div>
                             <div className="text-xs opacity-50">{`${item.minQuantity} - ${item.maxQuantity}szt.`}</div>
                         </div>

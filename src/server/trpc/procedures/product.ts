@@ -219,6 +219,9 @@ export const productProcedures = {
             where: {
                 id: validatedInput.data,
             },
+            include: {
+                company: true,
+            },
         });
     }),
     getProducts: publicProcedure
@@ -248,11 +251,16 @@ export const productProcedures = {
             whereClause.AND = [];
 
             // If search is provided, it will check for product name or description
+            let keywords: string[] | undefined = undefined;
+
             if (search) {
-                whereClause.OR = [
-                    {name: {contains: search}},
-                    {description: {contains: search}},
-                ];
+                keywords = search.split(' ');
+                whereClause.OR = keywords
+                    .map((keyword) => [
+                        {name: {contains: keyword}},
+                        {description: {contains: keyword}},
+                    ])
+                    .flat();
             }
 
             // If category is provided, it will filter by main category
@@ -324,8 +332,22 @@ export const productProcedures = {
 
             const isLastPage = skip + pageSize >= totalProduct;
 
+            const sortedProducts = products
+                .map((product) => {
+                    const matchCount = keywords?.reduce((count, keyword) => {
+                        const regex = new RegExp(keyword, 'gi');
+                        return (
+                            count +
+                            ((product.name.match(regex) || []).length +
+                                (product.description!.match(regex) || []).length)
+                        );
+                    }, 0);
+                    return {...product, matchCount};
+                })
+                .sort((a, b) => b.matchCount! - a.matchCount!);
+
             return {
-                products,
+                products: search ? sortedProducts : products,
                 currentPage: page,
                 isLastPage,
                 totalProduct,

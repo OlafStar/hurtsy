@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import {AppRoutes} from '~types/AppRoutes';
 import {ProductWeb} from '~types/products';
+import {getPriceRange} from '~utils/getPriceRange';
 
 const ProductCard = ({
     name,
@@ -9,18 +11,14 @@ const ProductCard = ({
     id,
     company,
 }: ProductWeb) => {
-    const allPrices = prices.map((p) => p.price);
-    const allMinQuantities = prices.map((p) => p.minQuantity);
-
-    const minPrice = Math.min(...allPrices);
-    const maxPrice = Math.max(...allPrices);
-    const lowestMinQuantity = Math.min(...allMinQuantities);
-
-    const priceRange = `${minPrice} - ${maxPrice} zł`;
+    const {priceRange, lowestMinQuantity} = getPriceRange(prices);
     return (
-        <Link href={`/products/${id}`}>
+        <Link href={`${AppRoutes.WEB_PRODUCTS}/${id}`}>
             <div className="flex gap-3 leading-none">
-                <img src={mainImage} className="w-[161px] h-[161px] object-cover" />
+                <img
+                    src={mainImage}
+                    className="w-[161px] aspect-square object-contain"
+                />
                 <div className="w-full flex flex-col gap-3">
                     <div>{name}</div>
                     <div className="flex flex-col">

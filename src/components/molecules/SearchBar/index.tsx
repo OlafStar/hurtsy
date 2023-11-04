@@ -1,6 +1,7 @@
 'use client';
 
 import {SearchIcon} from 'lucide-react';
+import Link from 'next/link';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {useState} from 'react';
 import {
@@ -13,6 +14,7 @@ import {
 import {Button} from '~components/ui/button';
 import {Input} from '~components/ui/input';
 import {SearchParams} from '~config/searchParams';
+import { translateEnumValueToPolish } from '~utils/enumValueTranslations';
 
 enum SearchSelect {
     Products = 'products',
@@ -53,23 +55,18 @@ const SearchBar = () => {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value={SearchSelect.Products}>
-                            {SearchSelect.Products}
+                            {translateEnumValueToPolish(SearchSelect.Products)}
                         </SelectItem>
                         <SelectItem value={SearchSelect.Companies}>
-                            {SearchSelect.Companies}
+                            {translateEnumValueToPolish(SearchSelect.Companies)}
                         </SelectItem>
                     </SelectContent>
                 </Select>
-                <Button
-                    className="bg-mainBlue rounded-none"
-                    onClick={() => {
-                        router.push(
-                            `/${currentSearch}/?${SearchParams.SearchQuery}=${searchValue}&${SearchParams.PagePagination}=1&${SearchParams.PageSize}=10`,
-                        );
-                    }}
+                <Link
+                    href={`/${currentSearch}/?${SearchParams.SearchQuery}=${searchValue}&${SearchParams.PagePagination}=1&${SearchParams.PageSize}=10`}
                 >
-                    {'Szukaj'}
-                </Button>
+                    <Button className="bg-mainBlue rounded-none">{'Szukaj'}</Button>
+                </Link>
             </div>
         </div>
     );

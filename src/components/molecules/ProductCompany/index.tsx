@@ -1,6 +1,7 @@
 import {serverClient} from '~server/trpc/serverClient';
 import ServerRepresentative from '../Representative/ServerRepresentative';
 import {CompanyTypeWeb} from '~types/company';
+import {Button} from '~components/ui/button';
 
 type ProductCompanyProps = {
     company: CompanyTypeWeb;
@@ -14,10 +15,9 @@ const ProductCompany = async ({company, representativeId}: ProductCompanyProps) 
             {company && (
                 <div className="flex flex-col gap-3">
                     <div className="flex gap-2">
-                        {/* <img src={company.image}/> */}
                         <img
                             src={company.image || ''}
-                            className="w-[72px] h-[72px] bg-cyan-200 object-contain"
+                            className="w-[72px] h-[72px] object-contain"
                         />
                         <div className="flex flex-col gap-3">
                             <div className="text-sm">{company.name}</div>
@@ -30,8 +30,10 @@ const ProductCompany = async ({company, representativeId}: ProductCompanyProps) 
                             </div>
                         </div>
                     </div>
+                    <Button>{'Kontakt'}</Button>
                 </div>
             )}
+
             {representative && <ServerRepresentative {...representative} />}
         </div>
     );

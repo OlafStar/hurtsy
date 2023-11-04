@@ -31,7 +31,7 @@ const ProductImageGallery = ({images}: ProductImageGalleryProps) => {
     };
 
     return (
-        <div className="w-[282px]">
+        <div className="w-[282px] flex flex-col gap-4">
             <div className="w-[282px] h-[282px]">
                 <img
                     src={images[currentDisplayedImage]}
@@ -45,15 +45,6 @@ const ProductImageGallery = ({images}: ProductImageGalleryProps) => {
                     onClick={handlePrevious}
                 />
                 <div className="flex gap-1 flex-1 justify-center overflow-hidden">
-                    {images.map((image, index) => (
-                        <img
-                            key={index}
-                            src={image}
-                            alt={`Product ${index + 1}`}
-                            className="w-[32px] h-[32px] cursor-pointer"
-                            onClick={() => handleImageClick(index)}
-                        />
-                    ))}
                     {images.map((image, index) => (
                         <img
                             key={index}
