@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import {Button} from '~components/ui/button';
 import Logo from '~components/atoms/Logo';
 import SearchBar from '../SearchBar';
+import Account from '../Account';
 
 const SiteNavigation = () => {
     return (
@@ -9,19 +9,7 @@ const SiteNavigation = () => {
             <div className="flex justify-between items-center">
                 <Logo />
                 <SearchBar />
-                <div className="flex gap-4">
-                    <Link href="/login">
-                        <Button
-                            variant="outline"
-                            className="border-[#000000] rounded-full"
-                        >
-                            {'Zaloguj'}
-                        </Button>
-                    </Link>
-                    <Link href="/register">
-                        <Button className="rounded-full">{'Dodaj firme'}</Button>
-                    </Link>
-                </div>
+                <Account />
             </div>
             <div className="w-full bg-black h-[1px] opacity-50" />
             <div className="flex justify-between items-center gap-4">

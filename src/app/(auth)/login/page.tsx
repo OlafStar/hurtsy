@@ -17,6 +17,7 @@ const RegisterPage = () => {
         });
 
         if (response?.ok) {
+            router.refresh()
             router.push(`/dashboard`);
         }
     };

@@ -1,16 +1,26 @@
 'use client';
 
 import {signOut} from 'next-auth/react';
+import {useRouter} from 'next/navigation';
+import {PropsWithChildren} from 'react';
+import {cn} from '~utils/shadcn';
 
-const LogOutButton = () => {
+const LogOutButton = ({
+    children,
+    className,
+}: PropsWithChildren & {className?: string}) => {
+    const router = useRouter();
     return (
         <button
             onClick={() => {
                 signOut();
+                router.refresh();
             }}
-            className="h-10 bg-[#3360FF] rounded-full text-sm text-white"
+            className={`${
+                !children && 'h-10 bg-[#3360FF] rounded-full text-sm text-white'
+            } ${className && cn(className)}`}
         >
-            Log out
+            {children ? children : 'Wyloguj'}
         </button>
     );
 };
