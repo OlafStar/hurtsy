@@ -3,29 +3,29 @@
 import Dropzone from 'react-dropzone';
 import {Dispatch, SetStateAction} from 'react';
 import DropzoneField from '~components/atoms/DropzoneField';
+import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
+import { useDescriptionImageContext } from '../TipTap';
 
 type UploadDropzoneProps = {
-    multiple: boolean;
-    setAcceptedImages: Dispatch<SetStateAction<(string | File)[]>>;
-    files?: Array<string | File>;
+    addImage: (url: string) => void;
     className?: string;
 };
 
-const UploadDropzone = ({
-    multiple,
-    setAcceptedImages,
-    files,
+const TipTapUpload = ({
+    addImage,
     className,
 }: UploadDropzoneProps) => {
+    const {descriptionImages, setDescriptionImages} = useDescriptionImageContext()
     return (
         <Dropzone
-            multiple={multiple}
+            multiple={false}
             onDrop={async (acceptedFile) => {
-                setAcceptedImages(
-                    multiple && files && files?.length > 0
-                        ? [...files, ...acceptedFile]
+                setDescriptionImages(
+                    descriptionImages && descriptionImages?.length > 0
+                        ? [...descriptionImages, ...acceptedFile]
                         : [...acceptedFile],
                 );
+                addImage(getImgBeforeUpload(acceptedFile[0]));
             }}
         >
             {({getRootProps, getInputProps, acceptedFiles}) => (
@@ -39,4 +39,4 @@ const UploadDropzone = ({
     );
 };
 
-export default UploadDropzone;
+export default TipTapUpload;

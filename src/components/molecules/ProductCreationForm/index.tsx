@@ -55,13 +55,13 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
     const [selectedMainCategory, setSelectedMainCategory] = useState(
         initialData ? (initialData.category?.mainCategory as string) : '',
     );
-    const [editorState, setEditorState] = useState('');
     const [mainImage, setMainImage] = useState<Array<File | string>>(
         isEdit && initialData?.mainImage ? [initialData.mainImage] : [],
     );
     const [images, setImages] = useState<Array<File | string>>(
         isEdit && initialData?.images ? initialData.images : [],
     );
+    const [descriptionImages, setDescriptionImages] = useState<Array<File>>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -70,10 +70,6 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
     const {uploadImagesToS3} = useUploadS3();
     const {representatives} = useCompanyRepresentatives(company?.id || '');
     const {refetch} = useUserCompanyProducts();
-
-    useEffect(() => {
-        form.setValue('description', `${editorState}`);
-    }, [editorState]);
 
     const router = useRouter();
     const {toast} = useToast();
@@ -115,6 +111,39 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                 (element) => element.name === company.name,
             );
 
+            let updatedDesc: string | undefined = undefined;
+            if (descriptionImages.length > 0 && values.description) {
+                const keys = await uploadImagesToS3(descriptionImages);
+                const blobUrlRegex =
+                    /<img [^>]*src=["'](blob:http:\/\/localhost:3000\/[^"']*)["']/g;
+                let localUrls = [];
+                let match;
+
+                // Use a loop to extract all matches
+                while ((match = blobUrlRegex.exec(values.description)) !== null) {
+                    // The actual blob URL is captured in the full match
+                    localUrls.push(match[1]);
+                }
+
+                console.log(localUrls);
+
+                console.log(keys);
+                console.log(localUrls);
+                console.log(values.description);
+
+                let updatedDescription = values.description;
+
+                localUrls.forEach((localUrl, index) => {
+                    const key = keys[index];
+                    updatedDescription = updatedDescription.replace(
+                        new RegExp(localUrl, 'g'),
+                        key,
+                    );
+                });
+                console.log(updatedDescription);
+                updatedDesc = updatedDescription;
+            }
+
             if (isEdit && initialData) {
                 if ([...mainImage, ...images].length > 0) {
                     const keys = await uploadImagesToS3([mainImage[0], ...images]);
@@ -125,6 +154,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                         mainImage: keys[0],
                         images: keys.slice(1),
                         id: initialData.id,
+                        description: updatedDesc ? updatedDesc : values.description,
                     };
                     await editProduct(submitValues);
                 } else {
@@ -133,6 +163,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                         ...values,
                         representativeId: companyRepresentative?.id || '',
                         id: initialData.id,
+                        description: updatedDesc ? updatedDesc : values.description,
                     };
                     await editProduct(submitValues);
                 }
@@ -145,6 +176,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                         representativeId: companyRepresentative?.id || '',
                         mainImage: keys[0],
                         images: keys.slice(1),
+                        description: updatedDesc ? updatedDesc : values.description,
                     };
 
                     await mutateAsync(submitValues);
@@ -153,6 +185,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                         companyId: company?.id || '',
                         ...values,
                         representativeId: companyRepresentative?.id || '',
+                        description: updatedDesc ? updatedDesc : values.description,
                     };
                     await mutateAsync(submitValues);
                 }
@@ -357,9 +390,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                         />
                         <div className="flex gap-4 h-[250px]">
                             <div>
-                                {isEdit &&
-                                initialData?.mainImage &&
-                                mainImage.length > 0 ? (
+                                {mainImage.length > 0 ? (
                                     typeof mainImage[0] !== 'string' ? (
                                         <img
                                             className="w-[250px] h-[250px] object-cover"
@@ -479,13 +510,17 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                                     <FormControl>
                                         <div>
                                             <Tiptap
-                                                description={
+                                                content={
                                                     isEdit &&
                                                     initialData?.description
                                                         ? initialData.description
                                                         : field.name
                                                 }
                                                 onChange={field.onChange}
+                                                {...{
+                                                    descriptionImages,
+                                                    setDescriptionImages,
+                                                }}
                                             />
                                         </div>
                                     </FormControl>

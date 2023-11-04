@@ -31,6 +31,9 @@ export const imagesProcedures = {
                 where: {
                     userId: ctx.user.id,
                 },
+                orderBy: {
+                    createdAt: 'desc', // Assuming 'createdAt' is the timestamp field for when the images were added
+                },
                 skip: skip,
                 take: pageSize,
             });
