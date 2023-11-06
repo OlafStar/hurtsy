@@ -1,24 +1,15 @@
-'use client';
-
 import CompanyDashboardProfile from '~components/molecules/CompanyDashboardProfile';
 import CompanyEmptyState from '~components/molecules/CompanyEmptyState';
-import {useUserCompany} from '~hooks/useUserCompany';
+import {serverClient} from '~server/trpc/serverClient';
+import {CompanyTypeWeb} from '~types/company';
 
-const YourCompany = () => {
-    const {company, isLoading} = useUserCompany();
+const YourCompany = async () => {
+    const company = await serverClient.getUserCompany();
 
-    return (
-        <>
-            {!isLoading ? (
-                company ? (
-                    <div className="p-4 grid grid-cols-2 gap-4">
-                        <CompanyDashboardProfile company={company} />
-                    </div>
-                ) : (
-                    <CompanyEmptyState />
-                )
-            ) : null}
-        </>
+    return company ? (
+        <CompanyDashboardProfile company={company as CompanyTypeWeb} />
+    ) : (
+        <CompanyEmptyState />
     );
 };
 

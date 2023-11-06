@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
+import {Button} from '~components/ui/button';
+import {getCurrentUser} from '~lib/session';
 import {AppRoutes} from '~types/AppRoutes';
 import {CompanyTypeWeb} from '~types/company';
 
@@ -7,64 +9,91 @@ type CompanyDashboardProfileProps = {
     company: CompanyTypeWeb;
 };
 
-const CompanyDashboardProfile = ({company}: CompanyDashboardProfileProps) => {
+const CompanyDashboardProfile = async ({company}: CompanyDashboardProfileProps) => {
+    const user = await getCurrentUser();
     return (
-        <div className="w-full max-w-xl mx-auto">
-            <div className="p-6 bg-white rounded-xl">
-                <div className="flex justify-between">
+        <div className="p-4 flex flex-col gap-6 max-w-[800px]">
+            <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-1">
+                    <div className="text-xl font-bold">{'Profil firmy'}</div>
+                    <div className="text-sm opacity-50">
+                        {
+                            'Informacje które zobaczą inni widząc twoje produkty lub profil.'
+                        }
+                    </div>
+                </div>
+                <div className="flex gap-4">
+                    <Link href={AppRoutes.EDIT_COMPANY}>
+                        <Button variant="outline" className="whitespace-nowrap">
+                            {'Zobacz profil'}
+                        </Button>
+                    </Link>
+                    <Link href={AppRoutes.EDIT_COMPANY}>
+                        <Button className="bg-mainBlue">{'Edytuj'}</Button>
+                    </Link>
+                </div>
+            </div>
+            <div className="w-full h-[1px] bg-black opacity-10" />
+
+            <div className="flex flex-col gap-6">
+                <div className="grid grid-cols-2 items-center">
                     <img
                         src={company.image || ''}
                         alt={'company-logo'}
-                        className="w-40 h-40 bg-cyan-200 mb-4 object-contain"
+                        className="w-64 h-64 object-contain rounded-sm"
                     />
-                    <div className="space-y-1">
-                        <Link href={AppRoutes.EDIT_COMPANY}>Edytuj</Link>
+                </div>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <div className="font-medium text-sm">{'Nazwa firmy'}</div>
+                    </div>
+                    <div className="">{company.name}</div>
+                </div>
+                <div className="w-full h-[1px] bg-black opacity-10" />
+                <div className="flex justify-between items-center">
+                    <div>
+                        <div className="font-medium text-sm">
+                            {'Typ działalności'}
+                        </div>
+                    </div>
+                    <div className="">{company.type}</div>
+                </div>
+                <div className="w-full h-[1px] bg-black opacity-10" />
+                <div className="flex justify-between items-center">
+                    <div>
+                        <div className="font-medium text-sm">{'Adres'}</div>
+                        <div className="text-xs opacity-50">
+                            {'Miejsce w którym działa twoja firma'}
+                        </div>
+                    </div>
+                    <div className="">{`${company.street}, ${company.postCode} ${company.city}`}</div>
+                </div>
+                <div className="w-full h-[1px] bg-black opacity-10" />
+                <div className="flex flex-col gap-2">
+                    <div className="flex justify-between">
+                        <div>
+                            <div className="font-medium text-sm">
+                                {'Dane kontaktowe'}
+                            </div>
+                            <div className="text-xs opacity-50">
+                                {'Sposób kontaktu z twoją firmą'}
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 grid-rows-2 col-gap-4 items-center">
+                            <div className="text-xs font-medium">{'Email:'}</div>
+                            <div className="">{user?.email}</div>
+                            <div className="text-xs font-medium">{'Telefon:'}</div>
+                            <div className="">{company.phone}</div>
+                        </div>
                     </div>
                 </div>
-                <h2 className="text-3xl font-semibold mb-8">{company.name}</h2>
-                <ul className="space-y-6 text-gray-800">
-                    <li className="flex justify-between items-center">
-                        <strong className="text-lg font-semibold">City</strong>
-                        <span>{company.city}</span>
-                    </li>
-                    <li className="flex justify-between items-center">
-                        <strong className="text-lg font-semibold">
-                            Phone Number
-                        </strong>
-                        <span>{company.phone}</span>
-                    </li>
-                    <li className="flex justify-between items-center">
-                        <strong className="text-lg font-semibold">Website</strong>
-                        <a
-                            href={company.website || ''}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline"
-                        >
-                            {company.website}
-                        </a>
-                    </li>
-                    <li className="flex justify-between items-center">
-                        <strong className="text-lg font-semibold">Address</strong>
-                        <span>{company.street}</span>
-                    </li>
-                    <li className="flex justify-between items-center">
-                        <strong className="text-lg font-semibold">
-                            Postal Code
-                        </strong>
-                        <span>{company.postCode}</span>
-                    </li>
-                    <li className="flex justify-between items-center">
-                        <strong className="text-lg font-semibold">Country</strong>
-                        <span>{company.country}</span>
-                    </li>
-                    <li className="flex justify-between items-center">
-                        <strong className="text-lg font-semibold">
-                            Established
-                        </strong>
-                        <span>{company.establishment}</span>
-                    </li>
-                </ul>
+                <div className="w-full h-[1px] bg-black opacity-10" />
+                <div className="flex justify-between items-center">
+                    <div>
+                        <div className="font-medium text-sm">{'Rok załoeżenia'}</div>
+                    </div>
+                    <div className="">{company.establishment}</div>
+                </div>
             </div>
         </div>
     );
