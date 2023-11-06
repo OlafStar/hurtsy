@@ -14,7 +14,7 @@ import {
 import {Button} from '~components/ui/button';
 import {Input} from '~components/ui/input';
 import {SearchParams} from '~config/searchParams';
-import { translateEnumValueToPolish } from '~utils/enumValueTranslations';
+import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
 enum SearchSelect {
     Products = 'products',
@@ -37,7 +37,7 @@ const SearchBar = () => {
                 <Input
                     defaultValue={searchValue.length ? searchValue : undefined}
                     placeholder="Search"
-                    className="p-none outline-none border-none shadow-none focus-visible:ring-0"
+                    className="p-none outline-none border-none shadow-none focus-visible:ring-0 placeholder:font-medium"
                     onChange={(e) => {
                         setSearchValue(e.target.value);
                     }}
@@ -50,7 +50,7 @@ const SearchBar = () => {
                         setCurrentSearch(e as SearchSelect);
                     }}
                 >
-                    <SelectTrigger className="w-[102px] text-xs">
+                    <SelectTrigger className="w-[102px] text-xs font-medium">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

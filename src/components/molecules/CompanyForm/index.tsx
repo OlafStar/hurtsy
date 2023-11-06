@@ -18,7 +18,6 @@ import {companyCreationSchema} from '~validations/company';
 import {trpc} from '~app/_trpc/client';
 import {useRouter} from 'next/navigation';
 import {DashboardRoutes} from '~types/AppRoutes';
-import {useCompanyContext} from '~context/CompanyContext';
 import {CompanyTypeWeb} from '~types/company';
 import UploadDropzone from '../UploadDropzone';
 import {useState} from 'react';
@@ -45,7 +44,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
     const [uploadProgress, setUploadProgress] = useState<number>(0);
 
     const {refetch: refetchRepresentative} = useUserCompanyRepresentatives();
-    const {setCompany} = useCompanyContext();
     const {uploadImageToS3} = useUploadS3();
     const router = useRouter();
     const {toast} = useToast();
@@ -100,30 +98,25 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
             if (isEdit) {
                 if (mainImage.length > 0 && typeof mainImage[0] !== 'string') {
                     const key = await uploadImageToS3(mainImage[0]);
-                    const response = await editCompany({...values, image: key});
-                    setCompany(response);
+                    await editCompany({...values, image: key});
                 } else if (
                     mainImage.length > 0 &&
                     typeof mainImage[0] === 'string'
                 ) {
-                    const response = await editCompany({
+                    await editCompany({
                         ...values,
                         image: mainImage[0],
                     });
-                    setCompany(response);
                 } else {
-                    const response = await editCompany({...values});
-                    setCompany(response);
+                    await editCompany({...values});
                 }
                 await refetchRepresentative();
             } else {
                 if (mainImage.length > 0 && typeof mainImage[0] !== 'string') {
                     const key = await uploadImageToS3(mainImage[0]);
-                    const response = await mutateAsync({...values, image: key});
-                    setCompany(response);
+                    await mutateAsync({...values, image: key});
                 } else {
-                    const response = await mutateAsync({...values});
-                    setCompany(response);
+                    await mutateAsync({...values});
                 }
             }
 
@@ -137,7 +130,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                 title: 'Success',
                 description: `Product has been ${isEdit ? 'edited' : 'created'}`,
             });
-            router.refresh()
+            router.refresh();
             router.push(DashboardRoutes.YOUR_COMPANY);
         } catch (error) {
             console.error('Error creating company:', error);

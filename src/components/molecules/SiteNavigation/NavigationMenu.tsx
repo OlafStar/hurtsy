@@ -16,7 +16,7 @@ import {Category} from '~types/categories';
 import Link from 'next/link';
 import {AppRoutes} from '~types/AppRoutes';
 import {SearchParams} from '~config/searchParams';
-import { translateEnumValueToPolish } from '~utils/enumValueTranslations';
+import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
 const components: {title: string; href: string; description: string}[] = [
     {
@@ -57,7 +57,7 @@ const components: {title: string; href: string; description: string}[] = [
 
 export function NavigationMenuDemo() {
     return (
-        <NavigationMenu>
+        <NavigationMenu skipDelayDuration={0}>
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <NavigationMenuTrigger>Kategorie</NavigationMenuTrigger>

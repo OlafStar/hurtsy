@@ -17,9 +17,7 @@ const YourCompany = () => {
                 ) : (
                     <CompanyEmptyState />
                 )
-            ) : (
-                <div>{'Loading'}</div>
-            )}
+            ) : null}
         </>
     );
 };

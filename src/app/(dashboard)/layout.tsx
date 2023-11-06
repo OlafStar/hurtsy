@@ -1,7 +1,8 @@
 import {redirect} from 'next/navigation';
+import {Suspense} from 'react';
+import Loader from '~components/atoms/Loader';
 import DashboardNavigation from '~components/molecules/DashboardNavigation';
-import { Toaster } from '~components/ui/toaster';
-import { CompanyProvider } from '~context/CompanyContext';
+import {Toaster} from '~components/ui/toaster';
 import {getCurrentUser} from '~lib/session';
 
 interface DashboardLayoutLayoutProps {
@@ -18,7 +19,7 @@ export default async function DashboardLayoutLayout({
     }
 
     return (
-        <CompanyProvider>
+        <>
             <div className="flex min-h-screen max-h-screen flex-col space-y-6 overflow-hidden">
                 <div className="grid flex-1 md:grid-cols-[auto_1fr] h-full overflow-hidden">
                     <DashboardNavigation />
@@ -28,6 +29,6 @@ export default async function DashboardLayoutLayout({
                 </div>
             </div>
             <Toaster />
-        </CompanyProvider>
+        </>
     );
 }

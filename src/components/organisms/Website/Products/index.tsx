@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {Suspense} from 'react';
+import Loader from '~components/atoms/Loader';
 import Filters from '~components/molecules/Filters';
 import Pagination from '~components/molecules/Pagination';
 import ProductCard from '~components/molecules/ProductCard';
@@ -46,7 +47,7 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
             : undefined,
     };
     return (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 min-h-[100%]">
             <div className="flex pt-8">
                 <Filters params={searchParams} />
                 <div className="flex flex-col align-end flex-1 px-4 gap-5">
