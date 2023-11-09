@@ -2,14 +2,18 @@ import {serverClient} from '~server/trpc/serverClient';
 import ServerRepresentative from '../Representative/ServerRepresentative';
 import {CompanyTypeWeb} from '~types/company';
 import {Button} from '~components/ui/button';
+import {ProductWeb} from '~types/products';
+import ProductContact from '~components/atoms/ProductContact';
 
 type ProductCompanyProps = {
-    company: CompanyTypeWeb;
+    product: ProductWeb;
     representativeId: string;
 };
 
-const ProductCompany = async ({company, representativeId}: ProductCompanyProps) => {
+const ProductCompany = async ({product, representativeId}: ProductCompanyProps) => {
     const representative = await serverClient.getRepresentative(representativeId);
+
+    const {company} = product;
     return (
         <div className="flex flex-col gap-8">
             {company && (
@@ -30,7 +34,7 @@ const ProductCompany = async ({company, representativeId}: ProductCompanyProps) 
                             </div>
                         </div>
                     </div>
-                    <Button>{'Kontakt'}</Button>
+                    <ProductContact {...product}/>
                 </div>
             )}
 

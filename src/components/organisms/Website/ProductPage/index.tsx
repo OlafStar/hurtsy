@@ -6,19 +6,20 @@ import {CompanyTypeWeb} from '~types/company';
 import {ProductWeb} from '~types/products';
 import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
-const ProductPage = ({
-    name,
-    mainImage,
-    category,
-    prices,
-    customProperties,
-    deliveryPrice,
-    customizations,
-    images,
-    representativeId,
-    company,
-    description,
-}: ProductWeb) => {
+const ProductPage = (props: ProductWeb) => {
+    const {
+        name,
+        mainImage,
+        category,
+        prices,
+        customProperties,
+        deliveryPrice,
+        customizations,
+        images,
+        representativeId,
+        company,
+        description,
+    } = props;
     return (
         <div className="pt-8">
             <div className="flex flex-col gap-8 ">
@@ -60,7 +61,7 @@ const ProductPage = ({
                     </div>
                     <div className="flex-1 max-w-[270px]">
                         <ProductCompany
-                            company={company as CompanyTypeWeb}
+                            product={props}
                             representativeId={representativeId}
                         />
                     </div>

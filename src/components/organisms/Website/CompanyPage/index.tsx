@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import CategoriesButton from '~components/atoms/CategoriesButton';
 import ClearFilterButton from '~components/atoms/ClearFilterButton';
+import Loader from '~components/atoms/Loader';
 import CompanyPageHeader from '~components/molecules/CompanyPageHeader';
 import CompanyProductCard from '~components/molecules/CompanyProductCard';
 import Pagination from '~components/molecules/Pagination';
@@ -51,15 +52,8 @@ const CompanyPage: React.FC<
                                 />
                             </div>
                         </div>
-                        <div className="flex gap-16">
-                            <div className="flex flex-col gap-4">
-                                <ClearFilterButton
-                                    paramsToDelete={'all'}
-                                    buttonProps={{variant: 'link'}}
-                                    className="w-fit p-0 self-end"
-                                >
-                                    {'Usuń filtry'}
-                                </ClearFilterButton>
+                        <div className="grid grid-cols-[max-content_1fr] gap-x-8">
+                            <div className="flex flex-col gap-4 min-w-[184px]">
                                 {categories.map((item) => (
                                     <CategoriesButton
                                         key={item.mainCategory}
@@ -67,14 +61,16 @@ const CompanyPage: React.FC<
                                     />
                                 ))}
                             </div>
-                            <div className="flex flex-wrap gap-6 ">
-                                {products.map((item, index) => (
-                                    <CompanyProductCard
-                                        key={index}
-                                        {...(item as ProductWeb)}
-                                    />
-                                ))}
-                            </div>
+                            <Suspense fallback={<Loader />}>
+                                <div className="flex flex-wrap gap-6 justify-around">
+                                    {products.map((item, index) => (
+                                        <CompanyProductCard
+                                            key={index}
+                                            {...(item as ProductWeb)}
+                                        />
+                                    ))}
+                                </div>
+                            </Suspense>
                         </div>
                     </div>
                 </div>
