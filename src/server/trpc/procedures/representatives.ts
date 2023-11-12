@@ -8,6 +8,7 @@ import {TRPCError} from '@trpc/server';
 import prismadb from '~lib/prismadb';
 import {z} from 'zod';
 import {getUserCompany} from '../utils/getUserCompany';
+import { PLANS } from '~config/stripe';
 
 export const representativesProcedures = {
     getRepresentative: publicProcedure.input(z.string()).query(async ({input}) => {
@@ -50,24 +51,61 @@ export const representativesProcedures = {
             },
         });
     }),
+    getUserRepresentativesCount: privateProcedure.query(async ({ctx}) => {
+        const company = await getUserCompany(ctx);
+
+        if (!company) {
+            return {
+                current: 0,
+                max: PLANS[0].availableRepresentatives,
+            };
+        }
+
+        const counter = await prismadb.representative.count({
+            where: {
+                companyId: company.id,
+            },
+        });
+
+        return {
+            current: counter,
+            max: ctx.subscriptionPlan.availableRepresentatives,
+        };
+    }),
     createRepresentatives: privateProcedure
         .input(representativeFormSchema)
         .mutation(async ({input, ctx}) => {
             // Validate input
-            const validatedInput = representativeFormSchema.safeParse(input);
-            if (!validatedInput.success) {
-                throw new TRPCError({
-                    code: 'BAD_REQUEST',
-                    message: validatedInput.error.message,
-                });
-            }
-
             const company = await getUserCompany(ctx);
 
             if (!company) {
                 throw new TRPCError({
                     code: 'BAD_REQUEST',
                     message: 'Company dosent exist',
+                });
+            }
+
+            const representativesNumber = await prismadb.representative.count({
+                where: {
+                    companyId: company.id,
+                },
+            });
+
+            if (
+                representativesNumber >=
+                ctx.subscriptionPlan.availableRepresentatives
+            ) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: 'Exceed max number',
+                });
+            }
+
+            const validatedInput = representativeFormSchema.safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
                 });
             }
 

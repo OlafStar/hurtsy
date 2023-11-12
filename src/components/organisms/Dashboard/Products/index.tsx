@@ -4,6 +4,7 @@ import {serverClient} from '~server/trpc/serverClient';
 
 const Products = async () => {
     const initialProducts = await serverClient.getUserCompanyProducts();
+    const initialCounter = await serverClient.getUserProductsCount();
     return (
         <div className="">
             <div className="p-4">
@@ -11,11 +12,12 @@ const Products = async () => {
                     promotedChildren={
                         <ProductsDataTable
                             initialProducts={initialProducts}
+                            initialCounter={initialCounter}
                             isPromoted={true}
                         />
                     }
                 >
-                    <ProductsDataTable initialProducts={initialProducts} />
+                    <ProductsDataTable initialProducts={initialProducts} initialCounter={initialCounter} />
                 </ProductTabs>
             </div>
         </div>

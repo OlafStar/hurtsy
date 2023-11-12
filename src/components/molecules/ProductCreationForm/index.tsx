@@ -102,107 +102,137 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
     };
 
     async function onSubmit(values: z.infer<typeof productFormSchema>) {
-        if (company) {
-            setIsOpen(true);
-            setIsUploading(true);
-            const progressInterval = startSimulatedProgress();
+        try {
+            if (company) {
+                setIsOpen(true);
+                setIsUploading(true);
+                const progressInterval = startSimulatedProgress();
 
-            const companyRepresentative = representatives?.find(
-                (element) => element.name === company.name,
-            );
+                const companyRepresentative = representatives?.find(
+                    (element) => element.name === company.name,
+                );
 
-            let updatedDesc: string | undefined = undefined;
-            if (descriptionImages.length > 0 && values.description) {
-                const keys = await uploadImagesToS3(descriptionImages);
-                const blobUrlRegex =
-                    /<img [^>]*src=["'](blob:http:\/\/localhost:3000\/[^"']*)["']/g;
-                let localUrls = [];
-                let match;
+                let updatedDesc: string | undefined = undefined;
+                if (descriptionImages.length > 0 && values.description) {
+                    const keys = await uploadImagesToS3(descriptionImages);
+                    const blobUrlRegex =
+                        /<img [^>]*src=["'](blob:http:\/\/localhost:3000\/[^"']*)["']/g;
+                    let localUrls = [];
+                    let match;
 
-                // Use a loop to extract all matches
-                while ((match = blobUrlRegex.exec(values.description)) !== null) {
-                    // The actual blob URL is captured in the full match
-                    localUrls.push(match[1]);
+                    // Use a loop to extract all matches
+                    while (
+                        (match = blobUrlRegex.exec(values.description)) !== null
+                    ) {
+                        // The actual blob URL is captured in the full match
+                        localUrls.push(match[1]);
+                    }
+
+                    console.log(localUrls);
+
+                    console.log(keys);
+                    console.log(localUrls);
+                    console.log(values.description);
+
+                    let updatedDescription = values.description;
+
+                    localUrls.forEach((localUrl, index) => {
+                        const key = keys[index];
+                        updatedDescription = updatedDescription.replace(
+                            new RegExp(localUrl, 'g'),
+                            key,
+                        );
+                    });
+                    console.log(updatedDescription);
+                    updatedDesc = updatedDescription;
                 }
 
-                console.log(localUrls);
+                if (isEdit && initialData) {
+                    if ([...mainImage, ...images].length > 0) {
+                        const keys = await uploadImagesToS3([
+                            mainImage[0],
+                            ...images,
+                        ]);
+                        const submitValues = {
+                            companyId: company?.id || '',
+                            ...values,
+                            representativeId: companyRepresentative?.id || '',
+                            mainImage: keys[0],
+                            images: keys.slice(1),
+                            id: initialData.id,
+                            description: updatedDesc
+                                ? updatedDesc
+                                : values.description,
+                        };
+                        await editProduct(submitValues);
+                    } else {
+                        const submitValues = {
+                            companyId: company?.id || '',
+                            ...values,
+                            representativeId: companyRepresentative?.id || '',
+                            id: initialData.id,
+                            description: updatedDesc
+                                ? updatedDesc
+                                : values.description,
+                        };
+                        await editProduct(submitValues);
+                    }
+                } else {
+                    if ([...mainImage, ...images].length > 0) {
+                        const keys = await uploadImagesToS3([
+                            ...mainImage,
+                            ...images,
+                        ]);
+                        const submitValues = {
+                            companyId: company?.id || '',
+                            ...values,
+                            representativeId: companyRepresentative?.id || '',
+                            mainImage: keys[0],
+                            images: keys.slice(1),
+                            description: updatedDesc
+                                ? updatedDesc
+                                : values.description,
+                        };
 
-                console.log(keys);
-                console.log(localUrls);
-                console.log(values.description);
+                        await mutateAsync(submitValues);
+                    } else {
+                        const submitValues = {
+                            companyId: company?.id || '',
+                            ...values,
+                            representativeId: companyRepresentative?.id || '',
+                            description: updatedDesc
+                                ? updatedDesc
+                                : values.description,
+                        };
+                        await mutateAsync(submitValues);
+                    }
+                }
 
-                let updatedDescription = values.description;
+                await refetch();
+                clearInterval(progressInterval);
+                setUploadProgress(100);
 
-                localUrls.forEach((localUrl, index) => {
-                    const key = keys[index];
-                    updatedDescription = updatedDescription.replace(
-                        new RegExp(localUrl, 'g'),
-                        key,
-                    );
+                setIsUploading(false);
+                setIsOpen(false);
+                toast({
+                    title: 'Success',
+                    description: `Product ${
+                        isEdit ? 'edytowany' : 'został stworzony'
+                    }`,
                 });
-                console.log(updatedDescription);
-                updatedDesc = updatedDescription;
+                router.refresh();
+                router.push(DashboardRoutes.PRODUCTS);
             }
-
-            if (isEdit && initialData) {
-                if ([...mainImage, ...images].length > 0) {
-                    const keys = await uploadImagesToS3([mainImage[0], ...images]);
-                    const submitValues = {
-                        companyId: company?.id || '',
-                        ...values,
-                        representativeId: companyRepresentative?.id || '',
-                        mainImage: keys[0],
-                        images: keys.slice(1),
-                        id: initialData.id,
-                        description: updatedDesc ? updatedDesc : values.description,
-                    };
-                    await editProduct(submitValues);
-                } else {
-                    const submitValues = {
-                        companyId: company?.id || '',
-                        ...values,
-                        representativeId: companyRepresentative?.id || '',
-                        id: initialData.id,
-                        description: updatedDesc ? updatedDesc : values.description,
-                    };
-                    await editProduct(submitValues);
-                }
-            } else {
-                if ([...mainImage, ...images].length > 0) {
-                    const keys = await uploadImagesToS3([...mainImage, ...images]);
-                    const submitValues = {
-                        companyId: company?.id || '',
-                        ...values,
-                        representativeId: companyRepresentative?.id || '',
-                        mainImage: keys[0],
-                        images: keys.slice(1),
-                        description: updatedDesc ? updatedDesc : values.description,
-                    };
-
-                    await mutateAsync(submitValues);
-                } else {
-                    const submitValues = {
-                        companyId: company?.id || '',
-                        ...values,
-                        representativeId: companyRepresentative?.id || '',
-                        description: updatedDesc ? updatedDesc : values.description,
-                    };
-                    await mutateAsync(submitValues);
-                }
-            }
-
-            await refetch();
-            clearInterval(progressInterval);
+        } catch (error) {
             setUploadProgress(100);
 
             setIsUploading(false);
             setIsOpen(false);
             toast({
-                title: 'Success',
-                description: `Product has been ${isEdit ? 'editted' : 'created'}`,
+                title: 'Error',
+                description: `Błąd z tworzeniem produktu`,
+                variant: 'destructive',
             });
-            router.refresh();
-            router.push(DashboardRoutes.PRODUCTS);
         }
     }
 

@@ -4,10 +4,13 @@ import {ProductWeb} from '~types/products';
 
 export default function useUserCompanyProducts(
     initial?: Awaited<ReturnType<(typeof serverClient)['getUserCompanyProducts']>>,
+    initialCounter?: Awaited<
+        ReturnType<(typeof serverClient)['getUserProductsCount']>
+    >,
 ) {
     const {
         data: products,
-        refetch,
+        refetch: refetchProducts,
         isLoading,
     } = trpc.getUserCompanyProducts.useQuery(undefined, {
         initialData: initial,
@@ -16,8 +19,22 @@ export default function useUserCompanyProducts(
         refetchOnWindowFocus: false,
     });
 
-    return {products, refetch, isLoading} as {
+    const {data: counter, refetch: refetchCounter} =
+        trpc.getUserProductsCount.useQuery(undefined, {
+            initialData: initialCounter,
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false,
+        });
+
+    const refetch = async () => {
+        await refetchProducts();
+        await refetchCounter();
+    };
+
+    return {products, counter, refetch, isLoading} as {
         products: ProductWeb[] | undefined;
+        counter: typeof counter;
         refetch: typeof refetch;
         isLoading: boolean;
     };

@@ -8,6 +8,7 @@ import {TRPCError} from '@trpc/server';
 import prismadb from '~lib/prismadb';
 import {getUserCompany} from '../utils/getUserCompany';
 import {z} from 'zod';
+import {PLANS} from '~config/stripe';
 
 export const productProcedures = {
     createProduct: privateProcedure
@@ -28,6 +29,19 @@ export const productProcedures = {
                 throw new TRPCError({
                     code: 'BAD_REQUEST',
                     message: 'Company dosent exist',
+                });
+            }
+
+            const productsNumber = await prismadb.product.count({
+                where: {
+                    companyId: company.id,
+                },
+            });
+
+            if (productsNumber >= ctx.subscriptionPlan.availableProducts) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: 'Exceed max number',
                 });
             }
 
@@ -136,6 +150,27 @@ export const productProcedures = {
                 companyId: company.id,
             },
         });
+    }),
+    getUserProductsCount: privateProcedure.query(async ({ctx}) => {
+        const company = await getUserCompany(ctx);
+
+        if (!company) {
+            return {
+                current: 0,
+                max: PLANS[0].availableProducts,
+            };
+        }
+
+        const counter = await prismadb.product.count({
+            where: {
+                companyId: company.id,
+            },
+        });
+
+        return {
+            current: counter,
+            max: ctx.subscriptionPlan.availableProducts,
+        };
     }),
     deleteProduct: privateProcedure
         .input(

@@ -12,13 +12,17 @@ export type ProductsDataTableProps = {
     initialProducts: Awaited<
         ReturnType<(typeof serverClient)['getUserCompanyProducts']>
     >;
+    initialCounter: Awaited<
+        ReturnType<(typeof serverClient)['getUserProductsCount']>
+    >;
 };
 
 const ProductsDataTable: FC<ProductsDataTableProps> = ({
     isPromoted,
     initialProducts,
+    initialCounter
 }) => {
-    const {products} = useUserCompanyProducts(initialProducts);
+    const {products} = useUserCompanyProducts(initialProducts, initialCounter);
 
 
     return (

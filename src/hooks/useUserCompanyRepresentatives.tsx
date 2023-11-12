@@ -5,12 +5,15 @@ export default function useUserCompanyRepresentatives(
     initial?: Awaited<
         ReturnType<(typeof serverClient)['getUserCompanyRepresentatives']>
     >,
+    initialCounter?: Awaited<
+        ReturnType<(typeof serverClient)['getUserRepresentativesCount']>
+    >,
 ) {
     const {
         data: representatives,
         isFetching,
         isLoading,
-        refetch,
+        refetch: refetchRepresentatives,
     } = trpc.getUserCompanyRepresentatives.useQuery(undefined, {
         initialData: initial,
         refetchOnMount: false,
@@ -18,5 +21,18 @@ export default function useUserCompanyRepresentatives(
         refetchOnWindowFocus: false,
     });
 
-    return {representatives, refetch, isFetching, isLoading};
+    const {data: counter, refetch: refetchCounter} =
+        trpc.getUserRepresentativesCount.useQuery(undefined, {
+            initialData: initialCounter,
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false,
+        });
+
+    const refetch = async () => {
+        await refetchRepresentatives();
+        await refetchCounter()
+    };
+
+    return {representatives, counter, refetch, isFetching, isLoading};
 }

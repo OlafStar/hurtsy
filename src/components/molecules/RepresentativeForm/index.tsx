@@ -22,14 +22,14 @@ import {useState} from 'react';
 import {useUploadS3} from '~hooks/useUploadS3';
 import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 import AddImage from '~components/atoms/AddImage';
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
 
 const RepresentativeForm = () => {
     const {toast} = useToast();
     const [mainImage, setMainImage] = useState<Array<File | string>>([]);
     const {uploadImageToS3} = useUploadS3();
     const {refetch} = useUserCompanyRepresentatives();
-    const router = useRouter()
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof representativeFormSchema>>({
         resolver: zodResolver(representativeFormSchema),
@@ -55,13 +55,17 @@ const RepresentativeForm = () => {
             await refetch();
             toast({
                 title: 'Success',
-                description: 'Representative has been created',
+                description: 'Pomyślnie stworzono przedstawiciela',
             });
             form.reset();
             setMainImage([]);
             router.refresh();
         } catch (error) {
-            console.error('Error creating representative:', error);
+            toast({
+                title: 'Error',
+                description: `Wystąpił błąd z tworzeniem przedstawiciela`,
+                variant: 'destructive',
+            });
         }
     }
 

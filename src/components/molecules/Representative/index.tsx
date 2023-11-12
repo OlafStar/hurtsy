@@ -35,28 +35,25 @@ const Representative = (props: RepresentativeWeb) => {
                     </div>
                 </div>
             </div>
-            {!isLoading && (
-                <div className="flex flex-col gap-4 ml-12">
-                    <Popover>
-                        <PopoverTrigger>
-                            <img src="/pen-to-square-solid.svg" />
-                        </PopoverTrigger>
-                        <PopoverContent>
-                            <EditRepresentative {...props} />
-                        </PopoverContent>
-                    </Popover>
-                    {!(name === company?.name) && (
-                        <Popover>
-                            <PopoverTrigger>
-                                <img src="/user-minus-solid.svg" />
-                            </PopoverTrigger>
-                            <PopoverContent>
-                                <DeleteRepresentative id={id} />
-                            </PopoverContent>
-                        </Popover>
-                    )}
-                </div>
-            )}
+            <div className="flex flex-col gap-4 ml-12">
+                <Popover>
+                    <PopoverTrigger>
+                        <img src="/pen-to-square-solid.svg" />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        <EditRepresentative {...props} />
+                    </PopoverContent>
+                </Popover>
+
+                <Popover>
+                    <PopoverTrigger>
+                        <img src="/user-minus-solid.svg" />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        <DeleteRepresentative id={id} name={name} />
+                    </PopoverContent>
+                </Popover>
+            </div>
         </div>
     );
 };

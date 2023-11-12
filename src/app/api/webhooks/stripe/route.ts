@@ -69,5 +69,10 @@ export async function POST(request: Request) {
         });
     }
 
+    // if (event.type === 'customer.subscription.deleted') {
+    //     // Retrieve the subscription details from Stripe.
+    //     const subscription = event.data.object as Stripe.Subscription;
+    // }
+
     return new Response(null, {status: 200});
 }
