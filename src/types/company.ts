@@ -1,5 +1,6 @@
 import {CompanyType} from '@prisma/client';
-import { ProductWeb } from './products';
+
+import {ProductWeb} from './products';
 
 export type CompanyTypeWeb = {
     id: string;
@@ -15,7 +16,7 @@ export type CompanyTypeWeb = {
     phone: string;
     country: string;
     establishment: number;
-    products?: ProductWeb[]
+    products?: ProductWeb[];
 };
 
 export type RepresentativeWeb = {

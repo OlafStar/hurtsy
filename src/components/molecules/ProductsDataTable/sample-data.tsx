@@ -2,8 +2,9 @@
 
 import {ColumnDef} from '@tanstack/react-table';
 import {MoreHorizontal} from 'lucide-react';
-import {Checkbox} from '~/components/ui/checkbox';
+import {useRouter} from 'next/navigation';
 
+import {Checkbox} from '~/components/ui/checkbox';
 import {Button} from '~/components/ui/button';
 import {
     DropdownMenu,
@@ -24,7 +25,6 @@ import {
 import {trpc} from '~app/_trpc/client';
 import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 import {useToast} from '~components/ui/use-toast';
-import {useRouter} from 'next/navigation';
 import {AppRoutes} from '~types/AppRoutes';
 import {parseNumberToCurrency} from '~utils/parseNumberToCurrency';
 import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
@@ -187,7 +187,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
                     {customizations?.map((item, index) => (
                         <div key={index} className="flex gap-1">
                             <div>{`${item.name}:`}</div>
-                            <div className='font-medium'>{`${item.value}`}</div>
+                            <div className="font-medium">{`${item.value}`}</div>
                         </div>
                     ))}
                 </div>
@@ -207,7 +207,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
+                            <span className="sr-only">{'Open menu'}</span>
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
@@ -216,7 +216,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
                         <DropdownMenuItem
                             onClick={() => navigator.clipboard.writeText(product.id)}
                         >
-                            Copy payment ID
+                            {'Copy payment ID'}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={() =>
@@ -225,7 +225,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
                                 )
                             }
                         >
-                            Edytuj
+                            {'Edytuj'}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -238,7 +238,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
                                 });
                             }}
                         >
-                            Delete product
+                            {'Delete product'}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={async () => {
@@ -251,7 +251,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
                                 });
                             }}
                         >
-                            Copy product
+                            {'Copy product'}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

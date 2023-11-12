@@ -1,8 +1,7 @@
 'use client';
 
-import {PrefetchKind} from 'next/dist/client/components/router-reducer/router-reducer-types';
-import {usePathname, useRouter} from 'next/navigation';
 import React, {useEffect, PropsWithChildren, useState} from 'react';
+
 import {Button, ButtonProps} from '~components/ui/button';
 import {SearchParams} from '~config/searchParams';
 import {useAddSearchParams} from '~hooks/useAddSearchParams';
@@ -22,8 +21,6 @@ const ClearFilterButton: React.FC<ClearFilterButtonProps> = ({
 }) => {
     const [showButton, setShowButton] = useState(false);
     const {currentSearchParams, deleteParam} = useAddSearchParams();
-    const router = useRouter();
-    const pathname = usePathname();
 
     useEffect(() => {
         if (paramsToDelete === 'all') {

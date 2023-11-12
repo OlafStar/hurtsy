@@ -1,5 +1,4 @@
 import {router} from './trpc';
-
 import {companyProcedures} from './procedures/company';
 import {representativesProcedures} from './procedures/representatives';
 import {s3Procedures} from './procedures/s3';

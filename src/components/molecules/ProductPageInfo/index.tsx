@@ -1,6 +1,7 @@
 import {ProductWeb} from '~types/products';
-import ProductImageGallery from '../ProductImageGallery';
 import { parseNumberToCurrency } from '~utils/parseNumberToCurrency';
+
+import ProductImageGallery from '../ProductImageGallery';
 
 type ProductPageInfoProp = Omit<
     ProductWeb,

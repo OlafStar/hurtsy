@@ -1,5 +1,7 @@
+/* eslint-disable camelcase */
 import {Baloo_Thambi_2} from 'next/font/google';
 import Link from 'next/link';
+
 import {PropsWithClassName} from '~types/generalTypes';
 import {cn} from '~utils/shadcn';
 

@@ -1,5 +1,4 @@
 import {DashboardRoutes} from '~types/AppRoutes';
-
 import YourCompanyIcon from '~assets/icons/your-company.svg';
 import SettingsIcon from '~assets/icons/settings.svg';
 import PlansIcon from '~assets/icons/plans.svg';

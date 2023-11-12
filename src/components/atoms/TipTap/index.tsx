@@ -12,11 +12,11 @@ import React, {
     SetStateAction,
     createContext,
     useContext,
-    useState,
 } from 'react';
-import TipTapToolbar from '../TipTapToolbar';
 import BulletList from '@tiptap/extension-bullet-list';
 import Image from '@tiptap/extension-image';
+
+import TipTapToolbar from '../TipTapToolbar';
 
 interface DescriptionImageContextType {
     descriptionImages: File[];
@@ -97,6 +97,7 @@ const Tiptap = ({
                         onChange(e.editor.getHTML());
                         console.log(e.editor.getHTML());
                     }}
+                    // eslint-disable-next-line react/no-children-prop
                     children={undefined}
                 />
             </DescriptionImageContextProvider>

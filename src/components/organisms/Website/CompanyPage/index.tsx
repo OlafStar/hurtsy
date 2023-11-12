@@ -1,6 +1,6 @@
 import React, {Suspense} from 'react';
+
 import CategoriesButton from '~components/atoms/CategoriesButton';
-import ClearFilterButton from '~components/atoms/ClearFilterButton';
 import Loader from '~components/atoms/Loader';
 import CompanyPageHeader from '~components/molecules/CompanyPageHeader';
 import CompanyProductCard from '~components/molecules/CompanyProductCard';
@@ -13,7 +13,7 @@ import {ProductWeb} from '~types/products';
 const CompanyPage: React.FC<
     CompanyTypeWeb & {searchParams?: SearchParamsType}
 > = async (props) => {
-    const {products, currentPage, isLastPage, totalProduct, totalPages} =
+    const {products, currentPage, totalProduct, totalPages} =
         await serverClient.getProducts({
             companyId: props.id,
             category: props.searchParams?.category as string | undefined,

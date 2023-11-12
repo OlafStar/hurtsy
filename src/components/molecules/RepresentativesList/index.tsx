@@ -1,8 +1,9 @@
 'use client';
 
-import Representative from '../Representative';
 import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 import {serverClient} from '~server/trpc/serverClient';
+
+import Representative from '../Representative';
 
 export type RepresentativesListProps = {
     initialRepresentatives: Awaited<

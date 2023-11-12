@@ -1,4 +1,5 @@
 import {SearchParamsType} from '~config/searchParams';
+
 import FilterCategories from './FilterCategories';
 import FilterOrder from './FilterOrder';
 

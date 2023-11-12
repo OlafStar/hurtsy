@@ -1,8 +1,9 @@
 'use client';
 import {CaretSortIcon} from '@radix-ui/react-icons';
-import React, {useEffect, useState} from 'react';
-import {Category, subCategoryEnums} from '~types/categories';
+import React, {useState} from 'react';
+import {CheckIcon, XIcon} from 'lucide-react';
 
+import {Category, subCategoryEnums} from '~types/categories';
 import {Popover, PopoverContent, PopoverTrigger} from '~components/ui/popover';
 import {
     Command,
@@ -13,7 +14,6 @@ import {
 } from '~components/ui/command';
 import {Button} from '~components/ui/button';
 import {cn} from '~utils/shadcn';
-import {CheckIcon, DeleteIcon, XIcon} from 'lucide-react';
 import {useAddSearchParams} from '~hooks/useAddSearchParams';
 import {SearchParams, SearchParamsType} from '~config/searchParams';
 import ClearFilterButton from '~components/atoms/ClearFilterButton';
@@ -74,13 +74,13 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
                     <PopoverContent className="w-[220px] h-[300px] p-0">
                         <Command>
                             <CommandInput placeholder="Search category..." />
-                            <CommandEmpty>No category found.</CommandEmpty>
+                            <CommandEmpty>{"No category found."}</CommandEmpty>
                             <CommandGroup className="overflow-scroll">
-                                {Object.entries(Category).map(([key, cat]) => (
+                                {Object.entries(Category).map(([_, cat]) => (
                                     <CommandItem
                                         value={cat as string}
                                         key={cat}
-                                        onSelect={(e) => {
+                                        onSelect={() => {
                                             updateParams({category: cat}, [
                                                 SearchParams.SubCategory,
                                             ]);
@@ -110,7 +110,7 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
                                 selectedCategory.charAt(0).toUpperCase() +
                                     selectedCategory.slice(1)
                             ] || {},
-                        ).map(([key, value], index) => {
+                        ).map(([_, value], index) => {
                             return (
                                 <div
                                     key={index}

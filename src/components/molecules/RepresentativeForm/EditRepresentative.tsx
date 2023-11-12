@@ -3,6 +3,7 @@
 import {useForm} from 'react-hook-form';
 import * as z from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
+
 import {Button} from '~/components/ui/button';
 import {
     Form,
@@ -39,7 +40,7 @@ const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
     async function onSubmit(values: z.infer<typeof representativeFormSchema>) {
         try {
             const submitValues = {id: id, ...values};
-            const response = await mutateAsync(submitValues);
+            await mutateAsync(submitValues);
             refetch();
             toast({
                 title: 'Success',
@@ -61,7 +62,7 @@ const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
                             name="name"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Imie i nazwisko</FormLabel>
+                                    <FormLabel>{'Imie i nazwisko'}</FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="Imie i nazwisko"
@@ -79,7 +80,7 @@ const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
                         name="email"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel>{'Email'}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Email" {...field} />
                                 </FormControl>
@@ -92,7 +93,7 @@ const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
                         name="phoneNumber"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Numer telefonu</FormLabel>
+                                <FormLabel>{'Numer telefonu'}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Numer telefonu" {...field} />
                                 </FormControl>
@@ -101,7 +102,7 @@ const EditRepresentative = ({id, name, email, phone}: RepresentativeWeb) => {
                         )}
                     />
 
-                    <Button type="submit">Edit</Button>
+                    <Button type="submit">{'Edit'}</Button>
                 </form>
             </Form>
         </div>

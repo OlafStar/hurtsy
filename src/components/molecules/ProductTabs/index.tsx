@@ -2,10 +2,11 @@
 
 import React, {PropsWithChildren, useEffect, useState} from 'react';
 import {Tabs} from '@radix-ui/react-tabs';
+import {usePathname, useRouter, useSearchParams} from 'next/navigation';
+
 import ButtonLink from '~components/atoms/ButtonLink';
 import {TabsList, TabsTrigger} from '~components/ui/tabs';
 import {ProductRoutes} from '~types/AppRoutes';
-import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 
 type ProductTabsProps = {promotedChildren: React.ReactNode} & PropsWithChildren;

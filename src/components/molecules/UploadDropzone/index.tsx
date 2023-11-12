@@ -2,6 +2,7 @@
 
 import Dropzone from 'react-dropzone';
 import {Dispatch, SetStateAction} from 'react';
+
 import DropzoneField from '~components/atoms/DropzoneField';
 
 type UploadDropzoneProps = {
@@ -28,7 +29,7 @@ const UploadDropzone = ({
                 );
             }}
         >
-            {({getRootProps, getInputProps, acceptedFiles}) => (
+            {({getRootProps, getInputProps}) => (
                 <DropzoneField
                     rootProps={getRootProps}
                     inputProps={getInputProps}

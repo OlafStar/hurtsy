@@ -4,7 +4,6 @@ import {
     SelectContent,
     SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from '~/components/ui/select';
@@ -26,9 +25,9 @@ const PaginationPageSize = ({size}: {size: string}) => {
             </SelectTrigger>
             <SelectContent side="top">
                 <SelectGroup>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="30">30</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="10">{"10"}</SelectItem>
+                    <SelectItem value="30">{"30"}</SelectItem>
+                    <SelectItem value="50">{"50"}</SelectItem>
                 </SelectGroup>
             </SelectContent>
         </Select>

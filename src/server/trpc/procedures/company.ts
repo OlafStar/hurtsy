@@ -1,10 +1,12 @@
-import prismadb from '~lib/prismadb';
-import {privateProcedure, publicProcedure} from '../trpc';
 import {TRPCError} from '@trpc/server';
-import {companyCreationSchema, getCompaniesFilterSchema} from '~validations/company';
-import {getUserCompany} from '../utils/getUserCompany';
 import {z} from 'zod';
+
+import prismadb from '~lib/prismadb';
+import {companyCreationSchema, getCompaniesFilterSchema} from '~validations/company';
 import {CategoryWeb} from '~types/products';
+
+import {privateProcedure, publicProcedure} from '../trpc';
+import {getUserCompany} from '../utils/getUserCompany';
 
 export const companyProcedures = {
     getCompany: publicProcedure.input(z.string()).query(async ({input}) => {

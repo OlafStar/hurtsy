@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import {AppRoutes} from '~types/AppRoutes';
 import {CompanyTypeWeb} from '~types/company';
 

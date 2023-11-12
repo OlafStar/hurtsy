@@ -1,6 +1,5 @@
 import {redirect} from 'next/navigation';
-import {Suspense} from 'react';
-import Loader from '~components/atoms/Loader';
+
 import DashboardNavigation from '~components/molecules/DashboardNavigation';
 import {Toaster} from '~components/ui/toaster';
 import {getCurrentUser} from '~lib/session';

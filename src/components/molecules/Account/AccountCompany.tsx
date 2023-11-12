@@ -1,14 +1,15 @@
-import {serverClient} from '~server/trpc/serverClient';
 import Link from 'next/link';
-import {Avatar, AvatarFallback, AvatarImage} from '~components/ui/avatar';
-import {Button} from '~components/ui/button';
-import {getCurrentUser} from '~lib/session';
-import {AppRoutes} from '~types/AppRoutes';
-import AccountHover from './AccountHover';
 import {User} from 'lucide-react';
 
+import {serverClient} from '~server/trpc/serverClient';
+import {Avatar, AvatarFallback, AvatarImage} from '~components/ui/avatar';
+import {Button} from '~components/ui/button';
+import {AppRoutes} from '~types/AppRoutes';
+
+import AccountHover from './AccountHover';
+
+
 const AccountCompany = async () => {
-    const user = await getCurrentUser();
     const company = await serverClient.getUserCompany();
 
     return company ? (

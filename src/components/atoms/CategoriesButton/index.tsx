@@ -1,10 +1,12 @@
 'use client';
+import {XIcon} from 'lucide-react';
+
 import {SearchParams} from '~config/searchParams';
 import {useAddSearchParams} from '~hooks/useAddSearchParams';
 import {CategoryWeb} from '~types/products';
 import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
+
 import ClearFilterButton from '../ClearFilterButton';
-import {XIcon} from 'lucide-react';
 
 const CategoriesButton = ({mainCategory}: CategoryWeb) => {
     const {currentSearchParams, updateParams} = useAddSearchParams();

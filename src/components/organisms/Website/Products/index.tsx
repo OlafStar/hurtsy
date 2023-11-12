@@ -1,13 +1,12 @@
-import React, {Suspense} from 'react';
-import Loader from '~components/atoms/Loader';
+import React from 'react';
+
 import Filters from '~components/molecules/Filters';
 import Pagination from '~components/molecules/Pagination';
 import ProductCard from '~components/molecules/ProductCard';
 import ProductsCompanySwitch from '~components/molecules/ProductsCompanySwitch';
-import PromotedProducts from '~components/molecules/PromotedProducts';
 import {SearchParamsType} from '~config/searchParams';
 import {serverClient} from '~server/trpc/serverClient';
-import {PriceWeb, ProductWeb, getData} from '~types/products';
+import {ProductWeb} from '~types/products';
 import {filterProducts} from '~utils/filterProduct';
 
 type ProductsPageProps = {
@@ -15,28 +14,25 @@ type ProductsPageProps = {
 };
 
 const ProductsPage = async ({searchParams}: ProductsPageProps) => {
-    const {products, currentPage, isLastPage, totalProduct, totalPages} =
-        await serverClient.getProducts({
-            search: searchParams?.search_query as string,
-            category: searchParams?.category as string,
-            subCategory: searchParams?.subCategory as string,
-            deliveryPrice: searchParams?.deliveryPrice
-                ? parseFloat(searchParams?.deliveryPrice as string)
-                : undefined,
-            companyType:
-                typeof searchParams?.companyType === 'string'
-                    ? [searchParams?.companyType]
-                    : searchParams?.companyType,
-            companyId: searchParams?.companyId as string,
-            pagination: {
-                page: searchParams?.page
-                    ? parseInt(searchParams?.page as string)
-                    : 1,
-                pageSize: searchParams?.pageSize
-                    ? parseInt(searchParams?.pageSize as string)
-                    : 10,
-            },
-        });
+    const {products, currentPage, totalPages} = await serverClient.getProducts({
+        search: searchParams?.search_query as string,
+        category: searchParams?.category as string,
+        subCategory: searchParams?.subCategory as string,
+        deliveryPrice: searchParams?.deliveryPrice
+            ? parseFloat(searchParams?.deliveryPrice as string)
+            : undefined,
+        companyType:
+            typeof searchParams?.companyType === 'string'
+                ? [searchParams?.companyType]
+                : searchParams?.companyType,
+        companyId: searchParams?.companyId as string,
+        pagination: {
+            page: searchParams?.page ? parseInt(searchParams?.page as string) : 1,
+            pageSize: searchParams?.pageSize
+                ? parseInt(searchParams?.pageSize as string)
+                : 10,
+        },
+    });
 
     const filters = {
         price: searchParams?.price

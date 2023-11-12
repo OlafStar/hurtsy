@@ -1,7 +1,8 @@
-import Link from 'next/link';
 import Logo from '~components/atoms/Logo';
+
 import SearchBar from '../SearchBar';
 import Account from '../Account';
+
 import {NavigationMenuDemo} from './NavigationMenu';
 
 const SiteNavigation = () => {

@@ -1,5 +1,6 @@
-import { Cloud } from 'lucide-react';
+import {Cloud} from 'lucide-react';
 import {DropzoneInputProps, DropzoneRootProps} from 'react-dropzone';
+
 import {cn} from '~utils/shadcn';
 
 type DropzoneFieldProps = {
@@ -24,10 +25,15 @@ const DropzoneField = ({rootProps, inputProps, className}: DropzoneFieldProps) =
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <Cloud className="h-6 w-6 text-zinc-500 mb-2" />
                         <p className="mb-2 text-sm text-zinc-700">
-                            <span className="font-semibold">Click to upload</span> or
-                            drag and drop
+                            <span className="font-semibold">
+                                {'Click to upload'}
+                            </span>{' '}
+                            {'or'}
+                            {'drag and drop'}
                         </p>
-                        <p className="text-xs text-zinc-500">Image (up to 4MB)</p>
+                        <p className="text-xs text-zinc-500">
+                            {'Image (up to 4MB)'}
+                        </p>
                     </div>
 
                     <input

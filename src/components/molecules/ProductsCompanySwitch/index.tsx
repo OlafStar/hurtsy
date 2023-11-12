@@ -1,6 +1,7 @@
 'use client';
 
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
+
 import {Tabs, TabsList, TabsTrigger} from '~components/ui/tabs';
 
 const ProductsCompanySwitch = () => {

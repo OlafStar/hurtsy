@@ -1,6 +1,6 @@
 import {Check} from 'lucide-react';
+
 import SubscribeButton from '~components/atoms/SubscribeButton';
-import {Button} from '~components/ui/button';
 import {SearchParamsType} from '~config/searchParams';
 import {PLANS} from '~config/stripe';
 

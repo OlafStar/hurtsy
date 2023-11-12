@@ -21,12 +21,12 @@ const Pagination = ({
 
         pages.push(
             <PaginationButton key={'first'} {...{currentPage, page: 1}}>
-                1
+                {'1'}
             </PaginationButton>,
         );
 
         if (startPage > 2) {
-            pages.push(<span key="start-ellipsis">...</span>);
+            pages.push(<span key="start-ellipsis">{"..."}</span>);
         }
 
         for (let page = startPage; page <= endPage; page++) {
@@ -38,7 +38,7 @@ const Pagination = ({
         }
 
         if (endPage < totalPages - 1) {
-            pages.push(<span key="end-ellipsis">...</span>);
+            pages.push(<span key="end-ellipsis">{'...'}</span>);
         }
 
         if (totalPages > 1) {

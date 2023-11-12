@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
-import prismadb from '~lib/prismadb';
 import {NextResponse} from 'next/server';
 import {NextRequest} from 'next/server';
-import { randomUUID } from 'crypto';
+
+import prismadb from '~lib/prismadb';
 
 //initialize prisma if needed
 

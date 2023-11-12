@@ -2,8 +2,9 @@
 
 import {SearchIcon} from 'lucide-react';
 import Link from 'next/link';
-import {useRouter, useSearchParams} from 'next/navigation';
+import {useSearchParams} from 'next/navigation';
 import {useState} from 'react';
+
 import {
     Select,
     SelectContent,
@@ -26,7 +27,6 @@ const SearchBar = () => {
 
     const search = searchParams.get(SearchParams.SearchQuery);
 
-    const router = useRouter();
     const [currentSearch, setCurrentSearch] = useState(SearchSelect.Products);
     const [searchValue, setSearchValue] = useState(search ? search : '');
 

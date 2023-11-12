@@ -1,6 +1,7 @@
 import {Button} from '~components/ui/button';
-import CompanyProductSearchBar from '../CompanyProductSearchBar';
 import {CompanyTypeWeb} from '~types/company';
+
+import CompanyProductSearchBar from '../CompanyProductSearchBar';
 
 const CompanyPageHeader = ({
     image,

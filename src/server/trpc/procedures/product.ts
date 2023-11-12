@@ -1,14 +1,16 @@
+import {TRPCError} from '@trpc/server';
+import {z} from 'zod';
+
 import {
     editProductFormSchema,
     getProductFilterSchema,
     productFormSchema,
 } from '~validations/product';
-import {privateProcedure, publicProcedure} from '../trpc';
-import {TRPCError} from '@trpc/server';
 import prismadb from '~lib/prismadb';
-import {getUserCompany} from '../utils/getUserCompany';
-import {z} from 'zod';
 import {PLANS} from '~config/stripe';
+
+import {privateProcedure, publicProcedure} from '../trpc';
+import {getUserCompany} from '../utils/getUserCompany';
 
 export const productProcedures = {
     createProduct: privateProcedure
@@ -178,7 +180,7 @@ export const productProcedures = {
                 id: z.string(),
             }),
         )
-        .mutation(async ({input, ctx}) => {
+        .mutation(async ({input}) => {
             const validatedInput = z
                 .object({
                     id: z.string(),

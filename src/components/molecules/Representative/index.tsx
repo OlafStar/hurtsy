@@ -1,13 +1,14 @@
 import {Popover, PopoverContent, PopoverTrigger} from '~/components/ui/popover';
-import EditRepresentative from '../RepresentativeForm/EditRepresentative';
 import {RepresentativeWeb} from '~types/company';
 import DeleteRepresentative from '~components/atoms/DeleteRepresentative';
 import {useUserCompany} from '~hooks/useUserCompany';
 
+import EditRepresentative from '../RepresentativeForm/EditRepresentative';
+
 const Representative = (props: RepresentativeWeb) => {
     const {id, name, email, phone, image} = props;
 
-    const {company, isLoading} = useUserCompany();
+    const {company} = useUserCompany();
 
     return (
         <div className="flex items-center gap-1">

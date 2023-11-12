@@ -1,5 +1,8 @@
 'use client';
 
+import {Loader2} from 'lucide-react';
+import {format} from 'date-fns';
+
 import {getUserSubscriptionPlan} from '~/lib/stripe';
 import {useToast} from '~/components/ui/use-toast';
 import {
@@ -10,9 +13,7 @@ import {
     CardTitle,
 } from '~/components/ui/card';
 import {Button} from '~/components/ui/button';
-import {Loader2} from 'lucide-react';
-import {format} from 'date-fns';
-import { trpc } from '~app/_trpc/client';
+import {trpc} from '~app/_trpc/client';
 
 interface BillingFormProps {
     subscriptionPlan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
@@ -45,10 +46,10 @@ const BillingForm = ({subscriptionPlan}: BillingFormProps) => {
         >
             <Card>
                 <CardHeader>
-                    <CardTitle>Subscription Plan</CardTitle>
+                    <CardTitle>{'Subscription Plan'}</CardTitle>
                     <CardDescription>
-                        You are currently on the{' '}
-                        <strong>{subscriptionPlan.name}</strong> plan.
+                        {'You are currently on the'}{' '}
+                        <strong>{subscriptionPlan.name}</strong> {'plan.'}
                     </CardDescription>
                 </CardHeader>
 
@@ -71,7 +72,7 @@ const BillingForm = ({subscriptionPlan}: BillingFormProps) => {
                                 subscriptionPlan.stripeCurrentPeriodEnd!,
                                 'dd.MM.yyyy',
                             )}
-                            .
+                            {'.'}
                         </p>
                     ) : null}
                 </CardFooter>

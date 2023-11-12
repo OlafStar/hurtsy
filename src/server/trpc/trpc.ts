@@ -1,4 +1,5 @@
 import {TRPCError, initTRPC} from '@trpc/server';
+
 import {getCurrentUser} from '~lib/session';
 import {getUserSubscriptionPlan} from '~lib/stripe';
 
@@ -14,7 +15,7 @@ const isAuth = middleware(async (opts) => {
     }
 
     const subscriptionPlan = await getUserSubscriptionPlan();
-    
+
     return opts.next({
         ctx: {
             user,

@@ -1,14 +1,16 @@
+import {TRPCError} from '@trpc/server';
+import {z} from 'zod';
+
 import {
     getCompanyRepresentativesInput,
     representativeEditSchema,
     representativeFormSchema,
 } from '~validations/company';
-import {privateProcedure, publicProcedure} from '../trpc';
-import {TRPCError} from '@trpc/server';
 import prismadb from '~lib/prismadb';
-import {z} from 'zod';
+import {PLANS} from '~config/stripe';
+
+import {privateProcedure, publicProcedure} from '../trpc';
 import {getUserCompany} from '../utils/getUserCompany';
-import { PLANS } from '~config/stripe';
 
 export const representativesProcedures = {
     getRepresentative: publicProcedure.input(z.string()).query(async ({input}) => {
@@ -123,7 +125,7 @@ export const representativesProcedures = {
         }),
     editRepresentative: privateProcedure
         .input(representativeEditSchema)
-        .mutation(async ({input, ctx}) => {
+        .mutation(async ({input}) => {
             const validatedInput = representativeEditSchema.safeParse(input);
             if (!validatedInput.success) {
                 throw new TRPCError({
@@ -188,7 +190,7 @@ export const representativesProcedures = {
                 id: z.string(),
             }),
         )
-        .mutation(async ({input, ctx}) => {
+        .mutation(async ({input}) => {
             const validatedInput = z
                 .object({
                     id: z.string(),

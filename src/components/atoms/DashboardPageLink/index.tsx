@@ -1,8 +1,10 @@
 import Link from 'next/link';
-import {DashboardRoutes} from '~types/AppRoutes';
-import ClientBackground from './ClientBackground';
 import Image from 'next/image';
+
+import {DashboardRoutes} from '~types/AppRoutes';
 import {cn} from '~utils/shadcn';
+
+import ClientBackground from './ClientBackground';
 
 type DashboardPageLinkProps = {
     icon?: any;

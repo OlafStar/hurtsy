@@ -3,6 +3,7 @@
 import {signOut} from 'next-auth/react';
 import {useRouter} from 'next/navigation';
 import {PropsWithChildren} from 'react';
+
 import {cn} from '~utils/shadcn';
 
 const LogOutButton = ({

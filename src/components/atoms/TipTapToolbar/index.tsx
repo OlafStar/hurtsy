@@ -1,6 +1,6 @@
 'use client';
 
-import {useCurrentEditor, type Editor} from '@tiptap/react';
+import {useCurrentEditor} from '@tiptap/react';
 import {
     Bold,
     Strikethrough,
@@ -9,7 +9,9 @@ import {
     ListOrdered,
     Heading2,
 } from 'lucide-react';
+
 import {Toggle} from '~components/ui/toggle';
+
 import TipTapImage from '../TipTapImage';
 
 const TipTapToolbar = () => {

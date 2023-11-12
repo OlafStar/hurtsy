@@ -15,7 +15,6 @@ import {
 } from '@tanstack/react-table';
 
 import {Input} from '~/components/ui/input';
-
 import {
     Table,
     TableBody,
@@ -24,8 +23,9 @@ import {
     TableHeader,
     TableRow,
 } from '~/components/ui/table';
-import DataTablePagination from '../DataTablePagination';
 import DataTableColumnOptions from '~components/atoms/DataTableColumnOptions';
+
+import DataTablePagination from '../DataTablePagination';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -123,7 +123,7 @@ export function DataTable<TData, TValue>({
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    No results.
+                                    {"No results."}
                                 </TableCell>
                             </TableRow>
                         )}

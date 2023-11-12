@@ -3,6 +3,9 @@
 import {useForm} from 'react-hook-form';
 import * as z from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
+import {useState} from 'react';
+import {useRouter} from 'next/navigation';
+
 import {Button} from '~/components/ui/button';
 import {
     Form,
@@ -17,12 +20,9 @@ import {representativeFormSchema} from '~validations/company';
 import {trpc} from '~app/_trpc/client';
 import {useToast} from '~components/ui/use-toast';
 import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
-import UploadDropzone from '../UploadDropzone';
-import {useState} from 'react';
 import {useUploadS3} from '~hooks/useUploadS3';
 import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 import AddImage from '~components/atoms/AddImage';
-import {useRouter} from 'next/navigation';
 
 const RepresentativeForm = () => {
     const {toast} = useToast();
@@ -100,7 +100,7 @@ const RepresentativeForm = () => {
                         name="name"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Imie i nazwisko</FormLabel>
+                                <FormLabel>{'Imie i nazwisko'}</FormLabel>
                                 <FormControl>
                                     <Input
                                         placeholder="Imie i nazwisko"
@@ -116,7 +116,7 @@ const RepresentativeForm = () => {
                         name="email"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel>{"Email"}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Email" {...field} />
                                 </FormControl>
@@ -129,7 +129,7 @@ const RepresentativeForm = () => {
                         name="phoneNumber"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Numer telefonu</FormLabel>
+                                <FormLabel>{"Numer telefonu"}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Numer telefonu" {...field} />
                                 </FormControl>
@@ -138,7 +138,7 @@ const RepresentativeForm = () => {
                         )}
                     />
 
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">{"Submit"}</Button>
                 </form>
             </Form>
         </div>

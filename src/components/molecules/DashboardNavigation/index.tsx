@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+
 import DashboardPageLink from '~components/atoms/DashboardPageLink';
 import LogOutButton from '~components/atoms/LogOutButton';
 import Logo from '~components/atoms/Logo';

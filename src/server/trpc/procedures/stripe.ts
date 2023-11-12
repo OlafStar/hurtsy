@@ -1,11 +1,13 @@
-import {absoluteUrl} from '~utils/absoluteUrl';
-import {privateProcedure} from '../trpc';
 import {TRPCError} from '@trpc/server';
+import {z} from 'zod';
+
 import prismadb from '~lib/prismadb';
 import {getUserSubscriptionPlan, stripe} from '~lib/stripe';
 import {PLANS} from '~config/stripe';
-import {z} from 'zod';
-import { DashboardRoutes } from '~types/AppRoutes';
+import {absoluteUrl} from '~utils/absoluteUrl';
+import {DashboardRoutes} from '~types/AppRoutes';
+
+import {privateProcedure} from '../trpc';
 
 export const stripeProcedures = {
     createStripeSession: privateProcedure
@@ -58,8 +60,9 @@ export const stripeProcedures = {
                 line_items: [
                     {
                         //@TO-DO change to production
-                        price: PLANS.find((plan) => plan.name === validatedInput.data)?.price
-                            .priceIds.test,
+                        price: PLANS.find(
+                            (plan) => plan.name === validatedInput.data,
+                        )?.price.priceIds.test,
                         quantity: 1,
                     },
                 ],

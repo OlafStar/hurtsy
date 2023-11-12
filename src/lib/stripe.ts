@@ -1,6 +1,7 @@
+import Stripe from 'stripe';
+
 import {PLANS} from '~config/stripe';
 
-import Stripe from 'stripe';
 import {getCurrentUser} from './session';
 import prismadb from './prismadb';
 

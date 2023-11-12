@@ -1,11 +1,13 @@
 'use client';
 
-import {columns} from './sample-data';
-import {DataTable} from './data-table';
 import {FC} from 'react';
+
 import {ProductWeb} from '~types/products';
 import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 import {serverClient} from '~server/trpc/serverClient';
+
+import {DataTable} from './data-table';
+import {columns} from './sample-data';
 
 export type ProductsDataTableProps = {
     isPromoted?: boolean;

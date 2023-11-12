@@ -2,7 +2,6 @@ import ProductsPage from '~components/organisms/Website/Products';
 import {SearchParamsType} from '~config/searchParams';
 
 function Page({
-    params,
     searchParams,
 }: {
     params: {slug: string};

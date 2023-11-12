@@ -2,6 +2,7 @@
 import {useRouter} from 'next/navigation';
 import React, {useState} from 'react';
 import {signIn} from 'next-auth/react';
+import Link from 'next/link';
 
 const RegisterPage = () => {
     const router = useRouter();
@@ -17,7 +18,7 @@ const RegisterPage = () => {
         });
 
         if (response?.ok) {
-            router.refresh()
+            router.refresh();
             router.push(`/dashboard`);
         }
     };
@@ -31,7 +32,7 @@ const RegisterPage = () => {
                         alt="Your Company"
                     />
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        Sign in to your account
+                        {'Zaloguj się'}
                     </h2>
                 </div>
 
@@ -47,7 +48,7 @@ const RegisterPage = () => {
                                 htmlFor="email"
                                 className="block text-sm font-medium leading-6 text-gray-900"
                             >
-                                Email address
+                                {'Email'}
                             </label>
                             <div className="mt-2">
                                 <input
@@ -71,14 +72,14 @@ const RegisterPage = () => {
                                     htmlFor="password"
                                     className="block text-sm font-medium leading-6 text-gray-900"
                                 >
-                                    Password
+                                    {'Hasło'}
                                 </label>
                                 <div className="text-sm">
                                     <a
                                         href="#"
                                         className="font-semibold text-indigo-600 hover:text-indigo-500"
                                     >
-                                        Forgot password?
+                                        {'Zapomniałeś hasła?'}
                                     </a>
                                 </div>
                             </div>
@@ -103,19 +104,19 @@ const RegisterPage = () => {
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                                Sign in
+                                {'Zaloguj'}
                             </button>
                         </div>
                     </form>
 
                     <p className="mt-10 text-center text-sm text-gray-500">
-                        Not a member?{' '}
-                        <a
-                            href="#"
+                        {'Not a member?'}{' '}
+                        <Link
+                            href="/register"
                             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
                         >
-                            Start a 14 day free trial
-                        </a>
+                            {'Start a 14 day free trial'}
+                        </Link>
                     </p>
                 </div>
             </div>

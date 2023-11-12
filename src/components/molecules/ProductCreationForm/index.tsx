@@ -2,6 +2,16 @@
 import {useForm} from 'react-hook-form';
 import * as z from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
+import {useRouter} from 'next/navigation';
+import React, {useState} from 'react';
+import {CaretSortIcon, CheckIcon} from '@radix-ui/react-icons';
+
+import {productFormSchema} from '~validations/product';
+import {trpc} from '~app/_trpc/client';
+import {Button} from '~components/ui/button';
+import {Input} from '~components/ui/input';
+import {Category, subCategoryEnums} from '~types/categories';
+import {Dialog, DialogContent} from '~/components/ui/dialog';
 import {
     Form,
     FormField,
@@ -11,16 +21,6 @@ import {
     FormMessage,
     FormItem,
 } from '~/components/ui/form';
-import {Dialog, DialogContent, DialogTrigger} from '~/components/ui/dialog';
-import {productFormSchema} from '~validations/product';
-import {trpc} from '~app/_trpc/client';
-import {useRouter} from 'next/navigation';
-import {Button} from '~components/ui/button';
-import {Input} from '~components/ui/input';
-import React, {useEffect, useState} from 'react';
-import {Category, subCategoryEnums} from '~types/categories';
-import {CaretSortIcon, CheckIcon} from '@radix-ui/react-icons';
-
 import {Popover, PopoverContent, PopoverTrigger} from '~components/ui/popover';
 import {
     Command,
@@ -35,9 +35,7 @@ import {
     generateDefaultValues,
     productFormDefaultValues,
 } from '~config/formDefaultValues';
-import FormFieldArray from '../FormFieldArray';
 import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
-import UploadDropzone from '../UploadDropzone';
 import {useUploadS3} from '~hooks/useUploadS3';
 import {Progress} from '~components/ui/progress';
 import {useUserCompany} from '~hooks/useUserCompany';
@@ -48,6 +46,8 @@ import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 import {ProductWeb} from '~types/products';
 import Tiptap from '~components/atoms/TipTap';
 import AddImage from '~components/atoms/AddImage';
+
+import FormFieldArray from '../FormFieldArray';
 
 type ProductCreationFormProps = {isEdit?: boolean; initialData?: ProductWeb};
 
@@ -257,7 +257,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
             </Dialog>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">{'Submit'}</Button>
                     <div className="flex flex-col gap-4">
                         <div className="flex gap-8">
                             <FormField
@@ -265,7 +265,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                                 name="category.mainCategory"
                                 render={({field}) => (
                                     <FormItem className="flex flex-col">
-                                        <FormLabel>Main Category</FormLabel>
+                                        <FormLabel>{'Main Category'}</FormLabel>
                                         <Popover>
                                             <PopoverTrigger asChild>
                                                 <FormControl>
@@ -289,7 +289,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                                                 <Command>
                                                     <CommandInput placeholder="Search category..." />
                                                     <CommandEmpty>
-                                                        No category found.
+                                                        {'No category found.'}
                                                     </CommandEmpty>
                                                     <CommandGroup>
                                                         {Object.values(Category)
@@ -347,7 +347,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                                             .toUpperCase() +
                                             selectedMainCategory.slice(1)
                                     ] || {},
-                                ).map(([key, value], index) => {
+                                ).map(([_, value], index) => {
                                     return (
                                         <FormField
                                             key={index}
@@ -498,7 +498,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                             name="deliveryPrice"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Delivery price</FormLabel>
+                                    <FormLabel>{'Delivery price'}</FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="Delivery price"
@@ -536,7 +536,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                             name="description"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Product Description</FormLabel>
+                                    <FormLabel>{'Product Description'}</FormLabel>
                                     <FormControl>
                                         <div>
                                             <Tiptap

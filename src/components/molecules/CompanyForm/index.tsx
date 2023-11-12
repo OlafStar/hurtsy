@@ -3,7 +3,14 @@
 import {useForm} from 'react-hook-form';
 import * as z from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Button} from '~/components/ui/button';
+import {useRouter} from 'next/navigation';
+import {useState} from 'react';
+
+import {CompanyTypeWeb} from '~types/company';
+import {DashboardRoutes} from '~types/AppRoutes';
+import {trpc} from '~app/_trpc/client';
+import {companyCreationSchema} from '~validations/company';
+import {Input} from '~/components/ui/input';
 import {
     Form,
     FormControl,
@@ -13,20 +20,12 @@ import {
     FormLabel,
     FormMessage,
 } from '~/components/ui/form';
-import {Input} from '~/components/ui/input';
-import {companyCreationSchema} from '~validations/company';
-import {trpc} from '~app/_trpc/client';
-import {useRouter} from 'next/navigation';
-import {DashboardRoutes} from '~types/AppRoutes';
-import {CompanyTypeWeb} from '~types/company';
-import UploadDropzone from '../UploadDropzone';
-import {useState} from 'react';
+import {Button} from '~/components/ui/button';
 import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
 import {useUploadS3} from '~hooks/useUploadS3';
 import {useToast} from '~components/ui/use-toast';
 import {Dialog, DialogContent} from '~components/ui/dialog';
 import {Progress} from '~components/ui/progress';
-import useCompanyRepresentatives from '~hooks/useCompanyRepresentatives';
 import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 import AddImage from '~components/atoms/AddImage';
 
@@ -186,12 +185,12 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         name="companyName"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Nazwa firmy</FormLabel>
+                                <FormLabel>{'Nazwa firmy'}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Nazwa firmy" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    This is your public display name.
+                                    {'This is your public display name.'}
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -203,7 +202,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         name="city"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Miasto</FormLabel>
+                                <FormLabel>{'Miasto'}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Miasto" {...field} />
                                 </FormControl>
@@ -217,7 +216,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         name="phoneNumber"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Numer telefonu</FormLabel>
+                                <FormLabel>{"Numer telefonu"}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="123456789" {...field} />
                                 </FormControl>
@@ -231,7 +230,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         name="website"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Strona internetowa</FormLabel>
+                                <FormLabel>{"Strona internetowa"}</FormLabel>
                                 <FormControl>
                                     <Input
                                         placeholder="https://example.com"
@@ -248,7 +247,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         name="address"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Adres</FormLabel>
+                                <FormLabel>{"Adres"}</FormLabel>
                                 <FormControl>
                                     <Input
                                         placeholder="Ulica i numer, miasto"
@@ -265,7 +264,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         name="postalCode"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Kod pocztowy</FormLabel>
+                                <FormLabel>{"Kod pocztowy"}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="00-000" {...field} />
                                 </FormControl>
@@ -279,7 +278,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         name="country"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Kraj</FormLabel>
+                                <FormLabel>{"Kraj"}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Polska" {...field} />
                                 </FormControl>
@@ -293,7 +292,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         name="established"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Rok założenia</FormLabel>
+                                <FormLabel>{"Rok założenia"}</FormLabel>
                                 <FormControl>
                                     <Input
                                         type="number"
@@ -314,12 +313,12 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         name="type"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>Typ firmy</FormLabel>
+                                <FormLabel>{"Typ firmy"}</FormLabel>
                                 <FormControl>
                                     <select {...field}>
-                                        <option value="Producent">Producent</option>
-                                        <option value="Factory">Factory</option>
-                                        <option value="Importer">Importer</option>
+                                        <option value="Producent">{"Producent"}</option>
+                                        <option value="Factory">{"Factory"}</option>
+                                        <option value="Importer">{"Importer"}</option>
                                     </select>
                                 </FormControl>
                                 <FormMessage />
@@ -327,7 +326,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         )}
                     />
 
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">{"Submit"}</Button>
                 </form>
             </Form>
         </div>

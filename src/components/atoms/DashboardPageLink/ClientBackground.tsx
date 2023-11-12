@@ -1,6 +1,7 @@
 'use client';
 
 import {usePathname} from 'next/navigation';
+
 import {DashboardRoutes} from '~types/AppRoutes';
 import { trimPathname } from '~utils/trimPathname';
 

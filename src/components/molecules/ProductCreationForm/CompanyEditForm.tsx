@@ -1,6 +1,7 @@
 import {serverClient} from '~server/trpc/serverClient';
-import ProductCreationForm from '.';
 import {ProductWeb} from '~types/products';
+
+import ProductCreationForm from '.';
 
 type ProductEditFormProps = {
     id: string;

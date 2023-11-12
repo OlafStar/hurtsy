@@ -3,7 +3,7 @@ const Page = ({params: {slug}}: {params: {slug: string[]}}) => {
 
     switch (completeSlug) {
         default:
-            return <div>Invalid slug!</div>;
+            return <div>{'Invalid slug!'}</div>;
     }
 };
 

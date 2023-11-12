@@ -23,7 +23,7 @@ const ProductContact = async ({company, mainImage, name}: ProductWeb) => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Wyślij zapytanie ofertowe</DialogTitle>
+                    <DialogTitle>{'Wyślij zapytanie ofertowe'}</DialogTitle>
                     <DialogDescription>
                         {`Skontaktuj się z firmą ${company?.name} odnośnie wybranego produktu.`}
                     </DialogDescription>
@@ -39,7 +39,7 @@ const ProductContact = async ({company, mainImage, name}: ProductWeb) => {
                     <div className="flex gap-2">
                         <div className="flex-1">
                             <Label htmlFor="email" className="text-left">
-                                Email
+                                {'Email'}
                             </Label>
                             <Input
                                 id="email"
@@ -49,7 +49,7 @@ const ProductContact = async ({company, mainImage, name}: ProductWeb) => {
                         </div>
                         <div className="flex-1">
                             <Label htmlFor="username" className="text-left">
-                                Liczba produktów
+                                {'Liczba produktów'}
                             </Label>
                             <Input
                                 id="username"
@@ -68,7 +68,7 @@ const ProductContact = async ({company, mainImage, name}: ProductWeb) => {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit">Save changes</Button>
+                    <Button type="submit">{'Save changes'}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

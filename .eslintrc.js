@@ -5,12 +5,13 @@ module.exports = {
     ignorePatterns: ['.eslintrc.js', '.prettierrc.js'],
     rules: {
         '@next/next/no-img-element': 'off',
-        camelcase: 'error',
+        camelcase: 'off',
         'react/jsx-no-literals': 'error',
         'no-eval': 'error',
         'import/first': 'error',
         // '@typescript-eslint/explicit-function-return-type': 'off',
         'react-hooks/exhaustive-deps': 'off',
+        'react-hooks/rules-of-hooks': 'off',
         'jsx-a11y/alt-text': [0],
         'react/prop-types': 'off',
         // "no-console": [

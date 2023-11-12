@@ -1,6 +1,8 @@
 import Link from 'next/link';
+
 import {Button} from '~components/ui/button';
 import {getCurrentUser} from '~lib/session';
+
 import AccountCompany from './AccountCompany';
 
 const Account = async () => {

@@ -3,8 +3,8 @@
 import {PropsWithChildren, useState} from 'react';
 
 import {Button} from '~/components/ui/button';
-
 import {DropdownMenu, DropdownMenuTrigger} from '~/components/ui/dropdown-menu';
+
 import AccountControl from './AccountControl';
 
 const AccountHover = ({children}: PropsWithChildren) => {

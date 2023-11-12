@@ -3,6 +3,7 @@
 import {CompanyType} from '@prisma/client';
 import {usePathname} from 'next/navigation';
 import {useState} from 'react';
+
 import ClearFilterButton from '~components/atoms/ClearFilterButton';
 import {Button} from '~components/ui/button';
 import {Checkbox} from '~components/ui/checkbox';
@@ -113,7 +114,7 @@ const FilterOrder = ({params}: FilterOrderProps) => {
             )}
             <div className="text-sm font-bold">{'Sprzedawca'}</div>
             <div className="flex-col flex gap-2">
-                {Object.entries(CompanyType).map(([key, value], index) => (
+                {Object.entries(CompanyType).map(([_, value], index) => (
                     <div className="flex gap-2 items-center text-sm" key={index}>
                         <Checkbox
                             checked={companyType.includes(value)}

@@ -1,4 +1,5 @@
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
+
 import {SearchParams} from '~config/searchParams';
 
 export function useAddSearchParams() {

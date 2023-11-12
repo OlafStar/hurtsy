@@ -1,7 +1,9 @@
 import {z} from 'zod';
-import {privateProcedure} from '../trpc';
-import prismadb from '~lib/prismadb';
 import {TRPCError} from '@trpc/server';
+
+import prismadb from '~lib/prismadb';
+
+import {privateProcedure} from '../trpc';
 
 export const imagesProcedures = {
     getImages: privateProcedure

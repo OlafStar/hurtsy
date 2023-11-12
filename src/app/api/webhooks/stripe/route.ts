@@ -1,6 +1,7 @@
-import {stripe} from '~/lib/stripe';
 import {headers} from 'next/headers';
 import type Stripe from 'stripe';
+
+import {stripe} from '~/lib/stripe';
 import prismadb from '~lib/prismadb';
 
 export async function POST(request: Request) {
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
         });
     }
 
-    // if (event.type === 'customer.subscription.deleted') {
+    // if (event.type === 'customer.subscription.deleted') {}
     //     // Retrieve the subscription details from Stripe.
     //     const subscription = event.data.object as Stripe.Subscription;
     // }

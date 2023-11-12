@@ -1,4 +1,5 @@
 import {Product} from '@prisma/client';
+
 import {PriceWeb} from '~types/products';
 
 export const filterProducts = (

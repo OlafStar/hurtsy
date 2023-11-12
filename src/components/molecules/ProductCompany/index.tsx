@@ -1,9 +1,8 @@
 import {serverClient} from '~server/trpc/serverClient';
-import ServerRepresentative from '../Representative/ServerRepresentative';
-import {CompanyTypeWeb} from '~types/company';
-import {Button} from '~components/ui/button';
 import {ProductWeb} from '~types/products';
 import ProductContact from '~components/atoms/ProductContact';
+
+import ServerRepresentative from '../Representative/ServerRepresentative';
 
 type ProductCompanyProps = {
     product: ProductWeb;
@@ -34,7 +33,7 @@ const ProductCompany = async ({product, representativeId}: ProductCompanyProps) 
                             </div>
                         </div>
                     </div>
-                    <ProductContact {...product}/>
+                    <ProductContact {...product} />
                 </div>
             )}
 

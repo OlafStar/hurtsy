@@ -1,4 +1,5 @@
 import {RedirectType, redirect} from 'next/navigation';
+
 import CompanyForm from '~components/molecules/CompanyForm';
 import CompanyEditForm from '~components/molecules/CompanyForm/CompanyEditForm';
 import ProductCreationForm from '~components/molecules/ProductCreationForm';
@@ -10,9 +11,9 @@ import Products from '~components/organisms/Dashboard/Products';
 import Representatives from '~components/organisms/Dashboard/Representatives';
 import Settings from '~components/organisms/Dashboard/Settings';
 import YourCompany from '~components/organisms/Dashboard/YourCompany';
-import {dashboardNavigation} from '~config/dashboard';
+// import {dashboardNavigation} from '~config/dashboard';
 import {serverClient} from '~server/trpc/serverClient';
-import {AppRoutes, DashboardRoutes} from '~types/AppRoutes';
+import {AppRoutes} from '~types/AppRoutes';
 
 // export async function generateStaticParams() {
 //     return dashboardNavigation.map((item) => ({
@@ -23,7 +24,6 @@ import {AppRoutes, DashboardRoutes} from '~types/AppRoutes';
 const Page = async ({params: {slug}}: {params: {slug: string[]}}) => {
     const completeSlug = `/dashboard/${slug.join('/')}`;
     const company = await serverClient.getUserCompany();
-
 
     if (
         !company &&
@@ -57,7 +57,7 @@ const Page = async ({params: {slug}}: {params: {slug: string[]}}) => {
         case AppRoutes.SETTINGS:
             return <Settings />;
         default:
-            return <div>Invalid slug!</div>;
+            return <div>{'Invalid slug!'}</div>;
     }
 };
 

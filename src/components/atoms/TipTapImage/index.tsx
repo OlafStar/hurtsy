@@ -2,11 +2,12 @@
 
 import {Editor} from '@tiptap/react';
 import {ChevronLeft, ChevronRight, Image} from 'lucide-react';
-import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
+import {useCallback, useState} from 'react';
+
 import {trpc} from '~app/_trpc/client';
-import UploadDropzone from '~components/molecules/UploadDropzone';
 import {Button} from '~components/ui/button';
 import {Dialog, DialogContent} from '~components/ui/dialog';
+
 import TipTapUpload from '../TipTapUpload';
 
 type TipTapImageProps = {

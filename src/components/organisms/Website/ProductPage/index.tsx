@@ -1,8 +1,8 @@
-import {ChevronRight, LineChart} from 'lucide-react';
+import {ChevronRight} from 'lucide-react';
 import React from 'react';
+
 import ProductCompany from '~components/molecules/ProductCompany';
 import ProductPageInfo from '~components/molecules/ProductPageInfo';
-import {CompanyTypeWeb} from '~types/company';
 import {ProductWeb} from '~types/products';
 import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
@@ -17,7 +17,6 @@ const ProductPage = (props: ProductWeb) => {
         customizations,
         images,
         representativeId,
-        company,
         description,
     } = props;
     return (

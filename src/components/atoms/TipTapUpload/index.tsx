@@ -1,21 +1,19 @@
 'use client';
 
 import Dropzone from 'react-dropzone';
-import {Dispatch, SetStateAction} from 'react';
+
 import DropzoneField from '~components/atoms/DropzoneField';
 import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
-import { useDescriptionImageContext } from '../TipTap';
+
+import {useDescriptionImageContext} from '../TipTap';
 
 type UploadDropzoneProps = {
     addImage: (url: string) => void;
     className?: string;
 };
 
-const TipTapUpload = ({
-    addImage,
-    className,
-}: UploadDropzoneProps) => {
-    const {descriptionImages, setDescriptionImages} = useDescriptionImageContext()
+const TipTapUpload = ({addImage, className}: UploadDropzoneProps) => {
+    const {descriptionImages, setDescriptionImages} = useDescriptionImageContext();
     return (
         <Dropzone
             multiple={false}
@@ -28,7 +26,7 @@ const TipTapUpload = ({
                 addImage(getImgBeforeUpload(acceptedFile[0]));
             }}
         >
-            {({getRootProps, getInputProps, acceptedFiles}) => (
+            {({getRootProps, getInputProps}) => (
                 <DropzoneField
                     rootProps={getRootProps}
                     inputProps={getInputProps}
