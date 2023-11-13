@@ -55,5 +55,11 @@ export const getProductFilterSchema = z.object({
     price: z.number().optional(),
     companyType: z.array(z.string()).optional(),
     companyId: z.string().optional(),
-    pagination: z.object({page: z.number(), pageSize: z.number()})
+    pagination: z.object({page: z.number(), pageSize: z.number()}),
+    isPromoted: z.string().optional(),
+});
+
+export const getPromotedProductFilterSchema = z.object({
+    category: z.string().optional(),
+    subCategory: z.string().optional(),
 });

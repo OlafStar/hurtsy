@@ -4,6 +4,7 @@ import CompanyCard from '~components/molecules/CompanyCard';
 import Filters from '~components/molecules/Filters';
 import Pagination from '~components/molecules/Pagination';
 import ProductsCompanySwitch from '~components/molecules/ProductsCompanySwitch';
+import PromotedProducts from '~components/molecules/PromotedProducts';
 import {SearchParamsType} from '~config/searchParams';
 import {serverClient} from '~server/trpc/serverClient';
 import {CompanyTypeWeb} from '~types/company';
@@ -46,7 +47,7 @@ const CompaniesPage = async ({searchParams}: CompaniesPageProps) => {
                         ))}
                     </div>
                 </div>
-                {/* <PromotedProducts /> */}
+                <PromotedProducts searchParams={searchParams} />
             </div>
             {totalPages > 1 && (
                 <Pagination

@@ -17,7 +17,6 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-                username: {label: 'Username', type: 'text', placeholder: 'Username'},
                 password: {label: 'Password', type: 'password'},
                 email: {label: 'Email', type: 'email'},
             },
@@ -59,7 +58,6 @@ export const authOptions: NextAuthOptions = {
         async session({token, session}) {
             if (token) {
                 session.user.id = token.id;
-                session.user.name = token.name;
                 session.user.email = token.email;
                 session.user.image = token.picture;
             }
@@ -81,7 +79,6 @@ export const authOptions: NextAuthOptions = {
 
             return {
                 id: dbUser.id,
-                name: dbUser.name,
                 email: dbUser.email,
                 picture: dbUser.image,
             };

@@ -12,14 +12,23 @@ import {Input} from '~/components/ui/input';
 import {Label} from '~/components/ui/label';
 import {Textarea} from '~components/ui/textarea';
 import {getCurrentUser} from '~lib/session';
+import {PropsWithClassName} from '~types/generalTypes';
 import {ProductWeb} from '~types/products';
+import {cn} from '~utils/shadcn';
 
-const ProductContact = async ({company, mainImage, name}: ProductWeb) => {
+const ProductContact = async ({
+    company,
+    mainImage,
+    name,
+    className,
+}: ProductWeb & PropsWithClassName) => {
     const user = await getCurrentUser();
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="bg-mainBlue">{'Kontakt'}</Button>
+                <Button className={`bg-mainBlue ${cn(className)}`}>
+                    {'Kontakt'}
+                </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

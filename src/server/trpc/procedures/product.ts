@@ -5,6 +5,7 @@ import {addWeeks} from 'date-fns';
 import {
     editProductFormSchema,
     getProductFilterSchema,
+    getPromotedProductFilterSchema,
     productFormSchema,
 } from '~validations/product';
 import prismadb from '~lib/prismadb';
@@ -295,6 +296,7 @@ export const productProcedures = {
                 deliveryPrice,
                 companyId,
                 pagination: {page, pageSize},
+                isPromoted,
             } = validatedInput.data;
 
             // Initialize the AND array to hold all AND conditions
@@ -361,6 +363,14 @@ export const productProcedures = {
                 });
             }
 
+            if (isPromoted === 'true') {
+                whereClause.AND.push({
+                    promotedTo: {
+                        gte: new Date(),
+                    },
+                });
+            }
+
             if (whereClause.AND.length === 0) {
                 delete whereClause.AND;
             }
@@ -412,6 +422,95 @@ export const productProcedures = {
                 totalPages: Math.ceil(totalProduct / pageSize),
             };
         }),
+    getPromotedProducts: publicProcedure
+        .input(getPromotedProductFilterSchema)
+        .query(async ({input}) => {
+            // Initial where clause setup
+            let whereClause: any = {};
+
+            whereClause.AND = [];
+
+            whereClause.AND.push({
+                promotedTo: {
+                    gte: new Date(),
+                },
+            });
+
+            // Validate input against the schema
+            const validatedInput = getPromotedProductFilterSchema.safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            // Destructure input data
+            const {subCategory, category} = validatedInput.data;
+
+            // Function to find promoted products with the given filters
+            async function findPromotedProducts(filters: any) {
+                const count = await prismadb.product.count({where: filters});
+                if (count === 0) return null;
+
+                const maxOffset = Math.max(0, count - 4);
+                const randomOffset = Math.floor(Math.random() * maxOffset);
+
+                return await prismadb.product.findMany({
+                    where: filters,
+                    take: 4,
+                    skip: randomOffset,
+                    include: {
+                        company: true,
+                    },
+                });
+            }
+
+            // Attempt to find products with both category and subCategory filters
+            if (category) {
+                whereClause.AND.push({
+                    category: {
+                        path: '$.mainCategory',
+                        equals: category,
+                    },
+                });
+            }
+
+            if (subCategory) {
+                whereClause.AND.push({
+                    category: {
+                        path: '$.subCategory',
+                        array_contains: subCategory,
+                    },
+                });
+            }
+
+            let promotedProducts = await findPromotedProducts(whereClause);
+
+            // If no products found, attempt to remove subCategory filter
+            if (!promotedProducts && subCategory) {
+                whereClause.AND = whereClause.AND.filter(
+                    (clause: {category: {path: string | string[]}}) =>
+                        !clause.category?.path.includes('subCategory'),
+                );
+                promotedProducts = await findPromotedProducts(whereClause);
+            }
+
+            // If still no products found, attempt to remove category filter
+            if (!promotedProducts && category) {
+                whereClause.AND = whereClause.AND.filter(
+                    (clause: {category: {path: string | string[]}}) =>
+                        !clause.category?.path.includes('mainCategory'),
+                );
+                promotedProducts = await findPromotedProducts(whereClause);
+            }
+
+            // Return the found products or an empty array
+            return {
+                promotedProducts: promotedProducts || [],
+            };
+        }),
+
     promoteProduct: privateProcedure
         .input(z.string())
         .mutation(async ({input, ctx}) => {

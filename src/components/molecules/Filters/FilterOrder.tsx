@@ -27,6 +27,7 @@ const FilterOrder = ({params}: FilterOrderProps) => {
     const [companyType, setCompanyType] = useState<Array<CompanyType>>(
         params?.companyType ? (params?.companyType as Array<CompanyType>) : [],
     );
+    const [isPromoted, setIsPromoted] = useState(params?.isPromoted || '');
 
     const handleMinQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === '' || /^[0-9]+$/.test(e.target.value)) {
@@ -125,7 +126,21 @@ const FilterOrder = ({params}: FilterOrderProps) => {
                 ))}
             </div>
             <div className="text-sm font-bold">{'Dodatkowe'}</div>
-            <div className="flex-col flex gap-2"></div>
+            <div className="flex-col flex gap-2">
+                {path !== AppRoutes.WEB_COMPANIES && (
+                    <div className="flex gap-2 items-center text-sm">
+                        <Checkbox
+                            checked={isPromoted === 'true'}
+                            onClick={() =>
+                                setIsPromoted(
+                                    isPromoted === 'true' ? 'false' : 'true',
+                                )
+                            }
+                        />
+                        <div>{'Promowane'}</div>
+                    </div>
+                )}
+            </div>
             <Button
                 onClick={() => {
                     const updatedParams = {
@@ -133,6 +148,7 @@ const FilterOrder = ({params}: FilterOrderProps) => {
                         ...(minQuantity !== '' && {minQuantity}),
                         ...(deliveryPrice !== '' && {deliveryPrice}),
                         ...(companyType.length > 0 && {companyType}),
+                        ...(isPromoted !== '' && {isPromoted}),
                     };
 
                     const resetKeys = [
@@ -144,6 +160,7 @@ const FilterOrder = ({params}: FilterOrderProps) => {
                         ...(companyType.length === 0
                             ? [SearchParams.CompanyType]
                             : []),
+                        ...(isPromoted === '' ? [SearchParams.IsPromoted] : []),
                     ];
                     updateParams(updatedParams, resetKeys);
                 }}

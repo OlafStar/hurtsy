@@ -4,6 +4,7 @@ import Filters from '~components/molecules/Filters';
 import Pagination from '~components/molecules/Pagination';
 import ProductCard from '~components/molecules/ProductCard';
 import ProductsCompanySwitch from '~components/molecules/ProductsCompanySwitch';
+import PromotedProducts from '~components/molecules/PromotedProducts';
 import {SearchParamsType} from '~config/searchParams';
 import {serverClient} from '~server/trpc/serverClient';
 import {ProductWeb} from '~types/products';
@@ -26,6 +27,7 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
                 ? [searchParams?.companyType]
                 : searchParams?.companyType,
         companyId: searchParams?.companyId as string,
+        isPromoted: searchParams?.isPromoted as string,
         pagination: {
             page: searchParams?.page ? parseInt(searchParams?.page as string) : 1,
             pageSize: searchParams?.pageSize
@@ -59,7 +61,7 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
                         ))}
                     </div>
                 </div>
-                {/* <PromotedProducts /> */}
+                <PromotedProducts searchParams={searchParams} />
             </div>
             {totalPages > 1 && (
                 <Pagination
