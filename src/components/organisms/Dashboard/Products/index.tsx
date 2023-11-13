@@ -17,7 +17,10 @@ const Products = async () => {
                         />
                     }
                 >
-                    <ProductsDataTable initialProducts={initialProducts} initialCounter={initialCounter} />
+                    <ProductsDataTable
+                        initialProducts={initialProducts}
+                        initialCounter={initialCounter}
+                    />
                 </ProductTabs>
             </div>
         </div>

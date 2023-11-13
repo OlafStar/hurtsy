@@ -22,14 +22,16 @@ export type ProductsDataTableProps = {
 const ProductsDataTable: FC<ProductsDataTableProps> = ({
     isPromoted,
     initialProducts,
-    initialCounter
+    initialCounter,
 }) => {
-    const {products} = useUserCompanyProducts(initialProducts, initialCounter);
-
+    const {products} = useUserCompanyProducts(
+        initialProducts,
+        initialCounter,
+        isPromoted,
+    );
 
     return (
         <div>
-            <div>{isPromoted && 'promoted'}</div>
             {products && (
                 <DataTable columns={columns} data={products as ProductWeb[]} />
             )}

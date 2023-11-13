@@ -138,27 +138,34 @@ export const productProcedures = {
 
             return product;
         }),
-    getUserCompanyProducts: privateProcedure.query(async ({ctx}) => {
-        const company = await getUserCompany(ctx);
+    getUserCompanyProducts: privateProcedure
+        .input(z.boolean().optional())
+        .query(async ({input, ctx}) => {
+            const company = await getUserCompany(ctx);
 
-        if (!company) {
-            throw new TRPCError({
-                code: 'BAD_REQUEST',
-                message: 'Company dosent exist',
-            });
-        }
+            if (!company) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: 'Company dosent exist',
+                });
+            }
 
-        return prismadb.product.findMany({
-            where: {
-                companyId: company.id,
-            },
-            orderBy: [
-                {
-                    createdAt: 'desc',
+            const isPromoted = input;
+
+            const getPromoted = isPromoted ? {promotedTo: {gte: new Date()}} : {};
+
+            return prismadb.product.findMany({
+                where: {
+                    companyId: company.id,
+                    AND: getPromoted,
                 },
-            ],
-        });
-    }),
+                orderBy: [
+                    {
+                        createdAt: 'desc',
+                    },
+                ],
+            });
+        }),
     getUserProductsCount: privateProcedure.query(async ({ctx}) => {
         const company = await getUserCompany(ctx);
 

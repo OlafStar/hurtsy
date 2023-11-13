@@ -1,7 +1,7 @@
 'use client';
 
 import {ColumnDef} from '@tanstack/react-table';
-import {MoreHorizontal} from 'lucide-react';
+import {CheckCircle, MoreHorizontal} from 'lucide-react';
 import {useRouter} from 'next/navigation';
 
 import {Checkbox} from '~/components/ui/checkbox';
@@ -231,8 +231,9 @@ export const columns: ColumnDef<ProductWeb>[] = [
                                 {'Promuj'}
                             </DropdownMenuItem>
                         ) : (
-                            <DropdownMenuItem className="pointer-events-none">
-                                {'Promowany'}
+                            <DropdownMenuItem className="pointer-events-none opacity-40 flex gap-1">
+                                <CheckCircle className="h-3 w-3" />
+                                <div>{'Promowany'}</div>
                             </DropdownMenuItem>
                         )}
 
@@ -250,11 +251,6 @@ export const columns: ColumnDef<ProductWeb>[] = [
                             {'Odśwież'}
                         </DropdownMenuItem>
 
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(product.id)}
-                        >
-                            {'Copy payment ID'}
-                        </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={() =>
                                 router.push(

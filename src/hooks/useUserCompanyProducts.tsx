@@ -7,6 +7,7 @@ export default function useUserCompanyProducts(
     initialCounter?: Awaited<
         ReturnType<(typeof serverClient)['getUserProductsCount']>
     >,
+    getPromoted?: boolean,
 ) {
     const formattedInitial = initial?.map((product) => ({
         ...product,
@@ -18,7 +19,7 @@ export default function useUserCompanyProducts(
         data: products,
         refetch: refetchProducts,
         isLoading,
-    } = trpc.getUserCompanyProducts.useQuery(undefined, {
+    } = trpc.getUserCompanyProducts.useQuery(getPromoted, {
         initialData: formattedInitial,
         refetchOnMount: false,
         refetchOnReconnect: false,
