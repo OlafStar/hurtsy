@@ -200,6 +200,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
             const product = row.original;
             const {mutateAsync} = trpc.deleteProduct.useMutation();
             const {mutateAsync: createProduct} = trpc.createProduct.useMutation();
+            const {mutateAsync: promote} = trpc.promoteProduct.useMutation();
             const {refetch} = useUserCompanyProducts();
             const {toast} = useToast();
             const router = useRouter();
@@ -213,6 +214,25 @@ export const columns: ColumnDef<ProductWeb>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>{'Akcje'}</DropdownMenuLabel>
+                        {!product.promotedTo ||
+                        new Date(product.promotedTo) < new Date() ? (
+                            <DropdownMenuItem
+                                onClick={async () => {
+                                    await promote(product.id);
+                                    await refetch();
+                                    toast({
+                                        title: 'Succes',
+                                        description: 'Product has been promoted',
+                                    });
+                                    router.refresh();
+                                }}
+                            >
+                                {'Promuj'}
+                            </DropdownMenuItem>
+                        ) : (
+                            <DropdownMenuItem className='pointer-events-none'>{'Promowany'}</DropdownMenuItem>
+                        )}
+
                         <DropdownMenuItem
                             onClick={() => navigator.clipboard.writeText(product.id)}
                         >

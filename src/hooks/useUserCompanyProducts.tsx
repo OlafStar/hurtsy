@@ -8,12 +8,17 @@ export default function useUserCompanyProducts(
         ReturnType<(typeof serverClient)['getUserProductsCount']>
     >,
 ) {
+    const formattedInitial = initial?.map((product) => ({
+        ...product,
+        promotedTo: product.promotedTo?.toISOString() ?? null, // Convert Date to string
+    }));
+
     const {
         data: products,
         refetch: refetchProducts,
         isLoading,
     } = trpc.getUserCompanyProducts.useQuery(undefined, {
-        initialData: initial,
+        initialData: formattedInitial,
         refetchOnMount: false,
         refetchOnReconnect: false,
         refetchOnWindowFocus: false,

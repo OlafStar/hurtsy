@@ -31,6 +31,7 @@ export type ProductWeb = {
     prices: PriceWeb[];
     deliveryPrice?: number | null;
     promotionDate?: string | null;
+    promotedTo?: Date | null;
     customizations?: CustomizationWeb[] | null;
     customProperties: CustomPropertiesWeb[];
     companyId: string;

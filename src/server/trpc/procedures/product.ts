@@ -1,5 +1,6 @@
 import {TRPCError} from '@trpc/server';
 import {z} from 'zod';
+import {addWeeks} from 'date-fns';
 
 import {
     editProductFormSchema,
@@ -363,6 +364,9 @@ export const productProcedures = {
                 include: {
                     company: true,
                 },
+                orderBy: {
+                    promotedTo: 'desc',
+                },
                 skip: skip,
                 take: pageSize,
             });
@@ -390,5 +394,37 @@ export const productProcedures = {
                 totalProduct,
                 totalPages: Math.ceil(totalProduct / pageSize),
             };
+        }),
+    promoteProduct: privateProcedure
+        .input(z.string())
+        .mutation(async ({input, ctx}) => {
+            // Validate input
+            const validatedInput = z.string().safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const company = await getUserCompany(ctx);
+
+            if (!company) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: 'Company dosent exist',
+                });
+            }
+
+            const oneWeekFromNow = addWeeks(new Date(), 1);
+
+            await prismadb.product.update({
+                where: {
+                    id: validatedInput.data,
+                },
+                data: {
+                    promotedTo: oneWeekFromNow,
+                },
+            });
         }),
 };

@@ -76,6 +76,7 @@ model Product {
   customProperties  Json               // Array of custom properties with name and value
   companyId         String
   representativeId  String
+  promotedTo        DateTime?
   company           Company            @relation(fields: [companyId], references: [id])
   representative    Representative     @relation(fields: [representativeId], references: [id])
 
