@@ -201,6 +201,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
             const {mutateAsync} = trpc.deleteProduct.useMutation();
             const {mutateAsync: createProduct} = trpc.createProduct.useMutation();
             const {mutateAsync: promote} = trpc.promoteProduct.useMutation();
+            const {mutateAsync: bump} = trpc.bumpProduct.useMutation();
             const {refetch} = useUserCompanyProducts();
             const {toast} = useToast();
             const router = useRouter();
@@ -230,8 +231,24 @@ export const columns: ColumnDef<ProductWeb>[] = [
                                 {'Promuj'}
                             </DropdownMenuItem>
                         ) : (
-                            <DropdownMenuItem className='pointer-events-none'>{'Promowany'}</DropdownMenuItem>
+                            <DropdownMenuItem className="pointer-events-none">
+                                {'Promowany'}
+                            </DropdownMenuItem>
                         )}
+
+                        <DropdownMenuItem
+                            onClick={async () => {
+                                bump(product.id);
+                                await refetch();
+                                toast({
+                                    title: 'Succes',
+                                    description: 'Product has been refreshed',
+                                });
+                                router.refresh();
+                            }}
+                        >
+                            {'Odśwież'}
+                        </DropdownMenuItem>
 
                         <DropdownMenuItem
                             onClick={() => navigator.clipboard.writeText(product.id)}

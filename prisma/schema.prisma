@@ -77,6 +77,8 @@ model Product {
   companyId         String
   representativeId  String
   promotedTo        DateTime?
+  createdAt         DateTime @default(now())
+
   company           Company            @relation(fields: [companyId], references: [id])
   representative    Representative     @relation(fields: [representativeId], references: [id])
 

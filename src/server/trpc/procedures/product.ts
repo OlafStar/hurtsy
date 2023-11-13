@@ -152,6 +152,11 @@ export const productProcedures = {
             where: {
                 companyId: company.id,
             },
+            orderBy: [
+                {
+                    createdAt: 'desc',
+                },
+            ],
         });
     }),
     getUserProductsCount: privateProcedure.query(async ({ctx}) => {
@@ -364,9 +369,14 @@ export const productProcedures = {
                 include: {
                     company: true,
                 },
-                orderBy: {
-                    promotedTo: 'desc',
-                },
+                orderBy: [
+                    {
+                        promotedTo: 'desc',
+                    },
+                    {
+                        createdAt: 'desc',
+                    },
+                ],
                 skip: skip,
                 take: pageSize,
             });
@@ -424,6 +434,36 @@ export const productProcedures = {
                 },
                 data: {
                     promotedTo: oneWeekFromNow,
+                },
+            });
+        }),
+    bumpProduct: privateProcedure
+        .input(z.string())
+        .mutation(async ({input, ctx}) => {
+            // Validate input
+            const validatedInput = z.string().safeParse(input);
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const company = await getUserCompany(ctx);
+
+            if (!company) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: 'Company dosent exist',
+                });
+            }
+
+            await prismadb.product.update({
+                where: {
+                    id: validatedInput.data,
+                },
+                data: {
+                    createdAt: new Date(),
                 },
             });
         }),

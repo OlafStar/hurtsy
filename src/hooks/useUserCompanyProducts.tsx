@@ -11,6 +11,7 @@ export default function useUserCompanyProducts(
     const formattedInitial = initial?.map((product) => ({
         ...product,
         promotedTo: product.promotedTo?.toISOString() ?? null, // Convert Date to string
+        createdAt: product.createdAt.toISOString(),
     }));
 
     const {
