@@ -16,6 +16,9 @@ module.exports = {
             },
         },
         extend: {
+            screens: {
+                'xs': {raw: '(min-width: 440px)'},
+            },
             fontSize: {
                 logo: '32px',
             },

@@ -14,10 +14,13 @@ const ProductsCompanySwitch = () => {
             onValueChange={(e) => {
                 router.push(`/${e}?${new URLSearchParams(searchParams)}`);
             }}
-            className="w-[228px] rounded-full overflow-hidden self-end"
+            className="w-[228px] rounded-full overflow-hidden self-end h-[30px] md:h-auto"
         >
-            <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger className="rounded-full" value={'products'}>
+            <TabsList className="grid w-full grid-cols-2 h-full md:h-auto">
+                <TabsTrigger
+                    className="rounded-full h-full md:h-auto"
+                    value={'products'}
+                >
                     {'Produkty'}
                 </TabsTrigger>
                 <TabsTrigger className="rounded-full" value={'companies'}>

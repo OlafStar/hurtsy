@@ -8,7 +8,6 @@ import {AppRoutes} from '~types/AppRoutes';
 
 import AccountHover from './AccountHover';
 
-
 const AccountCompany = async () => {
     const company = await serverClient.getUserCompany();
 
@@ -20,7 +19,7 @@ const AccountCompany = async () => {
                     <User />
                 </AvatarFallback>
             </Avatar>
-            <div>{company.name}</div>
+            <div className="whitespace-nowrap">{company.name}</div>
         </AccountHover>
     ) : (
         <>

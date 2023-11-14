@@ -1,5 +1,8 @@
+import {XIcon} from 'lucide-react';
 import React from 'react';
 
+import ClearFilterButton from '~components/atoms/ClearFilterButton';
+import FiltersSheet from '~components/atoms/FiltersSheet';
 import Filters from '~components/molecules/Filters';
 import Pagination from '~components/molecules/Pagination';
 import ProductCard from '~components/molecules/ProductCard';
@@ -46,10 +49,20 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
     };
     return (
         <div className="flex flex-col gap-8 min-h-[100%]">
-            <div className="flex pt-8">
-                <Filters params={searchParams} />
-                <div className="flex flex-col align-end flex-1 px-4 gap-5">
-                    <ProductsCompanySwitch />
+            <div className="flex pt-0 lg:pt-4">
+                <Filters params={searchParams} className="hidden lg:flex" />
+                <div className="flex flex-col flex-1 lg:px-4 gap-2 sm:gap-5">
+                    <div className="flex justify-between lg:justify-end">
+                        <div className="lg:hidden flex items-center gap-4">
+                            <FiltersSheet searchParams={searchParams}>
+                                <div className="text-sm font-medium">{'Filtry'}</div>
+                            </FiltersSheet>
+                            <ClearFilterButton paramsToDelete={'all'}>
+                                <XIcon className="h-4 w-4" />
+                            </ClearFilterButton>
+                        </div>
+                        <ProductsCompanySwitch />
+                    </div>
                     <div className="flex flex-col gap-6">
                         {filterProducts(products, filters).map((item, index) => (
                             <React.Fragment key={index}>
@@ -61,8 +74,15 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
                         ))}
                     </div>
                 </div>
-                <PromotedProducts searchParams={searchParams} />
+                <PromotedProducts
+                    searchParams={searchParams}
+                    className="hidden xl:flex"
+                />
             </div>
+            <PromotedProducts
+                searchParams={searchParams}
+                className="static xl:hidden sm:flex hidden"
+            />
             {totalPages > 1 && (
                 <Pagination
                     {...{

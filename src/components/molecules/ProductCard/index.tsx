@@ -13,12 +13,12 @@ const ProductCard = (props: ProductWeb) => {
     const {priceRange, lowestMinQuantity} = getPriceRange(prices);
 
     return (
-        <div className={`flex gap-4 items-center `}>
+        <div className={`flex flex-col xs:flex-row gap-4 xs:items-start md:items-center`}>
             <Link href={`${AppRoutes.WEB_PRODUCTS}/${id}`} className="flex-1">
-                <div className="flex gap-3 leading-none">
+                <div className="flex flex-col md:flex-row gap-3 leading-none">
                     <img
                         src={mainImage}
-                        className="w-[161px] aspect-square object-contain"
+                        className="w-full xs:w-[161px] aspect-square object-contain"
                     />
                     <div className="w-full flex flex-col gap-3">
                         <div>{name}</div>
@@ -28,12 +28,12 @@ const ProductCard = (props: ProductWeb) => {
                         </div>
                         <div
                             style={{
-                                display: 'grid',
                                 gridTemplateRows: 'repeat(2, auto)',
                                 gridAutoFlow: 'column',
                                 gridAutoColumns: 'max-content',
                                 columnGap: '16px',
                             }}
+                            className="flex flex-wrap md:grid"
                         >
                             {customProperties.map((item, index) => (
                                 <div
@@ -45,7 +45,7 @@ const ProductCard = (props: ProductWeb) => {
                                 </div>
                             ))}
                         </div>
-                        <div className="w-full h-[1px] bg-black opacity-10" />
+                        <div className="w-full h-[1px] bg-black opacity-10 hidden md:block" />
                         <div className="text-xs">
                             {isPromotionActive(promotedTo) && (
                                 <Badge>{'Wyróżnione'}</Badge>
@@ -54,8 +54,8 @@ const ProductCard = (props: ProductWeb) => {
                     </div>
                 </div>
             </Link>
-            <div className="flex gap-4 w-[140px] justify-center">
-                <div className="flex flex-col gap-2 items-center justify-end">
+            <div className="flex  gap-4 xs:w-[140px] justify-center">
+                <div className="flex flex-row xs:flex-col gap-2 items-center justify-end">
                     <img
                         src={company?.image || ''}
                         className="w-16 h-16 rounded-full object-contain"
