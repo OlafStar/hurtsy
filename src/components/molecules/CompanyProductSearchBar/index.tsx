@@ -9,12 +9,17 @@ import {Button} from '~components/ui/button';
 import {Input} from '~components/ui/input';
 import {SearchParams} from '~config/searchParams';
 import {AppRoutes} from '~types/AppRoutes';
+import {PropsWithClassName} from '~types/generalTypes';
+import {cn} from '~utils/shadcn';
 
 type CompanyProductSearchBarProps = {
     id: string;
 };
 
-const CompanyProductSearchBar = ({id}: CompanyProductSearchBarProps) => {
+const CompanyProductSearchBar = ({
+    id,
+    className,
+}: CompanyProductSearchBarProps & PropsWithClassName) => {
     const searchParams = useSearchParams();
 
     const search = searchParams.get(SearchParams.SearchQuery);
@@ -23,7 +28,11 @@ const CompanyProductSearchBar = ({id}: CompanyProductSearchBarProps) => {
     const [searchValue, setSearchValue] = useState(search ? search : '');
 
     return (
-        <div className="flex justify-between border-b border-black border-opacity-10 w-full max-w-[700px] overflow-hidden">
+        <div
+            className={`flex justify-between border-b border-black border-opacity-10 w-full max-w-[700px] overflow-hidden ${cn(
+                className,
+            )}`}
+        >
             <div className="w-full flex items-center pl-4">
                 <SearchIcon className="w-4 mr-0 opacity-40" />
                 <Input

@@ -2,8 +2,8 @@ import {XIcon} from 'lucide-react';
 import React, {Suspense} from 'react';
 
 import CategoriesButton from '~components/atoms/CategoriesButton';
+import CategoriesSheet from '~components/atoms/CategoriesSheet';
 import ClearFilterButton from '~components/atoms/ClearFilterButton';
-import FiltersSheet from '~components/atoms/FiltersSheet';
 import Loader from '~components/atoms/Loader';
 import CompanyPageHeader from '~components/molecules/CompanyPageHeader';
 import CompanyProductCard from '~components/molecules/CompanyProductCard';
@@ -57,11 +57,11 @@ const CompanyPage: React.FC<
                         </div>
                         <div className="md:hidden flex justify-between">
                             <div className=" items-center gap-4">
-                                <FiltersSheet searchParams={props.searchParams}>
+                                <CategoriesSheet categories={categories}>
                                     <div className="text-sm font-medium">
-                                        {'Filtry'}
+                                        {'Kategorie'}
                                     </div>
-                                </FiltersSheet>
+                                </CategoriesSheet>
                                 <ClearFilterButton paramsToDelete={'all'}>
                                     <XIcon className="h-4 w-4" />
                                 </ClearFilterButton>
@@ -88,7 +88,7 @@ const CompanyPage: React.FC<
                                 ))}
                             </div>
                             <Suspense fallback={<Loader />}>
-                                <div className="flex flex-wrap xs:gap-6 xs:justify-around">
+                                <div className="grid sm:grid-cols-3 xl:grid-cols-5 gap-4">
                                     {products.map((item, index) => (
                                         <CompanyProductCard
                                             key={index}
@@ -98,7 +98,7 @@ const CompanyPage: React.FC<
                                 </div>
                             </Suspense>
                         </div>
-                        <div className='xs:hidden'>
+                        <div className="xs:hidden">
                             <Pagination
                                 {...{
                                     currentPage,

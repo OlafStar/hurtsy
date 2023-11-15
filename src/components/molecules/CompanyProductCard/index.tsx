@@ -18,16 +18,14 @@ const CompanyProductCard = (props: ProductWeb) => {
     return (
         <div className="flex flex-col gap-3">
             <Link href={`${AppRoutes.WEB_PRODUCTS}/${id}`}>
-                <div className="flex flex-col xs:w-[142px] gap-3">
+                <div className="flex flex-col gap-3">
                     <img
                         src={mainImage || ''}
                         alt={name}
-                        className="xs:w-[142px] object-contain aspect-square"
+                        className="sm:w-[142px] object-contain aspect-square"
                     />
                     <div className="flex gap-1 flex-col">
-                        <div className="overflow-hidden xs:whitespace-nowrap text-ellipsis">
-                            {name}
-                        </div>
+                        <div className="overflow-hidden line-clamp-2">{name}</div>
                         <div className="flex gap-1 text-sm">
                             <div className="opacity-50">{'Min zamówienie:'}</div>
                             <div>{lowestMinQuantity}</div>

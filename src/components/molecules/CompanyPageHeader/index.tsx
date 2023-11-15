@@ -38,7 +38,7 @@ const CompanyPageHeader = ({
                 </div>
             </div>
             <div>
-                <CompanyProductSearchBar id={id} />
+                <CompanyProductSearchBar id={id} className="md:w-[270px] max-w-[1000px] " />
             </div>
         </div>
     );

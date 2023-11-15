@@ -11,9 +11,15 @@ import {
 import {SearchParams} from '~config/searchParams';
 import {AppRoutes} from '~types/AppRoutes';
 import {Category} from '~types/categories';
+import {CategoryWeb} from '~types/products';
 import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
-const CategoriesSheet = ({children}: PropsWithChildren) => {
+import CategoriesButton from '../CategoriesButton';
+
+const CategoriesSheet = ({
+    children,
+    categories,
+}: PropsWithChildren & {categories?: CategoryWeb[]}) => {
     return (
         <Sheet>
             <SheetTrigger>{children}</SheetTrigger>
@@ -23,16 +29,20 @@ const CategoriesSheet = ({children}: PropsWithChildren) => {
             >
                 <SheetHeader className="text-left ">
                     <SheetTitle>{'Kategorie'}</SheetTitle>
-                    {Object.entries(Category).map(([item, cat]) => (
-                        <Link
-                            key={item + cat}
-                            href={`${AppRoutes.WEB_PRODUCTS}?${SearchParams.Category}=${cat}`}
-                        >
-                            <div className="text-sm font-medium leading-none p-2 transition-colors hover:bg-accent hover:text-accent-foreground data-[active]:bg-accent/50">
-                                {translateEnumValueToPolish(cat)}
-                            </div>
-                        </Link>
-                    ))}
+                    {categories
+                        ? categories.map((item) => (
+                              <CategoriesButton key={item.mainCategory} {...item} />
+                          ))
+                        : Object.entries(Category).map(([item, cat]) => (
+                              <Link
+                                  key={item + cat}
+                                  href={`${AppRoutes.WEB_PRODUCTS}?${SearchParams.Category}=${cat}`}
+                              >
+                                  <div className="text-sm font-medium leading-none p-2 transition-colors hover:bg-accent hover:text-accent-foreground data-[active]:bg-accent/50">
+                                      {translateEnumValueToPolish(cat)}
+                                  </div>
+                              </Link>
+                          ))}
                 </SheetHeader>
             </SheetContent>
         </Sheet>
