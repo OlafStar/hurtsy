@@ -1,6 +1,9 @@
+import {XIcon} from 'lucide-react';
 import React, {Suspense} from 'react';
 
 import CategoriesButton from '~components/atoms/CategoriesButton';
+import ClearFilterButton from '~components/atoms/ClearFilterButton';
+import FiltersSheet from '~components/atoms/FiltersSheet';
 import Loader from '~components/atoms/Loader';
 import CompanyPageHeader from '~components/molecules/CompanyPageHeader';
 import CompanyProductCard from '~components/molecules/CompanyProductCard';
@@ -35,8 +38,8 @@ const CompanyPage: React.FC<
                     {/* <div>
                     Opis
                   </div> */}
-                    <div className="flex flex-col gap-8">
-                        <div className="flex justify-between">
+                    <div className="flex flex-col gap-4 md:gap-8">
+                        <div className="hidden md:flex justify-between">
                             <div className="font-bold text-2xl">
                                 {'Sprawdź produkty'}
                             </div>
@@ -52,8 +55,31 @@ const CompanyPage: React.FC<
                                 />
                             </div>
                         </div>
-                        <div className="grid grid-cols-[max-content_1fr] gap-x-8">
-                            <div className="flex flex-col gap-4 min-w-[184px]">
+                        <div className="md:hidden flex justify-between">
+                            <div className=" items-center gap-4">
+                                <FiltersSheet searchParams={props.searchParams}>
+                                    <div className="text-sm font-medium">
+                                        {'Filtry'}
+                                    </div>
+                                </FiltersSheet>
+                                <ClearFilterButton paramsToDelete={'all'}>
+                                    <XIcon className="h-4 w-4" />
+                                </ClearFilterButton>
+                            </div>
+                            <div>
+                                <Pagination
+                                    {...{
+                                        currentPage,
+                                        totalPages,
+                                        total: totalProduct,
+                                        pageSize: '10',
+                                    }}
+                                    hidePageSize
+                                />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-x-8">
+                            <div className="hidden md:flex flex-col gap-4 min-w-[184px]">
                                 {categories.map((item) => (
                                     <CategoriesButton
                                         key={item.mainCategory}
@@ -62,7 +88,7 @@ const CompanyPage: React.FC<
                                 ))}
                             </div>
                             <Suspense fallback={<Loader />}>
-                                <div className="flex flex-wrap gap-6 justify-around">
+                                <div className="flex flex-wrap xs:gap-6 xs:justify-around">
                                     {products.map((item, index) => (
                                         <CompanyProductCard
                                             key={index}
@@ -71,6 +97,17 @@ const CompanyPage: React.FC<
                                     ))}
                                 </div>
                             </Suspense>
+                        </div>
+                        <div className='xs:hidden'>
+                            <Pagination
+                                {...{
+                                    currentPage,
+                                    totalPages,
+                                    total: totalProduct,
+                                    pageSize: '10',
+                                }}
+                                hidePageSize
+                            />
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,3 @@
-import {Button} from '~components/ui/button';
 import {CompanyTypeWeb} from '~types/company';
 
 import CompanyProductSearchBar from '../CompanyProductSearchBar';
@@ -13,12 +12,12 @@ const CompanyPageHeader = ({
     id,
 }: CompanyTypeWeb) => {
     return (
-        <div className="flex justify-between items-center">
-            <div className="flex gap-4">
+        <div className="flex flex-col gap-8 md:gap-0 md:flex-row md:justify-between md:items-center">
+            <div className="flex flex-col xs:flex-row gap-4">
                 <img
                     src={image || ''}
                     alt={`${name}-logo`}
-                    className="w-[148px] aspect-square object-contain"
+                    className="xs:w-[148px] aspect-square object-contain"
                 />
                 <div className="flex flex-col gap-3 justify-between">
                     <div className="text-xl leading-none">{name}</div>
@@ -36,7 +35,6 @@ const CompanyPageHeader = ({
                             <div>{`${street}, ${postCode} ${city}`}</div>
                         </div>
                     </div>
-                    <Button className="bg-mainBlue font-bold">{'Kontakt'}</Button>
                 </div>
             </div>
             <div>

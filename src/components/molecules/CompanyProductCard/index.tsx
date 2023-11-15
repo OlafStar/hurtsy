@@ -18,14 +18,14 @@ const CompanyProductCard = (props: ProductWeb) => {
     return (
         <div className="flex flex-col gap-3">
             <Link href={`${AppRoutes.WEB_PRODUCTS}/${id}`}>
-                <div className="flex flex-col w-[142px] gap-3">
+                <div className="flex flex-col xs:w-[142px] gap-3">
                     <img
                         src={mainImage || ''}
                         alt={name}
-                        className="w-[142px] object-contain aspect-square"
+                        className="xs:w-[142px] object-contain aspect-square"
                     />
                     <div className="flex gap-1 flex-col">
-                        <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+                        <div className="overflow-hidden xs:whitespace-nowrap text-ellipsis">
                             {name}
                         </div>
                         <div className="flex gap-1 text-sm">

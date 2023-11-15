@@ -53,7 +53,7 @@ const Pagination = ({
     };
 
     return (
-        <div className="w-full flex justify-end items-end gap-2 pb-8">
+        <div className="w-full flex justify-end items-end gap-2">
             {!hidePageSize && <PaginationPageSize size={pageSize} />}
             {renderPagination()}
         </div>
