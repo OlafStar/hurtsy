@@ -6,38 +6,43 @@ import ServerRepresentative from '../Representative/ServerRepresentative';
 
 type ProductCompanyProps = {
     product: ProductWeb;
-    representativeId: string;
 };
 
-const ProductCompany = async ({product, representativeId}: ProductCompanyProps) => {
-    const representative = await serverClient.getRepresentative(representativeId);
+const ProductCompany = async ({product}: ProductCompanyProps) => {
+    const representative = await serverClient.getRepresentative(
+        product.representativeId,
+    );
 
     const {company} = product;
     return (
-        <div className="flex flex-col gap-8">
+        <div className="grid grid-cols-2 grid-rows-1 gap-4">
             {company && (
-                <div className="flex flex-col gap-3">
-                    <div className="flex gap-2">
+                <div className="flex flex-col gap-3 justify-between border border-black border-opacity-10 rounded-xl overflow-hidden">
+                    <div className="flex gap-2 items-center">
                         <img
                             src={company.image || ''}
                             className="w-[72px] h-[72px] object-contain"
                         />
-                        <div className="flex flex-col gap-3">
-                            <div className="text-sm">{company.name}</div>
+                        <div className="flex flex-1 flex-col gap-2">
+                            <div>{company.name}</div>
                             <div className="flex gap-1 text-xs">
                                 <div className="opacity-50">{'Adres:'}</div>
-                                <div className="flex flex-col">
+                                <div className="flex flex-row flex-wrap">
                                     <div>{`${company.street}`}</div>
                                     <div>{`${company.postCode} ${company.city}`}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <ProductContact {...product} />
+                    <ProductContact
+                        {...product}
+                        className="text-sm border-t-black border-opacity-10 rounded-t-none"
+                    />
                 </div>
             )}
-
-            {representative && <ServerRepresentative {...representative} />}
+            <div className="border border-black border-opacity-10 rounded-xl">
+                {representative && <ServerRepresentative {...representative} />}
+            </div>
         </div>
     );
 };

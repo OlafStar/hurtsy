@@ -30,13 +30,6 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
         params?.category ? (params?.category as string) : undefined,
     );
 
-    // useEffect(() => {
-    //     if (selectedCategory) {
-    //         updateParams({category: selectedCategory}, [SearchParams.SubCategory]);
-    //     }
-
-    //     console.log(selectedCategory);
-    // }, [selectedCategory, params?.category]);
     return (
         <>
             <div className="flex justify-between text-sm font-bold">
@@ -74,7 +67,7 @@ const FilterCategories = ({params}: FilterCategoriesProps) => {
                     <PopoverContent className="w-[220px] h-[300px] p-0">
                         <Command>
                             <CommandInput placeholder="Search category..." />
-                            <CommandEmpty>{"No category found."}</CommandEmpty>
+                            <CommandEmpty>{'No category found.'}</CommandEmpty>
                             <CommandGroup className="overflow-scroll">
                                 {Object.entries(Category).map(([_, cat]) => (
                                     <CommandItem

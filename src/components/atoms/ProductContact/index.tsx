@@ -1,4 +1,4 @@
-import {Button} from '~/components/ui/button';
+import {Button, ButtonProps} from '~/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -21,12 +21,13 @@ const ProductContact = async ({
     mainImage,
     name,
     className,
-}: ProductWeb & PropsWithClassName) => {
+    button
+}: ProductWeb & PropsWithClassName & {button?: ButtonProps}) => {
     const user = await getCurrentUser();
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className={`bg-mainBlue ${cn(className)}`}>
+                <Button className={`${cn(className)}`} {...button}>
                     {'Kontakt'}
                 </Button>
             </DialogTrigger>

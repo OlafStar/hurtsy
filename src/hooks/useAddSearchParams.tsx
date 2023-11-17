@@ -32,7 +32,7 @@ export function useAddSearchParams() {
         });
 
         const newSearch = searchParams.toString();
-        router.replace(newSearch ? `${path}?${newSearch}` : path);
+        router.push(newSearch ? `${path}?${newSearch}` : path);
     };
 
     const deleteParam = (keysToDelete: SearchParams[], newPath?: string) => {

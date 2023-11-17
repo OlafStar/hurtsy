@@ -20,21 +20,22 @@ const PromotedProducts = async ({
                 )}`}
             >
                 <div className="text-xl font-bold">{'Promowane'}</div>
-                <div className="flex xl:flex-col gap-6">
+                <div className="overflow-y-scroll xs:overflow-auto hide-scrollbar flex xl:flex-col gap-6">
                     {promotedProducts.map((item, index) => (
                         <div
                             key={index}
-                            className="flex-1 flex flex-col gap-2 justify-between xl:justify-center items-center"
+                            className="w-[192px] flex-shrink-0 xs:flex-shrink-1 xs:w-auto xs:flex-1 flex flex-col gap-2 justify-between xl:justify-center items-center"
                         >
                             <img
                                 className="w-[84px] h-[84px] object-contain"
                                 src={item.mainImage || ''}
                                 alt={item.name}
                             />
-                            <div className="text-xs">{item.name}</div>
+                            <div className="text-xs line-clamp-2">{item.name}</div>
                             <ProductContact
                                 {...(item as ProductWeb)}
                                 className="w-full"
+                                button={{variant: 'secondary'}}
                             />
                         </div>
                     ))}
