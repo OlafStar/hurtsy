@@ -195,6 +195,39 @@ export const columns: ColumnDef<ProductWeb>[] = [
         },
     },
     {
+        accessorKey: 'promotedTo',
+        header: ({column}) => {
+            return (
+                <DataTableColumnHeader
+                    column={column}
+                    title="Promowane do"
+                    disableSort
+                />
+            );
+        },
+        cell: ({row}) => {
+            let promotedTo: Date | string | undefined = row.getValue('promotedTo');
+            let displayDate = '';
+
+            if (promotedTo && Date.parse(promotedTo as string)) {
+                const promotedToDate = new Date(promotedTo);
+                const currentDate = new Date();
+
+                if (currentDate < promotedToDate) {
+                    displayDate = promotedToDate.toLocaleDateString();
+                }
+            } else {
+                displayDate = '';
+            }
+
+            return (
+                <div className="text-xs flex flex-col gap-1">
+                    <div>{displayDate}</div>
+                </div>
+            );
+        },
+    },
+    {
         id: 'actions',
         cell: ({row}) => {
             const product = row.original;
