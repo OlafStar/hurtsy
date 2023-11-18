@@ -81,7 +81,7 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
             </div>
             <PromotedProducts
                 searchParams={searchParams}
-                className="static xl:hidden sm:flex hidden"
+                className="static xl:hidden"
             />
             {totalPages > 1 && (
                 <Pagination

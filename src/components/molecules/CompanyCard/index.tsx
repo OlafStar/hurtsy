@@ -12,6 +12,7 @@ const CompanyCard = ({
     id,
     products,
     type,
+    establishment
 }: CompanyTypeWeb) => {
     return (
         <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
@@ -43,9 +44,8 @@ const CompanyCard = ({
                                     <div>{`${type}`}</div>
                                 </div>
                                 <div className="flex gap-1 text-xs">
-                                    <div className=" opacity-50">
-                                        {'Skontaktuj się z dotawcą!'}
-                                    </div>
+                                    <div className=" opacity-50">{'Działa od: '}</div>
+                                    <div>{`${establishment} r.`}</div>
                                 </div>
                             </div>
                         </div>
