@@ -5,6 +5,7 @@ import * as z from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useRouter} from 'next/navigation';
 import {useState} from 'react';
+import {CompanyType} from '@prisma/client';
 
 import {CompanyTypeWeb} from '~types/company';
 import {DashboardRoutes} from '~types/AppRoutes';
@@ -14,7 +15,6 @@ import {Input} from '~/components/ui/input';
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -28,6 +28,14 @@ import {Dialog, DialogContent} from '~components/ui/dialog';
 import {Progress} from '~components/ui/progress';
 import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 import AddImage from '~components/atoms/AddImage';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '~/components/ui/select';
+import Tiptap from '~components/atoms/TipTap';
 
 type CompanyFormProps = {
     isEdit?: boolean;
@@ -39,11 +47,12 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
         isEdit && initialData?.image ? [initialData.image] : [],
     );
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [descriptionImages, setDescriptionImages] = useState<Array<File>>([]);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
 
     const {refetch: refetchRepresentative} = useUserCompanyRepresentatives();
-    const {uploadImageToS3} = useUploadS3();
+    const {uploadImageToS3, uploadImagesToS3} = useUploadS3();
     const router = useRouter();
     const {toast} = useToast();
 
@@ -94,6 +103,39 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
             setIsUploading(true);
             const progressInterval = startSimulatedProgress();
 
+            let updatedDesc: string | undefined = undefined;
+            if (descriptionImages.length > 0 && values.description) {
+                const keys = await uploadImagesToS3(descriptionImages);
+                const blobUrlRegex =
+                    /<img [^>]*src=["'](blob:http:\/\/localhost:3000\/[^"']*)["']/g;
+                let localUrls = [];
+                let match;
+
+                // Use a loop to extract all matches
+                while ((match = blobUrlRegex.exec(values.description)) !== null) {
+                    // The actual blob URL is captured in the full match
+                    localUrls.push(match[1]);
+                }
+
+                console.log(localUrls);
+
+                console.log(keys);
+                console.log(localUrls);
+                console.log(values.description);
+
+                let updatedDescription = values.description;
+
+                localUrls.forEach((localUrl, index) => {
+                    const key = keys[index];
+                    updatedDescription = updatedDescription.replace(
+                        new RegExp(localUrl, 'g'),
+                        key,
+                    );
+                });
+                console.log(updatedDescription);
+                updatedDesc = updatedDescription;
+            }
+
             if (isEdit) {
                 if (mainImage.length > 0 && typeof mainImage[0] !== 'string') {
                     const key = await uploadImageToS3(mainImage[0]);
@@ -105,17 +147,28 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                     await editCompany({
                         ...values,
                         image: mainImage[0],
+                        description: updatedDesc ? updatedDesc : values.description,
                     });
                 } else {
-                    await editCompany({...values});
+                    await editCompany({
+                        ...values,
+                        description: updatedDesc ? updatedDesc : values.description,
+                    });
                 }
                 await refetchRepresentative();
             } else {
                 if (mainImage.length > 0 && typeof mainImage[0] !== 'string') {
                     const key = await uploadImageToS3(mainImage[0]);
-                    await mutateAsync({...values, image: key});
+                    await mutateAsync({
+                        ...values,
+                        image: key,
+                        description: updatedDesc ? updatedDesc : values.description,
+                    });
                 } else {
-                    await mutateAsync({...values});
+                    await mutateAsync({
+                        ...values,
+                        description: updatedDesc ? updatedDesc : values.description,
+                    });
                 }
             }
 
@@ -137,7 +190,287 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
     }
 
     return (
-        <div className="p-4">
+        <div className="p-4 min-h-full flex flex-col">
+            <div className="flex justify-between gap-4">
+                <div className="flex flex-col gap-2 pb-[70px]">
+                    <div className="text-2xl font-bold">
+                        {isEdit ? 'Edytuj firme' : 'Dodaj firme'}
+                    </div>
+                    <div className="text-sm opacity-50">
+                        {isEdit
+                            ? 'Zaktualizuj profil swojej firmy, aby dostosować informacje i poprawić swoją ofertę na rynku.'
+                            : 'Stwórz profil firmy i zacznij wystawiać lub wysyłać oferty'}
+                    </div>
+                </div>
+                <div className='flex gap-4 xs:flex-row flex-col'>
+                    <Button form="companyForm" variant="outline" type="button">
+                        {'Podgląd'}
+                    </Button>
+                    <Button form="companyForm" type="submit">
+                        {isEdit ? 'Edytuj' : 'Dodaj'}
+                    </Button>
+                </div>
+            </div>
+            <Form {...form}>
+                <form
+                    id="companyForm"
+                    name="companyForm"
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex-1"
+                >
+                    <div className="grid lg:grid-cols-2 gap-x-4">
+                        <div className='flex flex-col gap-5'>
+                            <div className="flex w-full gap-4">
+                                <div>
+                                    {isEdit &&
+                                    initialData?.image &&
+                                    mainImage.length > 0 ? (
+                                        typeof mainImage[0] !== 'string' ? (
+                                            <img
+                                                className="w-[148px] h-[148px] object-cover"
+                                                src={getImgBeforeUpload(
+                                                    mainImage[0],
+                                                )}
+                                                onClick={() => setMainImage([])}
+                                            />
+                                        ) : (
+                                            <img
+                                                className="w-[148px] h-[148px] object-cover"
+                                                src={mainImage[0]}
+                                                onClick={() => setMainImage([])}
+                                            />
+                                        )
+                                    ) : (
+                                        <AddImage
+                                            multiple={false}
+                                            onAcceptedImage={setMainImage}
+                                        />
+                                    )}
+                                </div>
+                                <div className="flex-1 flex flex-col gap-3">
+                                    <FormField
+                                        control={form.control}
+                                        name="companyName"
+                                        render={({field}) => (
+                                            <FormItem className="flex-1 space-y-3">
+                                                <FormLabel>
+                                                    {'Nazwa firmy'}
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Nazwa firmy"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="type"
+                                        render={({field}) => (
+                                            <FormItem>
+                                                <FormLabel>{'Typ firmy'}</FormLabel>
+                                                <FormControl>
+                                                    <Select
+                                                        defaultValue={
+                                                            isEdit && initialData
+                                                                ? (initialData.type as string)
+                                                                : undefined
+                                                        }
+                                                        {...field}
+                                                    >
+                                                        <SelectTrigger className="space-y-3 shadow-sm border border-input">
+                                                            <SelectValue placeholder="Theme" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {Object.entries(
+                                                                CompanyType,
+                                                            ).map(
+                                                                (
+                                                                    [_, value],
+                                                                    index,
+                                                                ) => {
+                                                                    return (
+                                                                        <SelectItem
+                                                                            key={
+                                                                                index
+                                                                            }
+                                                                            value={
+                                                                                value
+                                                                            }
+                                                                        >
+                                                                            {value}
+                                                                        </SelectItem>
+                                                                    );
+                                                                },
+                                                            )}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 xs:flex gap-3">
+                                <FormField
+                                    control={form.control}
+                                    name="address"
+                                    render={({field}) => (
+                                        <FormItem className="space-y-3 flex-1 col-span-2 row-span-2">
+                                            <FormLabel>{'Adres'}</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Ulica i numer, miasto"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="postalCode"
+                                    render={({field}) => (
+                                        <FormItem className="space-y-3 flex-1">
+                                            <FormLabel>{'Kod pocztowy'}</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="00-000"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="city"
+                                    render={({field}) => (
+                                        <FormItem className="space-y-3 flex-1">
+                                            <FormLabel>{'Miasto'}</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Miasto"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            <div className="flex gap-3 w-full">
+                                <FormField
+                                    control={form.control}
+                                    name="country"
+                                    render={({field}) => (
+                                        <FormItem className="space-y-3 flex-1">
+                                            <FormLabel>{'Kraj'}</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Polska"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="established"
+                                    render={({field}) => (
+                                        <FormItem className="space-y-3 max-w-[100px]">
+                                            <FormLabel>{'Rok założenia'}</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    min={1800}
+                                                    {...field}
+                                                    onChange={(event) =>
+                                                        field.onChange(
+                                                            +event.target.value,
+                                                        )
+                                                    }
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            <FormField
+                                control={form.control}
+                                name="phoneNumber"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>{'Numer telefonu'}</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="123456789"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="website"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>{'Strona internetowa'}</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="https://example.com"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        <div className='pt-5 lg:pt-0'>
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>{'Opis firmy'}</FormLabel>
+                                        <FormControl>
+                                            <div>
+                                                <Tiptap
+                                                    content={
+                                                        isEdit &&
+                                                        initialData?.description
+                                                            ? initialData.description
+                                                            : field.name
+                                                    }
+                                                    onChange={field.onChange}
+                                                    {...{
+                                                        descriptionImages,
+                                                        setDescriptionImages,
+                                                    }}
+                                                />
+                                            </div>
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </div>
+                </form>
+            </Form>
             <Dialog
                 open={isOpen}
                 onOpenChange={(v) => {
@@ -155,180 +488,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                     )}
                 </DialogContent>
             </Dialog>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-                    <div>
-                        {isEdit && initialData?.image && mainImage.length > 0 ? (
-                            typeof mainImage[0] !== 'string' ? (
-                                <img
-                                    className="w-[250px] h-[250px] object-cover"
-                                    src={getImgBeforeUpload(mainImage[0])}
-                                    onClick={() => setMainImage([])}
-                                />
-                            ) : (
-                                <img
-                                    className="w-[250px] h-[250px] object-cover"
-                                    src={mainImage[0]}
-                                    onClick={() => setMainImage([])}
-                                />
-                            )
-                        ) : (
-                            <AddImage
-                                multiple={false}
-                                onAcceptedImage={setMainImage}
-                            />
-                        )}
-                    </div>
-
-                    <FormField
-                        control={form.control}
-                        name="companyName"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>{'Nazwa firmy'}</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Nazwa firmy" {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                    {'This is your public display name.'}
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="city"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>{'Miasto'}</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Miasto" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="phoneNumber"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>{"Numer telefonu"}</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="123456789" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="website"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>{"Strona internetowa"}</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="https://example.com"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="address"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>{"Adres"}</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Ulica i numer, miasto"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="postalCode"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>{"Kod pocztowy"}</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="00-000" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="country"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>{"Kraj"}</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Polska" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="established"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>{"Rok założenia"}</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        min={1800}
-                                        {...field}
-                                        onChange={(event) =>
-                                            field.onChange(+event.target.value)
-                                        }
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="type"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>{"Typ firmy"}</FormLabel>
-                                <FormControl>
-                                    <select {...field}>
-                                        <option value="Producent">{"Producent"}</option>
-                                        <option value="Factory">{"Factory"}</option>
-                                        <option value="Importer">{"Importer"}</option>
-                                    </select>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <Button type="submit">{"Submit"}</Button>
-                </form>
-            </Form>
         </div>
     );
 };

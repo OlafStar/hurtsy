@@ -4,6 +4,7 @@ import React, {Suspense} from 'react';
 import CategoriesButton from '~components/atoms/CategoriesButton';
 import CategoriesSheet from '~components/atoms/CategoriesSheet';
 import ClearFilterButton from '~components/atoms/ClearFilterButton';
+import InnerHTML from '~components/atoms/InnerHTML';
 import Loader from '~components/atoms/Loader';
 import CompanyPageHeader from '~components/molecules/CompanyPageHeader';
 import CompanyProductCard from '~components/molecules/CompanyProductCard';
@@ -35,9 +36,10 @@ const CompanyPage: React.FC<
             <CompanyPageHeader {...props} />
             <div>
                 <div className="flex flex-col gap-8">
-                    {/* <div>
-                    Opis
-                  </div> */}
+                    <div className="flex flex-col gap-4 max-w-[887px]">
+                        <div className="text-2xl font-bold">{'Opis'}</div>
+                        <InnerHTML html={props.description || ''} />
+                    </div>
                     <div className="flex flex-col gap-4 md:gap-8">
                         <div className="hidden md:flex justify-between">
                             <div className="font-bold text-2xl">

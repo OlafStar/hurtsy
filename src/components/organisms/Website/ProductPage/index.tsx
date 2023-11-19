@@ -2,6 +2,7 @@ import {ChevronRight} from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
+import InnerHTML from '~components/atoms/InnerHTML';
 import ProductPageInfo from '~components/molecules/ProductPageInfo';
 import PromotedProducts from '~components/molecules/PromotedProducts';
 import {Button} from '~components/ui/button';
@@ -112,11 +113,7 @@ const ProductPage = (props: ProductWeb) => {
                 {description && (
                     <div className="flex flex-col gap-6">
                         <div className="font-bold text-2xl">{'Opis'}</div>
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: description ? description : '',
-                            }}
-                        />
+                        <InnerHTML html={description || ''} />
                     </div>
                 )}
             </div>

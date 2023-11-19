@@ -90,6 +90,7 @@ model Company {
   id               String          @id @default(cuid())
   userId           String          @unique
   name             String
+  description       String?            @db.Text// Optional
   type             CompanyType
   mainProducts     Json?
   city             String

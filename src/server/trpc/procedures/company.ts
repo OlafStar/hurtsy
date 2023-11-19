@@ -62,6 +62,7 @@ export const companyProcedures = {
             const company = await prismadb.company.create({
                 data: {
                     name: validatedInput.data.companyName,
+                    description: validatedInput.data.description,
                     city: validatedInput.data.city,
                     phone: validatedInput.data.phoneNumber,
                     image: validatedInput.data.image,
@@ -150,6 +151,7 @@ export const companyProcedures = {
             const company = await prismadb.company.update({
                 data: {
                     name: validatedInput.data.companyName,
+                    description: validatedInput.data.description,
                     city: validatedInput.data.city,
                     phone: validatedInput.data.phoneNumber,
                     image: validatedInput.data.image,

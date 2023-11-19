@@ -6,6 +6,7 @@ const phoneField = z.string().length(9);
 
 export const companyCreationSchema = z.object({
     companyName: stringField(2, 50),
+    description: z.string().optional(),
     city: stringField(2, 50),
     phoneNumber: phoneField,
     image: z.string().optional(),
