@@ -1,4 +1,4 @@
-import {PlusIcon, MinusIcon} from '@radix-ui/react-icons';
+import {MinusIcon} from '@radix-ui/react-icons';
 import {
     Control,
     FieldArrayPath,
@@ -16,6 +16,7 @@ import {
     FormMessage,
 } from '~components/ui/form';
 import {Input} from '~components/ui/input';
+import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 
@@ -47,25 +48,32 @@ const FormFieldArray = <
         name: name,
     });
     return (
-        <div className="flex flex-col outline outline-[#fafafa] rounded-xl overflow-hidden w-fit">
-            <div className="flex justify-between items-center bg-[#fafafa] pl-2">
-                <FormLabel>{name}</FormLabel>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => append(defaultValue)}
-                >
-                    <PlusIcon />
-                </Button>
+        <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-3">
+                <div className="flex justify-between">
+                    <div className="text-xl font-bold">{translateEnumValueToPolish(name)}</div>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => append(defaultValue)}
+                    >
+                        {'Dodaj'}
+                    </Button>
+                </div>
+                <div className="w-full h-[1px] bg-black opacity-10" />
             </div>
-            <div className="py-2 px-4 flex flex-col gap-2">
+            <div className="flex flex-col gap-2">
                 {fields.map((field, index) => {
                     return (
                         <div
                             className="flex items-end gap-2"
                             key={`${field.id}-${index}`}
                         >
-                            <div className={`grid grid-cols-${Object.keys(defaultValue).length} gap-4`}>
+                            <div
+                                className={`grid grid-cols-${
+                                    Object.keys(defaultValue).length
+                                } gap-4`}
+                            >
                                 {Object.keys(defaultValue).map((key) => {
                                     const value = defaultValue[key];
                                     const inputType =
@@ -83,7 +91,11 @@ const FormFieldArray = <
                                             render={({field}) => (
                                                 <FormItem>
                                                     {index === 0 && (
-                                                        <FormLabel>{key}</FormLabel>
+                                                        <FormLabel>
+                                                            {translateEnumValueToPolish(
+                                                                key,
+                                                            )}
+                                                        </FormLabel>
                                                     )}
                                                     <FormControl>
                                                         <Input
@@ -116,12 +128,14 @@ const FormFieldArray = <
                                     );
                                 })}
                             </div>
-                            <Button
-                                variant="destructive"
-                                onClick={() => remove(index)}
-                            >
-                                <MinusIcon />
-                            </Button>
+                            {index !== 0 && (
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => remove(index)}
+                                >
+                                    <MinusIcon />
+                                </Button>
+                            )}
                         </div>
                     );
                 })}

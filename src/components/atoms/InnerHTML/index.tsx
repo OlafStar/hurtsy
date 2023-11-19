@@ -1,4 +1,5 @@
-import purify from 'dompurify';
+import {sanitize} from 'isomorphic-dompurify';
+import {useMemo} from 'react';
 
 import {PropsWithClassName} from '~types/generalTypes';
 import {cn} from '~utils/shadcn';
@@ -6,14 +7,18 @@ import {cn} from '~utils/shadcn';
 import styles from './styles.module.css';
 
 const InnerHTML = ({html, className}: {html: string} & PropsWithClassName) => {
+    const sanitized = useMemo(() => sanitize(html), [html]);
+
     return (
         <div className={`${cn(className)}`}>
-            <div
-                className={styles.innerHTMLStyle}
-                dangerouslySetInnerHTML={{
-                    __html: purify.sanitize(html) || '',
-                }}
-            />
+            {sanitized && (
+                <div
+                    className={styles.innerHTMLStyle}
+                    dangerouslySetInnerHTML={{
+                        __html: sanitized || '',
+                    }}
+                />
+            )}
         </div>
     );
 };

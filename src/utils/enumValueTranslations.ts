@@ -155,6 +155,17 @@ const translations: {[key: string]: string} = {
 
     products: 'Produkty',
     companies: 'Firmy',
+
+    prices: "Ceny",
+    price: "Cena",
+    minQuantity: "Min. Ilość",
+    maxQuantity: "Max. Ilość",
+
+    customizations: "Personalizacja",
+    name: "Nazwa",
+
+    customProperties: "Kluczowe atrybuty",
+    value: "Wartość"
 };
 
 //TODO CHANGE TO LOCALES

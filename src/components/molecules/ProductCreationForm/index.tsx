@@ -46,6 +46,7 @@ import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 import {ProductWeb} from '~types/products';
 import Tiptap from '~components/atoms/TipTap';
 import AddImage from '~components/atoms/AddImage';
+import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
 import FormFieldArray from '../FormFieldArray';
 
@@ -237,165 +238,42 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
     }
 
     return (
-        <div className="p-4">
-            <Dialog
-                open={isOpen}
-                onOpenChange={(v) => {
-                    if (!v) {
-                        setIsOpen(v);
-                    }
-                }}
-            >
-                <DialogContent hideClose>
-                    {isUploading && (
-                        <Progress
-                            value={uploadProgress}
-                            className="h-1 w-full bg-zinc-200"
-                        />
-                    )}
-                </DialogContent>
-            </Dialog>
+        <div className="p-4 min-h-full flex flex-col">
+            <div className="flex justify-between gap-4">
+                <div className="flex flex-col gap-2 pb-[70px]">
+                    <div className="text-2xl font-bold">
+                        {isEdit ? 'Edytuj produkt' : 'Dodaj produkt'}
+                    </div>
+                    <div className="text-sm opacity-50">
+                        {isEdit
+                            ? 'Zaaktualizuj informacje w tym produkcie'
+                            : 'Stworz produkt i zacznij zbierać oferty!'}
+                    </div>
+                </div>
+                <div className="flex gap-4 xs:flex-row flex-col">
+                    <Button variant="outline" type="button">
+                        {'Podgląd'}
+                    </Button>
+                    <Button form="productForm" type="submit">
+                        {isEdit ? 'Edytuj' : 'Dodaj'}
+                    </Button>
+                </div>
+            </div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-                    <Button type="submit">{'Submit'}</Button>
-                    <div className="flex flex-col gap-4">
-                        <div className="flex gap-8">
-                            <FormField
-                                control={form.control}
-                                name="category.mainCategory"
-                                render={({field}) => (
-                                    <FormItem className="flex flex-col">
-                                        <FormLabel>{'Main Category'}</FormLabel>
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <FormControl>
-                                                    <Button
-                                                        variant="outline"
-                                                        role="combobox"
-                                                        className={cn(
-                                                            'w-[300px] justify-between',
-                                                            !field.value &&
-                                                                'text-muted-foreground',
-                                                        )}
-                                                    >
-                                                        {field.value ||
-                                                            'Select category'}
-                                                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                    </Button>
-                                                </FormControl>
-                                            </PopoverTrigger>
-
-                                            <PopoverContent className="w-[300px] p-0">
-                                                <Command>
-                                                    <CommandInput placeholder="Search category..." />
-                                                    <CommandEmpty>
-                                                        {'No category found.'}
-                                                    </CommandEmpty>
-                                                    <CommandGroup>
-                                                        {Object.values(Category)
-                                                            .filter(
-                                                                (value) =>
-                                                                    typeof value ===
-                                                                    'string',
-                                                            )
-                                                            .map((cat) => (
-                                                                <CommandItem
-                                                                    value={
-                                                                        cat as string
-                                                                    }
-                                                                    key={cat}
-                                                                    onSelect={() => {
-                                                                        form.setValue(
-                                                                            'category.mainCategory',
-                                                                            cat as string,
-                                                                        );
-                                                                        setSelectedMainCategory(
-                                                                            cat as string,
-                                                                        );
-                                                                        form.setValue(
-                                                                            'category.subCategory',
-                                                                            [],
-                                                                        );
-                                                                    }}
-                                                                >
-                                                                    <CheckIcon
-                                                                        className={cn(
-                                                                            'mr-2 h-4 w-4',
-                                                                            cat ===
-                                                                                field.value
-                                                                                ? 'opacity-100'
-                                                                                : 'opacity-0',
-                                                                        )}
-                                                                    />
-                                                                    {cat}
-                                                                </CommandItem>
-                                                            ))}
-                                                    </CommandGroup>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                <form
+                    id="productForm"
+                    name="productForm"
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-2 max-w-[800px] w-full mx-auto flex flex-col gap-10"
+                >
+                    <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-3">
                             <div>
-                                {Object.entries(
-                                    subCategoryEnums[
-                                        selectedMainCategory
-                                            .charAt(0)
-                                            .toUpperCase() +
-                                            selectedMainCategory.slice(1)
-                                    ] || {},
-                                ).map(([_, value], index) => {
-                                    return (
-                                        <FormField
-                                            key={index}
-                                            control={form.control}
-                                            name="category.subCategory"
-                                            render={({field}) => {
-                                                return (
-                                                    <FormItem
-                                                        key={index}
-                                                        className="flex flex-row items-start space-x-3 space-y-0"
-                                                    >
-                                                        <FormControl>
-                                                            <Checkbox
-                                                                checked={field.value?.includes(
-                                                                    value,
-                                                                )}
-                                                                onCheckedChange={(
-                                                                    checked,
-                                                                ) => {
-                                                                    return checked
-                                                                        ? field.onChange(
-                                                                              [
-                                                                                  ...field.value,
-                                                                                  value,
-                                                                              ],
-                                                                          )
-                                                                        : field.onChange(
-                                                                              field.value?.filter(
-                                                                                  (
-                                                                                      catValue,
-                                                                                  ) =>
-                                                                                      catValue !==
-                                                                                      value,
-                                                                              ),
-                                                                          );
-                                                                }}
-                                                            />
-                                                        </FormControl>
-                                                        <FormLabel className="font-normal">
-                                                            {value}
-                                                        </FormLabel>
-                                                    </FormItem>
-                                                );
-                                            }}
-                                        />
-                                    );
-                                })}
+                                <div className="text-xl font-bold">
+                                    {'Informacje o produkcie'}
+                                </div>
                             </div>
+                            <div className="w-full h-[1px] bg-black opacity-10" />
                         </div>
                         <FormField
                             control={form.control}
@@ -409,15 +287,241 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                                             {...field}
                                         />
                                     </FormControl>
-                                    <FormDescription>
-                                        {
-                                            'Nazwa produktu dzięki której użytkownik znajdzie twój produkt'
-                                        }
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="category.mainCategory"
+                            render={({field}) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>{'Main Category'}</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    className={cn(
+                                                        'justify-between',
+                                                        !field.value &&
+                                                            'text-muted-foreground',
+                                                    )}
+                                                >
+                                                    {field.value
+                                                        ? translateEnumValueToPolish(
+                                                              field.value,
+                                                          )
+                                                        : 'Select category'}
+                                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+
+                                        <PopoverContent className="p-0">
+                                            <Command>
+                                                <CommandInput placeholder="Search category..." />
+                                                <CommandEmpty>
+                                                    {'No category found.'}
+                                                </CommandEmpty>
+                                                <CommandGroup>
+                                                    {Object.values(Category)
+                                                        .filter(
+                                                            (value) =>
+                                                                typeof value ===
+                                                                'string',
+                                                        )
+                                                        .map((cat) => (
+                                                            <CommandItem
+                                                                value={cat as string}
+                                                                key={cat}
+                                                                onSelect={() => {
+                                                                    form.setValue(
+                                                                        'category.mainCategory',
+                                                                        cat as string,
+                                                                    );
+                                                                    setSelectedMainCategory(
+                                                                        cat as string,
+                                                                    );
+                                                                    form.setValue(
+                                                                        'category.subCategory',
+                                                                        [],
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <CheckIcon
+                                                                    className={cn(
+                                                                        'mr-2 h-4 w-4',
+                                                                        cat ===
+                                                                            field.value
+                                                                            ? 'opacity-100'
+                                                                            : 'opacity-0',
+                                                                    )}
+                                                                />
+                                                                {translateEnumValueToPolish(
+                                                                    cat,
+                                                                )}
+                                                            </CommandItem>
+                                                        ))}
+                                                </CommandGroup>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <div className="flex justify-around gap-4 flex-wrap min-h-[16px]">
+                            {Object.entries(
+                                subCategoryEnums[
+                                    selectedMainCategory.charAt(0).toUpperCase() +
+                                        selectedMainCategory.slice(1)
+                                ] || {},
+                            ).map(([_, value], index) => {
+                                return (
+                                    <FormField
+                                        key={index}
+                                        control={form.control}
+                                        name="category.subCategory"
+                                        render={({field}) => {
+                                            return (
+                                                <FormItem
+                                                    key={index}
+                                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                                >
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value?.includes(
+                                                                value,
+                                                            )}
+                                                            onCheckedChange={(
+                                                                checked,
+                                                            ) => {
+                                                                return checked
+                                                                    ? field.onChange(
+                                                                          [
+                                                                              ...field.value,
+                                                                              value,
+                                                                          ],
+                                                                      )
+                                                                    : field.onChange(
+                                                                          field.value?.filter(
+                                                                              (
+                                                                                  catValue,
+                                                                              ) =>
+                                                                                  catValue !==
+                                                                                  value,
+                                                                          ),
+                                                                      );
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal whitespace-nowrap">
+                                                        {translateEnumValueToPolish(
+                                                            value,
+                                                        )}
+                                                    </FormLabel>
+                                                </FormItem>
+                                            );
+                                        }}
+                                    />
+                                );
+                            })}
+                        </div>
+                        <FormField
+                            control={form.control}
+                            name="deliveryPrice"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>{'Delivery price'}</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Delivery price"
+                                            type="number"
+                                            min={0}
+                                            {...field}
+                                            onChange={(event) =>
+                                                field.onChange(+event.target.value)
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+                    <FormFieldArray
+                        control={form.control}
+                        name="prices"
+                        defaultValue={{
+                            price: 0,
+                            minQuantity: 0,
+                            maxQuantity: 0,
+                        }}
+                    />
+
+                    <FormFieldArray
+                        control={form.control}
+                        name="customizations"
+                        defaultValue={{
+                            name: '',
+                            minQuantity: 0,
+                        }}
+                    />
+
+                    <FormFieldArray
+                        control={form.control}
+                        name="customProperties"
+                        defaultValue={{
+                            name: '',
+                            value: '',
+                        }}
+                    />
+
+                    <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-3">
+                            <div>
+                                <div className="text-xl font-bold">{'Opis'}</div>
+                            </div>
+                            <div className="w-full h-[1px] bg-black opacity-10" />
+                        </div>
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>{'Product Description'}</FormLabel>
+                                    <FormControl>
+                                        <div>
+                                            <Tiptap
+                                                content={
+                                                    isEdit &&
+                                                    initialData?.description
+                                                        ? initialData.description
+                                                        : field.name
+                                                }
+                                                onChange={field.onChange}
+                                                {...{
+                                                    descriptionImages,
+                                                    setDescriptionImages,
+                                                }}
+                                            />
+                                        </div>
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+                    {/* <div className="flex flex-col gap-4">
+                        <div className="flex gap-8">
+                            
+                            
+                        </div>
+                        
                         <div className="flex gap-4 h-[250px]">
                             <div>
                                 {mainImage.length > 0 ? (
@@ -484,82 +588,31 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                                 onAcceptedImage={setImages}
                             />
                         </div>
-                        <FormFieldArray
-                            control={form.control}
-                            name="prices"
-                            defaultValue={{
-                                price: 0,
-                                minQuantity: 0,
-                                maxQuantity: 0,
-                            }}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="deliveryPrice"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>{'Delivery price'}</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Delivery price"
-                                            type="number"
-                                            min={0}
-                                            {...field}
-                                            onChange={(event) =>
-                                                field.onChange(+event.target.value)
-                                            }
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormFieldArray
-                            control={form.control}
-                            name="customizations"
-                            defaultValue={{
-                                name: '',
-                                minQuantity: 0,
-                            }}
-                        />
-                        <FormFieldArray
-                            control={form.control}
-                            name="customProperties"
-                            defaultValue={{
-                                name: '',
-                                value: '',
-                            }}
-                        />
+                       
+                        
+                        
 
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>{'Product Description'}</FormLabel>
-                                    <FormControl>
-                                        <div>
-                                            <Tiptap
-                                                content={
-                                                    isEdit &&
-                                                    initialData?.description
-                                                        ? initialData.description
-                                                        : field.name
-                                                }
-                                                onChange={field.onChange}
-                                                {...{
-                                                    descriptionImages,
-                                                    setDescriptionImages,
-                                                }}
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                    </div>
+                       
+                    </div> */}
                 </form>
             </Form>
+            <Dialog
+                open={isOpen}
+                onOpenChange={(v) => {
+                    if (!v) {
+                        setIsOpen(v);
+                    }
+                }}
+            >
+                <DialogContent hideClose>
+                    {isUploading && (
+                        <Progress
+                            value={uploadProgress}
+                            className="h-1 w-full bg-zinc-200"
+                        />
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
