@@ -27,7 +27,7 @@ const AddImage = ({currentState, multiple, onAcceptedImage}: AddImageProps) => {
 
     return (
         <>
-            <Button type="button" onClick={() => setIsOpen(true)}>
+            <Button type="button" onClick={() => setIsOpen(true)} variant='ghost'>
                 {'Dodaj zdjecie'}
             </Button>
             <Dialog

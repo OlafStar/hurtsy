@@ -17,7 +17,6 @@ import {
     FormField,
     FormLabel,
     FormControl,
-    FormDescription,
     FormMessage,
     FormItem,
 } from '~/components/ui/form';
@@ -268,6 +267,82 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                 >
                     <div className="flex flex-col gap-6">
                         <div className="flex flex-col gap-3">
+                            <div className="flex justify-between">
+                                <div className="text-xl font-bold">
+                                    {'Zdjęcia'}
+                                </div>
+                                <AddImage
+                                    multiple={true}
+                                    currentState={images}
+                                    onAcceptedImage={setImages}
+                                />
+                            </div>
+                            <div className="w-full h-[1px] bg-black opacity-10" />
+                        </div>
+                        <div className="flex gap-4 h-[250px]">
+                            <div>
+                                {mainImage.length > 0 ? (
+                                    typeof mainImage[0] !== 'string' ? (
+                                        <img
+                                            className="w-[250px] h-[250px] object-cover"
+                                            src={getImgBeforeUpload(mainImage[0])}
+                                            onClick={() => setMainImage([])}
+                                        />
+                                    ) : (
+                                        <img
+                                            className="w-[250px] h-[250px] object-cover"
+                                            src={mainImage[0]}
+                                            onClick={() => setMainImage([])}
+                                        />
+                                    )
+                                ) : (
+                                    <AddImage
+                                        multiple={false}
+                                        onAcceptedImage={setMainImage}
+                                    />
+                                )}
+                            </div>
+
+                            <div className="flex flex-col gap-2 flex-wrap">
+                                {images.map((item, index) => {
+                                    if (typeof item !== 'string') {
+                                        return (
+                                            <img
+                                                key={index}
+                                                className="w-[121px] h-[121px] object-cover"
+                                                src={getImgBeforeUpload(item)}
+                                                onClick={() => {
+                                                    const filteredImages =
+                                                        images.filter(
+                                                            (_, filterIndex) =>
+                                                                filterIndex !==
+                                                                index,
+                                                        );
+                                                    setImages(filteredImages);
+                                                }}
+                                            />
+                                        );
+                                    }
+                                    return (
+                                        <img
+                                            key={index}
+                                            className="w-[121px] h-[121px] object-cover"
+                                            src={item}
+                                            onClick={() => {
+                                                const filteredImages = images.filter(
+                                                    (_, filterIndex) =>
+                                                        filterIndex !== index,
+                                                );
+                                                setImages(filteredImages);
+                                            }}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-3">
                             <div>
                                 <div className="text-xl font-bold">
                                     {'Informacje o produkcie'}
@@ -515,85 +590,6 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                             )}
                         />
                     </div>
-
-                    {/* <div className="flex flex-col gap-4">
-                        <div className="flex gap-8">
-                            
-                            
-                        </div>
-                        
-                        <div className="flex gap-4 h-[250px]">
-                            <div>
-                                {mainImage.length > 0 ? (
-                                    typeof mainImage[0] !== 'string' ? (
-                                        <img
-                                            className="w-[250px] h-[250px] object-cover"
-                                            src={getImgBeforeUpload(mainImage[0])}
-                                            onClick={() => setMainImage([])}
-                                        />
-                                    ) : (
-                                        <img
-                                            className="w-[250px] h-[250px] object-cover"
-                                            src={mainImage[0]}
-                                            onClick={() => setMainImage([])}
-                                        />
-                                    )
-                                ) : (
-                                    <AddImage
-                                        multiple={false}
-                                        onAcceptedImage={setMainImage}
-                                    />
-                                )}
-                            </div>
-
-                            <div className="flex flex-col gap-2 flex-wrap">
-                                {images.map((item, index) => {
-                                    if (typeof item !== 'string') {
-                                        return (
-                                            <img
-                                                key={index}
-                                                className="w-[121px] h-[121px] object-cover"
-                                                src={getImgBeforeUpload(item)}
-                                                onClick={() => {
-                                                    const filteredImages =
-                                                        images.filter(
-                                                            (_, filterIndex) =>
-                                                                filterIndex !==
-                                                                index,
-                                                        );
-                                                    setImages(filteredImages);
-                                                }}
-                                            />
-                                        );
-                                    }
-                                    return (
-                                        <img
-                                            key={index}
-                                            className="w-[121px] h-[121px] object-cover"
-                                            src={item}
-                                            onClick={() => {
-                                                const filteredImages = images.filter(
-                                                    (_, filterIndex) =>
-                                                        filterIndex !== index,
-                                                );
-                                                setImages(filteredImages);
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </div>
-                            <AddImage
-                                multiple={true}
-                                currentState={images}
-                                onAcceptedImage={setImages}
-                            />
-                        </div>
-                       
-                        
-                        
-
-                       
-                    </div> */}
                 </form>
             </Form>
             <Dialog
