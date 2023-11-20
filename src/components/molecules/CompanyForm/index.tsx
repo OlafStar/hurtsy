@@ -36,6 +36,8 @@ import {
     SelectValue,
 } from '~/components/ui/select';
 import Tiptap from '~components/atoms/TipTap';
+import {Countries} from '~config/countries';
+import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
 type CompanyFormProps = {
     isEdit?: boolean;
@@ -50,6 +52,12 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
     const [descriptionImages, setDescriptionImages] = useState<Array<File>>([]);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
+    const [year, setYear] = useState<number>(
+        initialData?.establishment ? initialData.establishment : 0,
+    );
+    const [phone, setPhone] = useState<string>(
+        initialData?.phone ? initialData.phone : '',
+    );
 
     const {refetch: refetchRepresentative} = useUserCompanyRepresentatives();
     const {uploadImageToS3, uploadImagesToS3} = useUploadS3();
@@ -75,6 +83,10 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                   companyName: '',
                   city: '',
                   phoneNumber: '',
+                  address: '',
+                  postalCode: '',
+                  established: 2023,
+                  website: undefined,
               },
     });
 
@@ -95,6 +107,20 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
         }, 500);
 
         return interval;
+    };
+
+    const handleYear = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value === '' || /^[0-9]+$/.test(e.target.value)) {
+            setYear(+e.target.value);
+            form.setValue('established', +e.target.value);
+        }
+    };
+
+    const handlePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value === '' || /^[0-9]+$/.test(e.target.value)) {
+            setPhone(e.target.value);
+            form.setValue('phoneNumber', e.target.value);
+        }
     };
 
     async function onSubmit(values: z.infer<typeof companyCreationSchema>) {
@@ -148,11 +174,15 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         ...values,
                         image: mainImage[0],
                         description: updatedDesc ? updatedDesc : values.description,
+                        established: year,
+                        phoneNumber: phone,
                     });
                 } else {
                     await editCompany({
                         ...values,
                         description: updatedDesc ? updatedDesc : values.description,
+                        established: year,
+                        phoneNumber: phone,
                     });
                 }
                 await refetchRepresentative();
@@ -163,11 +193,13 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         ...values,
                         image: key,
                         description: updatedDesc ? updatedDesc : values.description,
+                        established: year,
                     });
                 } else {
                     await mutateAsync({
                         ...values,
                         description: updatedDesc ? updatedDesc : values.description,
+                        established: year,
                     });
                 }
             }
@@ -202,7 +234,7 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                             : 'Stwórz profil firmy i zacznij wystawiać lub wysyłać oferty'}
                     </div>
                 </div>
-                <div className='flex gap-4 xs:flex-row flex-col'>
+                <div className="flex gap-4 xs:flex-row flex-col">
                     <Button form="companyForm" variant="outline" type="button">
                         {'Podgląd'}
                     </Button>
@@ -219,30 +251,43 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                     className="flex-1"
                 >
                     <div className="grid lg:grid-cols-2 gap-x-4">
-                        <div className='flex flex-col gap-5'>
-                            <div className="flex w-full gap-4">
+                        <div className="flex flex-col gap-5">
+                            <div className="flex flex-col xs:flex-row w-full gap-4">
                                 <div>
                                     {isEdit &&
                                     initialData?.image &&
                                     mainImage.length > 0 ? (
-                                        typeof mainImage[0] !== 'string' ? (
-                                            <img
-                                                className="w-[148px] h-[148px] object-cover"
-                                                src={getImgBeforeUpload(
-                                                    mainImage[0],
-                                                )}
-                                                onClick={() => setMainImage([])}
-                                            />
-                                        ) : (
-                                            <img
-                                                className="w-[148px] h-[148px] object-cover"
-                                                src={mainImage[0]}
-                                                onClick={() => setMainImage([])}
-                                            />
-                                        )
+                                        <img
+                                            className="w-[148px] h-[148px] object-contain"
+                                            src={
+                                                typeof mainImage[0] !== 'string'
+                                                    ? getImgBeforeUpload(
+                                                          mainImage[0],
+                                                      )
+                                                    : mainImage[0]
+                                            }
+                                            onClick={() => setMainImage([])}
+                                        />
+                                    ) : mainImage[0] ? (
+                                        <img
+                                            className="w-[148px] h-[148px] object-contain"
+                                            src={
+                                                typeof mainImage[0] !== 'string'
+                                                    ? getImgBeforeUpload(
+                                                          mainImage[0],
+                                                      )
+                                                    : mainImage[0]
+                                            }
+                                            onClick={() => setMainImage([])}
+                                        />
                                     ) : (
                                         <AddImage
-                                            multiple={false}
+                                            className={`w-full xs:w-[148px] xs:h-[148px] ${
+                                                form.formState.errors.image
+                                                    ? ''
+                                                    : 'border border-red-300'
+                                            }`}
+                                            multiple={true}
                                             onAcceptedImage={setMainImage}
                                         />
                                     )}
@@ -262,7 +307,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                                         {...field}
                                                     />
                                                 </FormControl>
-                                                <FormMessage />
                                             </FormItem>
                                         )}
                                     />
@@ -280,10 +324,13 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                                                 ? (initialData.type as string)
                                                                 : undefined
                                                         }
+                                                        onValueChange={
+                                                            field.onChange
+                                                        }
                                                         {...field}
                                                     >
                                                         <SelectTrigger className="space-y-3 shadow-sm border border-input">
-                                                            <SelectValue placeholder="Theme" />
+                                                            <SelectValue placeholder="" />
                                                         </SelectTrigger>
                                                         <SelectContent>
                                                             {Object.entries(
@@ -310,7 +357,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                                         </SelectContent>
                                                     </Select>
                                                 </FormControl>
-                                                <FormMessage />
                                             </FormItem>
                                         )}
                                     />
@@ -329,7 +375,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -345,7 +390,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -361,7 +405,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -374,12 +417,38 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                         <FormItem className="space-y-3 flex-1">
                                             <FormLabel>{'Kraj'}</FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    placeholder="Polska"
+                                                <Select
+                                                    defaultValue={
+                                                        isEdit && initialData
+                                                            ? (initialData.country as string)
+                                                            : undefined
+                                                    }
                                                     {...field}
-                                                />
+                                                    onValueChange={field.onChange}
+                                                >
+                                                    <SelectTrigger className="space-y-3 shadow-sm border border-input">
+                                                        <SelectValue placeholder="" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {Object.entries(
+                                                            Countries,
+                                                        ).map(
+                                                            ([_, value], index) => {
+                                                                return (
+                                                                    <SelectItem
+                                                                        key={index}
+                                                                        value={value}
+                                                                    >
+                                                                        {translateEnumValueToPolish(
+                                                                            value,
+                                                                        )}
+                                                                    </SelectItem>
+                                                                );
+                                                            },
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
                                             </FormControl>
-                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -391,17 +460,12 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                             <FormLabel>{'Rok założenia'}</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    type="number"
-                                                    min={1800}
                                                     {...field}
                                                     onChange={(event) =>
-                                                        field.onChange(
-                                                            +event.target.value,
-                                                        )
+                                                        handleYear(event)
                                                     }
                                                 />
                                             </FormControl>
-                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -416,9 +480,11 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                             <Input
                                                 placeholder="123456789"
                                                 {...field}
+                                                onChange={(event) =>
+                                                    handlePhone(event)
+                                                }
                                             />
                                         </FormControl>
-                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -426,11 +492,11 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                                 control={form.control}
                                 name="website"
                                 render={({field}) => (
-                                    <FormItem>
+                                    <FormItem className="flex-1 space-y-3">
                                         <FormLabel>{'Strona internetowa'}</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="https://example.com"
+                                                placeholder="Strona internetowa"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -440,21 +506,21 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                             />
                         </div>
 
-                        <div className='pt-5 lg:pt-0'>
+                        <div className="h-full flex-1 pt-5 lg:pt-0">
                             <FormField
                                 control={form.control}
                                 name="description"
                                 render={({field}) => (
-                                    <FormItem>
+                                    <FormItem className="h-full">
                                         <FormLabel>{'Opis firmy'}</FormLabel>
                                         <FormControl>
-                                            <div>
+                                            <div className="h-full pb-8">
                                                 <Tiptap
                                                     content={
                                                         isEdit &&
                                                         initialData?.description
                                                             ? initialData.description
-                                                            : field.name
+                                                            : ''
                                                     }
                                                     onChange={field.onChange}
                                                     {...{

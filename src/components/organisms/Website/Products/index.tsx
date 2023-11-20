@@ -1,15 +1,19 @@
 import {XIcon} from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 
 import ClearFilterButton from '~components/atoms/ClearFilterButton';
 import FiltersSheet from '~components/atoms/FiltersSheet';
+import EmptyState from '~components/molecules/EmptyState';
 import Filters from '~components/molecules/Filters';
 import Pagination from '~components/molecules/Pagination';
 import ProductCard from '~components/molecules/ProductCard';
 import ProductsCompanySwitch from '~components/molecules/ProductsCompanySwitch';
 import PromotedProducts from '~components/molecules/PromotedProducts';
+import {Button} from '~components/ui/button';
 import {SearchParamsType} from '~config/searchParams';
 import {serverClient} from '~server/trpc/serverClient';
+import {AppRoutes} from '~types/AppRoutes';
 import {ProductWeb} from '~types/products';
 import {filterProducts} from '~utils/filterProduct';
 
@@ -47,6 +51,8 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
             ? parseInt(searchParams?.minQuantity as string)
             : undefined,
     };
+
+    const filteredProducts = filterProducts(products, filters);
     return (
         <div className="flex flex-col gap-8 min-h-[100%]">
             <div className="flex pt-0 lg:pt-4">
@@ -63,15 +69,26 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
                         </div>
                         <ProductsCompanySwitch />
                     </div>
-                    <div className="flex flex-col gap-6">
-                        {filterProducts(products, filters).map((item, index) => (
-                            <React.Fragment key={index}>
-                                <ProductCard {...(item as ProductWeb)} />
-                                {products.length - 1 > index && (
-                                    <div className="w-full h-[1px] bg-black opacity-10" />
-                                )}
-                            </React.Fragment>
-                        ))}
+                    <div className="flex flex-col gap-6 min-h-full">
+                        {filteredProducts.length > 0 ? (
+                            filteredProducts.map((item, index) => (
+                                <React.Fragment key={index}>
+                                    <ProductCard {...(item as ProductWeb)} />
+                                    {products.length - 1 > index && (
+                                        <div className="w-full h-[1px] bg-black opacity-10" />
+                                    )}
+                                </React.Fragment>
+                            ))
+                        ) : (
+                            <EmptyState
+                                title="Nie możemy znaleźć tego czego szukasz"
+                                description="Posiadasz takie produkty?"
+                            >
+                                <Link href={AppRoutes.ADD_PRODUCT}>
+                                    <Button>{'Dodaj produkt'}</Button>
+                                </Link>
+                            </EmptyState>
+                        )}
                     </div>
                 </div>
                 <PromotedProducts

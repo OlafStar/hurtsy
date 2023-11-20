@@ -1,15 +1,16 @@
 /* Basic editor styles */
 .tiptap {
+    height: 100%;
     > * + * {
         margin-top: 0.75em;
     }
 
-    ul{
-      list-style: disc;
+    ul {
+        list-style: disc;
     }
 
-    ol{
-      list-style: auto;
+    ol {
+        list-style: auto;
     }
 
     ul,
@@ -17,3 +18,4 @@
         padding: 0 1rem;
     }
 }
+

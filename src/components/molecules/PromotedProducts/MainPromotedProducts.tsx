@@ -3,12 +3,15 @@ import Link from 'next/link';
 import {Button} from '~components/ui/button';
 import {serverClient} from '~server/trpc/serverClient';
 import {AppRoutes} from '~types/AppRoutes';
-import {PriceWeb, ProductWeb} from '~types/products';
-import {getPriceRange} from '~utils/getPriceRange';
+import {PriceWeb} from '~types/products';
 import {parseNumberToCurrency} from '~utils/parseNumberToCurrency';
 
 const MainPromotedProducts = async () => {
     const {promotedProducts} = await serverClient.getPromotedProducts({});
+
+    if (promotedProducts.length <= 0) {
+        return null;
+    }
 
     return (
         <div className="flex flex-col gap-12">

@@ -12,6 +12,11 @@ const PromotedProducts = async ({
         category: searchParams?.category as string,
         subCategory: searchParams?.subCategory as string,
     });
+
+    if (promotedProducts.length <= 0) {
+        return null;
+    }
+
     return (
         <div className="relative">
             <div

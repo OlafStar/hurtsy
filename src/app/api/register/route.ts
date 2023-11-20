@@ -1,14 +1,15 @@
+import {randomUUID} from 'crypto';
+
 import bcrypt from 'bcrypt';
 import {NextResponse} from 'next/server';
 import {NextRequest} from 'next/server';
+import Mailgun, {MailgunMessageData} from 'mailgun.js';
+import formData from 'form-data';
 
 import prismadb from '~lib/prismadb';
 
-//initialize prisma if needed
-
 interface SignupRequestBody {
     data: {
-        name: string;
         email: string;
         password: string;
     };
@@ -16,9 +17,9 @@ interface SignupRequestBody {
 
 export async function POST(request: NextRequest) {
     const body: SignupRequestBody = await request.json();
-    const {name, email, password} = body.data;
+    const {email, password} = body.data;
 
-    if (!name || !email || !password) {
+    if (!email || !password) {
         return new NextResponse('Missing name, email, or password', {status: 400});
     }
 
@@ -36,18 +37,37 @@ export async function POST(request: NextRequest) {
 
     const user = await prismadb.user.create({
         data: {
-            name,
             email,
             hashedPassword,
         },
     });
 
-    // const token = await prismadb.activateToken.create({
-    //     data: {
-    //         userId: user.id,
-    //         token: `${randomUUID()}${randomUUID()}`.replace(/-/g, ''),
-    //     },
-    // });
+    const token = await prismadb.activateToken.create({
+        data: {
+            userId: user.id,
+            token: `${randomUUID()}${randomUUID()}`.replace(/-/g, ''),
+        },
+    });
 
+    const mailgun = new Mailgun(formData);
+    const client = mailgun.client({
+        username: 'api',
+        key: process.env.MAILGUN_API_KEY || '',
+        url: 'https://api.eu.mailgun.net',
+    });
+
+    const messageData: MailgunMessageData = {
+        from: `Hurtsy <no-reply@${
+            process.env.MAILGUN_DOMAIN || process.env.WEB_URL || ''
+        }>`,
+        to: user.email,
+        subject: 'Aktywuj swoje konto',
+        text: `Cześć! Proszę aktywuj swoje konto klikając w ten link ${process.env.WEB_URL}/activate/${token.token}.`,
+    };
+
+    await client.messages.create(
+        process.env.MAILGUN_DOMAIN || '',
+        messageData,
+    );
     return NextResponse.json(user);
 }

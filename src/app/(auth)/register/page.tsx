@@ -1,28 +1,21 @@
 'use client';
+
 import Link from 'next/link';
-import {useRouter} from 'next/navigation';
 import React, {useState} from 'react';
 
+import {registerUserServer} from '../../../server/actions/action';
+
 const RegisterPage = () => {
-    const router = useRouter();
     const [data, setData] = useState({
-        name: '',
         email: '',
         password: '',
     });
+
     const registerUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const response = await fetch('/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({data}),
-        });
-
-        await response.json();
-        router.push(`/dashboard`);
+        await registerUserServer(data);
     };
+
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

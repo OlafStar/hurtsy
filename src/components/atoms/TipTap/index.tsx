@@ -18,6 +18,8 @@ import Image from '@tiptap/extension-image';
 
 import TipTapToolbar from '../TipTapToolbar';
 
+import styles from './styles.module.scss';
+
 interface DescriptionImageContextType {
     descriptionImages: File[];
     setDescriptionImages: Dispatch<SetStateAction<File[]>>;
@@ -84,12 +86,13 @@ const Tiptap = ({
     ];
 
     return (
-        <div className="w-full">
+        <div className={styles.editorHFull}>
             <DescriptionImageContextProvider
                 descriptionImages={descriptionImages}
                 setDescriptionImages={setDescriptionImages}
             >
                 <EditorProvider
+                    injectCSS={true}
                     content={content}
                     slotBefore={<TipTapToolbar />}
                     extensions={extensions}

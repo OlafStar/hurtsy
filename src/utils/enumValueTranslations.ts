@@ -165,7 +165,9 @@ const translations: {[key: string]: string} = {
     name: "Nazwa",
 
     customProperties: "Kluczowe atrybuty",
-    value: "Wartość"
+    value: "Wartość",
+
+    poland: "Polska"
 };
 
 //TODO CHANGE TO LOCALES

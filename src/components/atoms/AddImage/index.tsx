@@ -7,6 +7,8 @@ import {trpc} from '~app/_trpc/client';
 import UploadDropzone from '~components/molecules/UploadDropzone';
 import {Button} from '~components/ui/button';
 import {Dialog, DialogContent} from '~components/ui/dialog';
+import {PropsWithClassName} from '~types/generalTypes';
+import {cn} from '~utils/shadcn';
 
 type AddImageProps = {
     multiple: boolean;
@@ -14,7 +16,12 @@ type AddImageProps = {
     onAcceptedImage: Dispatch<SetStateAction<(string | File)[]>>;
 };
 
-const AddImage = ({currentState, multiple, onAcceptedImage}: AddImageProps) => {
+const AddImage = ({
+    currentState,
+    multiple,
+    onAcceptedImage,
+    className,
+}: AddImageProps & PropsWithClassName) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(0);
 
@@ -27,7 +34,12 @@ const AddImage = ({currentState, multiple, onAcceptedImage}: AddImageProps) => {
 
     return (
         <>
-            <Button type="button" onClick={() => setIsOpen(true)} variant='ghost'>
+            <Button
+                type="button"
+                onClick={() => setIsOpen(true)}
+                variant="ghost"
+                className={`${cn(className)}`}
+            >
                 {'Dodaj zdjecie'}
             </Button>
             <Dialog

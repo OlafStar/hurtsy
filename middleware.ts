@@ -9,13 +9,17 @@ export default withAuth(
         const isAuthPage =
             req.nextUrl.pathname.startsWith('/login') ||
             req.nextUrl.pathname.startsWith('/register');
-        console.log('middleware')
+        console.log('middleware');
         if (isAuthPage) {
             if (isAuth) {
                 return NextResponse.redirect(new URL('/dashboard', req.url));
             }
 
             return null;
+        }
+
+        if (!token?.active) {
+            return NextResponse.redirect(new URL('/activate-account', req.url));
         }
 
         if (!isAuth) {

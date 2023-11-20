@@ -21,7 +21,9 @@ const UploadDropzone = ({
     return (
         <Dropzone
             multiple={multiple}
-            onDrop={async (acceptedFile) => {
+            onDrop={(acceptedFile) => {
+                console.log('accepted', acceptedFile)
+                console.log('accepted', multiple && files && files?.length > 0)
                 setAcceptedImages(
                     multiple && files && files?.length > 0
                         ? [...files, ...acceptedFile]

@@ -4,6 +4,7 @@ import React from 'react';
 import ClearFilterButton from '~components/atoms/ClearFilterButton';
 import FiltersSheet from '~components/atoms/FiltersSheet';
 import CompanyCard from '~components/molecules/CompanyCard';
+import EmptyState from '~components/molecules/EmptyState';
 import Filters from '~components/molecules/Filters';
 import Pagination from '~components/molecules/Pagination';
 import ProductsCompanySwitch from '~components/molecules/ProductsCompanySwitch';
@@ -49,15 +50,29 @@ const CompaniesPage = async ({searchParams}: CompaniesPageProps) => {
                         </div>
                         <ProductsCompanySwitch />
                     </div>
-                    <div className="flex flex-col gap-6">
-                        {companies.map((item, index) => (
-                            <React.Fragment key={index}>
-                                <CompanyCard {...(item as CompanyTypeWeb)} />
-                                {companies.length - 1 > index && (
-                                    <div className="w-full h-[1px] bg-black opacity-10" />
-                                )}
-                            </React.Fragment>
-                        ))}
+                    <div className="flex flex-col gap-6 min-h-full">
+                        {companies.length > 0 ? (
+                            companies.map((item, index) => (
+                                <React.Fragment key={index}>
+                                    <CompanyCard {...(item as CompanyTypeWeb)} />
+                                    {companies.length - 1 > index && (
+                                        <div className="w-full h-[1px] bg-black opacity-10" />
+                                    )}
+                                </React.Fragment>
+                            ))
+                        ) : (
+                            <EmptyState
+                                title="Nie możemy znaleźć firm z takimi parametrami"
+                                description="Spróbuj ponownie"
+                            >
+                                <ClearFilterButton
+                                    paramsToDelete={'all'}
+                                    buttonProps={{variant: 'destructive'}}
+                                >
+                                    {'Wyczyść filtry'}
+                                </ClearFilterButton>
+                            </EmptyState>
+                        )}
                     </div>
                 </div>
                 <PromotedProducts

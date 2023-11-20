@@ -25,7 +25,7 @@ const AccountCompany = async () => {
         <>
             <Link href={AppRoutes.ADD_COMPANY}>
                 <Button
-                    variant="secondary"
+                    variant="default"
                     className="border-[#000000] rounded-full"
                 >
                     {'Dodaj firme'}

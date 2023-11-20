@@ -17,6 +17,10 @@ export default async function DashboardLayoutLayout({
         return redirect('/login');
     }
 
+    if (!user.active) {
+        redirect(`/activate-account`);
+    }
+
     return (
         <>
             <div className="flex min-h-screen max-h-screen flex-col space-y-6 overflow-hidden">

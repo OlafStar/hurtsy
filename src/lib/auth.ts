@@ -35,14 +35,11 @@ export const authOptions: NextAuthOptions = {
                     return null;
                 }
 
-                // if (!user.active) {
-                //     throw new Error('User is not active');
-                // }
-
                 const passwordsMatch = await bcrypt.compare(
                     credentials.password,
                     user.hashedPassword,
                 );
+                console.log(passwordsMatch);
 
                 if (!passwordsMatch) {
                     return null;
@@ -60,13 +57,14 @@ export const authOptions: NextAuthOptions = {
                 session.user.id = token.id;
                 session.user.email = token.email;
                 session.user.image = token.picture;
+                session.user.active = token.active;
             }
             return session;
         },
         async jwt({token, user}) {
             const dbUser = await prismadb.user.findFirst({
                 where: {
-                    email: token.email,
+                    email: token.email || undefined,
                 },
             });
 
@@ -81,6 +79,7 @@ export const authOptions: NextAuthOptions = {
                 id: dbUser.id,
                 email: dbUser.email,
                 picture: dbUser.image,
+                active: dbUser.active,
             };
         },
     },
