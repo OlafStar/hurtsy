@@ -6,7 +6,7 @@ export const productFormDefaultValues = {
     mainImage: '',
     images: [],
     category: {
-        mainCategory: '',
+        mainCategory: undefined,
         subCategory: [],
     },
     prices: [
@@ -16,7 +16,7 @@ export const productFormDefaultValues = {
             maxQuantity: 0,
         },
     ],
-    deliveryPrice: 0,
+    deliveryPrice: undefined,
     customizations: [
         {
             name: '',
@@ -38,7 +38,7 @@ export const generateDefaultValues = (initialData: ProductWeb) => {
         mainImage: initialData.mainImage,
         images: initialData.images ?? [],
         category: initialData.category ?? {
-            mainCategory: '',
+            mainCategory: undefined,
             subCategory: [],
         },
         prices:
@@ -51,7 +51,7 @@ export const generateDefaultValues = (initialData: ProductWeb) => {
                           maxQuantity: 0,
                       },
                   ],
-        deliveryPrice: initialData.deliveryPrice ?? 0,
+        deliveryPrice: initialData.deliveryPrice ?? undefined,
         customizations: initialData.customizations ?? [
             {
                 name: '',

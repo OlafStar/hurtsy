@@ -172,7 +172,7 @@ enum ComputersAndElectronicsSub {
     Networking = 'networking',
 }
 
-type SubCategoryEnum = {
+export type SubCategoryEnum = {
     [key: string]:
         | typeof FootwearSub
         | typeof ApparelAndAccessoriesSub

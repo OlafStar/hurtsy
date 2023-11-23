@@ -1,7 +1,7 @@
 import {MinusIcon} from '@radix-ui/react-icons';
 import {
-    Control,
     FieldArrayPath,
+    FieldPath,
     FieldValues,
     Path,
     useFieldArray,
@@ -18,17 +18,7 @@ import {
 import {Input} from '~components/ui/input';
 import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
-type Unpacked<T> = T extends (infer U)[] ? U : T;
-
-type ControllerArrayProps<
-    TFieldValues extends FieldValues = FieldValues,
-    TFieldArrayName extends
-        FieldArrayPath<TFieldValues> = FieldArrayPath<TFieldValues>,
-> = {
-    control?: Control<TFieldValues>;
-    name: TFieldArrayName;
-    defaultValue: Unpacked<TFieldValues[TFieldArrayName]>;
-};
+import {ControllerArrayProps} from '../ProductCreationForm/types';
 
 const FormFieldArray = <
     TFieldValues extends FieldValues = FieldValues,
@@ -51,7 +41,9 @@ const FormFieldArray = <
         <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-3">
                 <div className="flex justify-between">
-                    <div className="text-xl font-bold">{translateEnumValueToPolish(name)}</div>
+                    <div className="text-xl font-bold">
+                        {translateEnumValueToPolish(name)}
+                    </div>
                     <Button
                         type="button"
                         variant="outline"
@@ -139,6 +131,15 @@ const FormFieldArray = <
                         </div>
                     );
                 })}
+                <FormField
+                    control={control}
+                    name={`${name}` as FieldPath<TFieldValues>}
+                    render={() => (
+                        <FormItem>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
             </div>
         </div>
     );

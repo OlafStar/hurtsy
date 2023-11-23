@@ -6,7 +6,7 @@ export type CompanyTypeWeb = {
     id: string;
     userId: string;
     name: string;
-    description?: string;
+    description: string | null;
     type: CompanyType;
     mainProducts?: any;
     city: string;

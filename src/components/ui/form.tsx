@@ -4,6 +4,7 @@ import {Slot} from '@radix-ui/react-slot';
 import {
     Controller,
     ControllerProps,
+    FieldError,
     FieldPath,
     FieldValues,
     FormProvider,
@@ -145,8 +146,10 @@ const FormMessage = React.forwardRef<
     React.HTMLAttributes<HTMLParagraphElement>
 >(({className, children, ...props}, ref) => {
     const {error, formMessageId} = useFormField();
-    const body = error ? String(error?.message) : children;
-
+    const body = (error as FieldError | undefined)
+        ? String(error?.root ? error.root.message : error?.message)
+        : children;
+    console.log(error)
     if (!body) {
         return null;
     }

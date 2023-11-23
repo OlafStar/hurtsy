@@ -1,7 +1,8 @@
+import {Category} from './categories';
 import {CompanyTypeWeb} from './company';
 
 export type CategoryWeb = {
-    mainCategory: string;
+    mainCategory: Category;
     subCategory: string[];
 };
 

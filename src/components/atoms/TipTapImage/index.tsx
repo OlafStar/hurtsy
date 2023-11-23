@@ -18,7 +18,7 @@ const TipTapImage = ({editor}: TipTapImageProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(0);
 
-    const {data, isLoading} = trpc.getImages.useQuery({
+    const {data, isLoading, refetch} = trpc.getImages.useQuery({
         page: currentPage,
         pageSize: 6,
     });
@@ -47,7 +47,13 @@ const TipTapImage = ({editor}: TipTapImageProps) => {
             >
                 <DialogContent>
                     <div className="flex flex-col gap-4 items-center">
-                        <TipTapUpload addImage={addImage} />
+                        <TipTapUpload
+                            addImage={addImage}
+                            onComplete={async () => {
+                                await refetch();
+                                setIsOpen(false);
+                            }}
+                        />
                         <div className="flex gap-2 items-center w-[324px] h-[184px]">
                             <ChevronLeft
                                 onClick={() => setCurrentPage(currentPage - 1)}

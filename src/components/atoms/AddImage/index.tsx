@@ -12,8 +12,8 @@ import {cn} from '~utils/shadcn';
 
 type AddImageProps = {
     multiple: boolean;
-    currentState?: Array<string | File>;
-    onAcceptedImage: Dispatch<SetStateAction<(string | File)[]>>;
+    currentState?: Array<string>;
+    onAcceptedImage: Dispatch<SetStateAction<string[]>>;
 };
 
 const AddImage = ({
@@ -25,12 +25,10 @@ const AddImage = ({
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(0);
 
-    const {data, isLoading} = trpc.getImages.useQuery({
+    const {data, isLoading, refetch} = trpc.getImages.useQuery({
         page: currentPage,
         pageSize: 6,
     });
-
-    console.log(data);
 
     return (
         <>
@@ -59,15 +57,21 @@ const AddImage = ({
                             }
                             setAcceptedImages={onAcceptedImage}
                             className="w-[324px] h-[152px]"
+                            onComplete={async () => {
+                                await refetch()
+                                setIsOpen(false);
+                            }}
                         />
                         <div className="flex gap-2 items-center w-[324px] h-[184px]">
                             <ChevronLeft
                                 onClick={() => setCurrentPage(currentPage - 1)}
                                 className={`${
-                                    currentPage === 0 &&
+                                    ((data && data.totalImages < 6) ||
+                                        currentPage < 1) &&
                                     'disabled opacity-0 pointer-events-none'
                                 } cursor-pointer`}
                             />
+
                             <div className="grid grid-cols-3 grid-rows-2 gap-2">
                                 {data?.images.map((item, index) => (
                                     <img

@@ -72,7 +72,7 @@ model Product {
   images            Json               // Json type to represent a list of strings
   category          Json   
   prices            Json               // Array of objects of price, minQuantity, maxQuantity
-  deliveryPrice     Float?             // Optional value
+  deliveryPrice     Float?            // Optional value
   customizations    Json               // Array of customization objects with name and minQuantity
   customProperties  Json               // Array of custom properties with name and value
   companyId         String

@@ -3,27 +3,23 @@
 import Dropzone from 'react-dropzone';
 
 import DropzoneField from '~components/atoms/DropzoneField';
-import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
-
-import {useDescriptionImageContext} from '../TipTap';
+import {useUploadS3} from '~hooks/useUploadS3';
 
 type UploadDropzoneProps = {
     addImage: (url: string) => void;
     className?: string;
+    onComplete: () => Promise<void>;
 };
 
-const TipTapUpload = ({addImage, className}: UploadDropzoneProps) => {
-    const {descriptionImages, setDescriptionImages} = useDescriptionImageContext();
+const TipTapUpload = ({addImage, className, onComplete}: UploadDropzoneProps) => {
+    const {uploadImageToS3} = useUploadS3();
     return (
         <Dropzone
             multiple={false}
             onDrop={async (acceptedFile) => {
-                setDescriptionImages(
-                    descriptionImages && descriptionImages?.length > 0
-                        ? [...descriptionImages, ...acceptedFile]
-                        : [...acceptedFile],
-                );
-                addImage(getImgBeforeUpload(acceptedFile[0]));
+                const key = await uploadImageToS3(acceptedFile[0]);
+                addImage(key);
+                await onComplete();
             }}
         >
             {({getRootProps, getInputProps}) => (

@@ -1,8 +1,12 @@
 import {z} from 'zod';
 
+import {Category} from '~types/categories';
+
+const subCategorySchema = z.array(z.string()).nonempty();
+
 const categorySchema = z.object({
-    mainCategory: z.string(),
-    subCategory: z.array(z.string()),
+    mainCategory: z.nativeEnum(Category),
+    subCategory: subCategorySchema,
 });
 
 const priceSchema = z.object({
@@ -10,6 +14,60 @@ const priceSchema = z.object({
     minQuantity: z.number(),
     maxQuantity: z.number(),
 });
+
+const pricesSchema = z
+    .array(priceSchema)
+    .nonempty()
+    .superRefine((prices, ctx) => {
+        let lastIndexMax = 0;
+        if (prices.length > 3) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.too_big,
+                maximum: 4,
+                inclusive: true,
+                type: 'number',
+                message: 'Maksymalnie można dodać trzy warianty ceny',
+            });
+        }
+        for (let i = 0; i < prices.length; i++) {
+            console.log(prices[i].minQuantity, lastIndexMax);
+
+            if (
+                prices[i].minQuantity <= lastIndexMax &&
+                prices[i].minQuantity !== 0
+            ) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.too_small,
+                    minimum: lastIndexMax,
+                    inclusive: true,
+                    type: 'number',
+                    message:
+                        'Minimalna wielkość nie może być mniejsza niż poprzednia maksymalna wielkość',
+                });
+            }
+            if (prices[i].maxQuantity < prices[i].minQuantity) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.too_small,
+                    minimum: prices[i].minQuantity,
+                    inclusive: true,
+                    type: 'number',
+                    message:
+                        'Maksymalna wielkość nie może być mniejsza niż minimalna',
+                });
+            }
+            if (prices[i].minQuantity === 0 || prices[i].maxQuantity === 0) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.too_small,
+                    minimum: 1,
+                    inclusive: true,
+                    type: 'number',
+                    message: 'Podane parametry nie mogą być zerem',
+                });
+            }
+            lastIndexMax = prices[i].maxQuantity;
+        }
+        return true;
+    });
 
 const customizationSchema = z
     .object({
@@ -26,10 +84,10 @@ const customPropertiesSchema = z.object({
 const baseProductSchema = {
     name: z.string(),
     description: z.string().optional(),
-    mainImage: z.string().optional(),
+    mainImage: z.string(),
     images: z.array(z.string()).optional(),
     category: categorySchema,
-    prices: z.array(priceSchema),
+    prices: pricesSchema,
     deliveryPrice: z.number().optional(),
     customizations: z.array(customizationSchema),
     customProperties: z.array(customPropertiesSchema),
