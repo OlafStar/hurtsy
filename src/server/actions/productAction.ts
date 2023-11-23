@@ -23,7 +23,7 @@ export const createProduct = async (
     const companyRepresentative = representatives.find(
         (element) => element.name === company.name,
     );
-
+    console.log(mainImage);
     if (isEdit && id) {
         if ([mainImage, ...parsedImages].length > 0) {
             const submitValues = {
@@ -69,7 +69,7 @@ export const createProduct = async (
         }
     }
 
-    revalidatePath(DashboardRoutes.PRODUCTS);
+    revalidatePath("/");
     revalidatePath(AppRoutes.WEB_PRODUCTS);
     redirect(DashboardRoutes.PRODUCTS);
 };

@@ -17,7 +17,7 @@ const ProductPhotosFields = <
 }) => {
     const {formState} = useFormContext();
     const [mainImage, setMainImage] = useState<Array<string>>(
-        formState.defaultValues ? formState.defaultValues[name] : [],
+        formState.defaultValues ? [formState.defaultValues[name]] : [],
     );
     const [images, setImages] = useState<Array<string>>(
         formState.defaultValues ? formState.defaultValues['images'] : [],
@@ -43,19 +43,11 @@ const ProductPhotosFields = <
             <div className="flex gap-4 h-[250px]">
                 <div>
                     {mainImage.length > 0 ? (
-                        typeof mainImage[0] !== 'string' ? (
-                            <img
-                                className="w-[250px] h-[250px] object-contain"
-                                src={getImgBeforeUpload(mainImage[0])}
-                                onClick={() => setMainImage([])}
-                            />
-                        ) : (
-                            <img
-                                className="w-[250px] h-[250px] object-contain"
-                                src={mainImage[0]}
-                                onClick={() => setMainImage([])}
-                            />
-                        )
+                        <img
+                            className="w-[250px] h-[250px] object-contain"
+                            src={mainImage[0]}
+                            onClick={() => setMainImage([])}
+                        />
                     ) : (
                         <AddImage multiple={false} onAcceptedImage={setMainImage} />
                     )}

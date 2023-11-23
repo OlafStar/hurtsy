@@ -46,7 +46,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
             createProduct(
                 company,
                 values,
-                JSON.stringify([allImages[0]]),
+                allImages[0],
                 JSON.stringify(allImages.slice(1)),
                 isEdit,
                 initialData?.id,
