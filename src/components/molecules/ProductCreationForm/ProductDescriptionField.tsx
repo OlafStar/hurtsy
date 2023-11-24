@@ -9,7 +9,7 @@ import {
 } from '~components/ui/form';
 import Tiptap from '~components/atoms/TipTap';
 
-import {FormFieldProps} from './types';
+import {FormFieldProps} from '../../../types/formFieldTypes';
 
 const ProductDescriptionField = <
     TFieldValues extends FieldValues,

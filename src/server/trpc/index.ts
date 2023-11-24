@@ -5,6 +5,7 @@ import {s3Procedures} from './procedures/s3';
 import {productProcedures} from './procedures/product';
 import {imagesProcedures} from './procedures/images';
 import {stripeProcedures} from './procedures/stripe';
+import {offersProcedures} from './procedures/offers';
 
 export const appRouter = router({
     ...companyProcedures,
@@ -13,6 +14,7 @@ export const appRouter = router({
     ...s3Procedures,
     ...imagesProcedures,
     ...stripeProcedures,
+    ...offersProcedures,
 });
 
 export type AppRouter = typeof appRouter;

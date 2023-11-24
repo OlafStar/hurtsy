@@ -9,7 +9,7 @@ import {
 } from '~components/ui/form';
 import {Input} from '~components/ui/input';
 
-import {FormFieldProps} from './types';
+import {FormFieldProps} from '../../../types/formFieldTypes';
 
 const ProductDeliveryField = <
     TFieldValues extends FieldValues,

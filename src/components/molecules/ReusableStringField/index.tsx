@@ -11,7 +11,7 @@ import {Input} from '~components/ui/input';
 
 import {FormFieldProps} from '../../../types/formFieldTypes';
 
-const ProductNameField = <
+const ReusableStringField = <
     TFieldValues extends FieldValues,
     TName extends FieldPath<TFieldValues>,
 >({
@@ -26,9 +26,9 @@ const ProductNameField = <
             name={name}
             render={({field}) => (
                 <FormItem>
-                    <FormLabel>{'Nazwa produktu'}</FormLabel>
+                    <FormLabel>{name}</FormLabel>
                     <FormControl>
-                        <Input placeholder="Nazwa produktu" {...field} />
+                        <Input placeholder={name} {...field} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -37,4 +37,4 @@ const ProductNameField = <
     );
 };
 
-export default ProductNameField;
+export default ReusableStringField;

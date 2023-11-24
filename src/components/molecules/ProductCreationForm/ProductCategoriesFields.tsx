@@ -24,7 +24,7 @@ import {Category, subCategoryEnums} from '~types/categories';
 import {cn} from '~utils/shadcn';
 import {Checkbox} from '~components/ui/checkbox';
 
-import {FormFieldProps} from './types';
+import {FormFieldProps} from '../../../types/formFieldTypes';
 
 const ProductCategoriesFields = <
     TFieldValues extends FieldValues,

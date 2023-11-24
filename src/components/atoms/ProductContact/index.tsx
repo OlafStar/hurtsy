@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import {Button, ButtonProps} from '~/components/ui/button';
 import {
     Dialog,
@@ -8,22 +10,59 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '~/components/ui/dialog';
-import {Input} from '~/components/ui/input';
-import {Label} from '~/components/ui/label';
-import {Textarea} from '~components/ui/textarea';
-import {getCurrentUser} from '~lib/session';
 import {PropsWithClassName} from '~types/generalTypes';
 import {ProductWeb} from '~types/products';
 import {cn} from '~utils/shadcn';
+import {getCurrentUser} from '~lib/session';
+import {serverClient} from '~server/trpc/serverClient';
+import {AppRoutes} from '~types/AppRoutes';
 
-const ProductContact = async ({
-    company,
-    mainImage,
-    name,
-    className,
-    button
-}: ProductWeb & PropsWithClassName & {button?: ButtonProps}) => {
+import OfferForm from './OfferForm';
+
+const ProductContact = async (
+    props: ProductWeb &
+        PropsWithClassName & {button?: ButtonProps; disableDialog?: boolean},
+) => {
+    const {company, className, button, disableDialog} = props;
     const user = await getCurrentUser();
+    const userCompany = await serverClient.getUserCompany();
+
+    if (disableDialog) {
+        return (
+            <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-2">
+                    <div className="text-2xl font-bold">
+                        {'Wyślij zapytanie ofertowe'}
+                    </div>
+                    <div>
+                        {`Skontaktuj się z firmą ${company?.name} odnośnie wybranego produktu.`}
+                    </div>
+                </div>
+                <OfferForm
+                    formId="offerForm"
+                    formName="offerForm"
+                    {...props}
+                    email={user?.email}
+                />
+                <div>
+                    {userCompany ? (
+                        <Button type="submit" form="offerForm" disabled={!user}>
+                            {'Wyślij'}
+                        </Button>
+                    ) : !user ? (
+                        <Link href={'/login'}>
+                            <Button type="button">{'Zaloguj'}</Button>
+                        </Link>
+                    ) : (
+                        <Link href={AppRoutes.ADD_COMPANY}>
+                            <Button type="button">{'Dodaj firmę'}</Button>
+                        </Link>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -38,47 +77,40 @@ const ProductContact = async ({
                         {`Skontaktuj się z firmą ${company?.name} odnośnie wybranego produktu.`}
                     </DialogDescription>
                 </DialogHeader>
-                <div className="flex flex-col gap-4">
-                    <div className="flex gap-4 items-center">
-                        <img
-                            src={mainImage}
-                            className="w-12 aspect-square object-contain"
-                        />
-                        <div className="text-xs">{name}</div>
-                    </div>
-                    <div className="flex gap-2">
-                        <div className="flex-1">
-                            <Label htmlFor="email" className="text-left">
-                                {'Email'}
-                            </Label>
-                            <Input
-                                id="email"
-                                value={user?.email || ''}
-                                className="col-span-3 h-6 text-xs"
-                            />
-                        </div>
-                        <div className="flex-1">
-                            <Label htmlFor="username" className="text-left">
-                                {'Liczba produktów'}
-                            </Label>
-                            <Input
-                                id="username"
-                                className="col-span-3 h-6 text-xs"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <Label htmlFor="message" className="text-left">
-                            {'Wiadomość'}
-                        </Label>
-                        <Textarea
-                            id="message"
-                            placeholder="Wprowadź tutaj wszystkie informacje na temat produktu oraz swoją wiadomość."
-                        />
-                    </div>
-                </div>
+                <OfferForm
+                    formId="dialogOfferForm"
+                    formName="dialogOfferForm"
+                    {...props}
+                    email={user?.email}
+                />
                 <DialogFooter>
-                    <Button type="submit">{'Save changes'}</Button>
+                    {userCompany ? (
+                        <Button
+                            type="submit"
+                            form="dialogOfferForm"
+                            disabled={!user}
+                        >
+                            {'Wyślij'}
+                        </Button>
+                    ) : !user ? (
+                        <div className="flex flex-1 justify-between items-end">
+                            <div className="text-xs opacity-50">
+                                {'Kontakt z tą firmą dostępny jest po zalogowaniu'}
+                            </div>
+                            <Link href={'/login'}>
+                                <Button type="button">{'Zaloguj'}</Button>
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="flex flex-1 justify-between items-end">
+                            <div className="text-xs opacity-50">
+                                {'Uzupełnij swój profil'}
+                            </div>
+                            <Link href={AppRoutes.ADD_COMPANY}>
+                                <Button type="button">{'Dodaj firmę'}</Button>
+                            </Link>
+                        </div>
+                    )}
                 </DialogFooter>
             </DialogContent>
         </Dialog>

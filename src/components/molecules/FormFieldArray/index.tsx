@@ -18,7 +18,7 @@ import {
 import {Input} from '~components/ui/input';
 import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
-import {ControllerArrayProps} from '../ProductCreationForm/types';
+import {ControllerArrayProps} from '../../../types/formFieldTypes';
 
 const FormFieldArray = <
     TFieldValues extends FieldValues = FieldValues,

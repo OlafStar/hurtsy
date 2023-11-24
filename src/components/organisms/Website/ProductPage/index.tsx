@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import InnerHTML from '~components/atoms/InnerHTML';
+import ProductContact from '~components/atoms/ProductContact';
 import ProductPageInfo from '~components/molecules/ProductPageInfo';
 import PromotedProducts from '~components/molecules/PromotedProducts';
 import {Button} from '~components/ui/button';
@@ -111,11 +112,16 @@ const ProductPage = (props: ProductWeb) => {
                 </div>
                 <PromotedProducts className="flex xl:hidden" />
                 {description && (
-                    <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-6 max-w-[886px] overflow-hidden">
                         <div className="font-bold text-2xl">{'Opis'}</div>
-                        <InnerHTML html={description || ''} />
+                        <InnerHTML
+                            html={description || ''}
+                            className="width: 100%"
+                        />
                     </div>
                 )}
+
+                <ProductContact {...props} disableDialog />
             </div>
             <PromotedProducts className="hidden xl:flex" />
         </div>

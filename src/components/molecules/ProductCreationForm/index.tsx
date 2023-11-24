@@ -43,7 +43,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
 
     async function onSubmit(values: z.infer<typeof productFormSchema>) {
         if (company) {
-            createProduct(
+            await createProduct(
                 company,
                 values,
                 allImages[0],

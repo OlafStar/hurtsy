@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 import AddImage from '~components/atoms/AddImage';
 import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
 
-import {FormFieldProps} from './types';
+import {FormFieldProps} from '../../../types/formFieldTypes';
 
 const ProductPhotosFields = <
     TFieldValues extends FieldValues,

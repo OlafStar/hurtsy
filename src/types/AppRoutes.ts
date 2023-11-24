@@ -20,7 +20,7 @@ export enum ProductRoutes {
 
 export enum WebsiteRoutes {
     WEB_COMPANIES = '/companies',
-    WEB_PRODUCTS = '/products'
+    WEB_PRODUCTS = '/products',
 }
 
 export const AppRoutes = {
@@ -28,4 +28,5 @@ export const AppRoutes = {
     ...CompanyRoutes,
     ...ProductRoutes,
     ...WebsiteRoutes,
+    ACTIVE_ACCOUNT: '/activate-account',
 };

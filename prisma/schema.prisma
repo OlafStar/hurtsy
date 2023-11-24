@@ -82,10 +82,30 @@ model Product {
 
   company           Company            @relation(fields: [companyId], references: [id])
   representative    Representative     @relation(fields: [representativeId], references: [id])
+  offers        Offer[]
 
   @@index([companyId])
   @@index([representativeId])
 }
+
+model Offer {
+  id         String   @id @default(cuid())
+  productId  String   // Assuming productId is a field holding the reference ID to Product
+  senderId   String   // Field to hold the reference ID for the sender Company
+  receiverId String   // Field to hold the reference ID for the receiver Company
+  message    String
+  quantity   Int
+
+
+  product    Product  @relation(fields: [productId], references: [id])
+  sender     Company  @relation(fields: [senderId], references: [id], name: "OfferSender")
+  receiver   Company  @relation(fields: [receiverId], references: [id], name: "OfferReceiver")
+
+  @@index([productId])
+  @@index([senderId])
+  @@index([receiverId])
+}
+
 
 model Company {
   id               String          @id @default(cuid())
@@ -102,11 +122,16 @@ model Company {
   phone            String
   country          String
   establishment    Int
+
+  sentOffers    Offer[] @relation("OfferSender")
+  receivedOffers Offer[] @relation("OfferReceiver")
   user             User            @relation(fields: [userId], references: [id])
   representatives  Representative[]
   products         Product[]
   @@index([userId])
 }
+
+
 
 model Representative {
   id        String   @id @default(cuid())

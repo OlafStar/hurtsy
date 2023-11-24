@@ -4,9 +4,11 @@ import {randomUUID} from 'crypto';
 
 import Mailgun, {MailgunMessageData} from 'mailgun.js';
 import formData from 'form-data';
+import {redirect} from 'next/navigation';
 
 import prismadb from '~lib/prismadb';
 import {getCurrentUser} from '~lib/session';
+import { AppRoutes } from '~types/AppRoutes';
 
 export const registerUserServer = async (data: {
     email: string;
@@ -19,6 +21,7 @@ export const registerUserServer = async (data: {
         },
         body: JSON.stringify({data}),
     });
+    redirect(AppRoutes.ACTIVE_ACCOUNT);
 };
 
 export const resendActiveToken = async () => {
