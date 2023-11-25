@@ -48,6 +48,8 @@ const Page = async ({params: {slug}}: {params: {slug: string[]}}) => {
             return <ProductEditForm id={slug[2]} />;
         case AppRoutes.OFFERS:
             return <Offers />;
+        case `${AppRoutes.OFFERS}/${slug[1]}`:
+            return <Offers id={slug[1]} />;
         case AppRoutes.REPRESENTATIVES:
             return <Representatives />;
         case AppRoutes.PLANS:

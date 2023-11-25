@@ -68,7 +68,7 @@ model Product {
   id                String   @id @default(cuid())
   name              String
   description       String?            @db.Text// Optional
-  mainImage         String?            // Optional
+  mainImage         String            // Optional
   images            Json               // Json type to represent a list of strings
   category          Json   
   prices            Json               // Array of objects of price, minQuantity, maxQuantity

@@ -1,10 +1,13 @@
 import {useFormContext} from 'react-hook-form';
+import * as React from 'react';
 
-import {Input, InputProps} from '~components/ui/input';
+import {cn} from '~/utils/shadcn';
+import { InputProps } from '~components/ui/input';
 
-const NumberInput = (
-    props: InputProps & {field: string; type: 'int' | 'float'},
-) => {
+export const NumberInput = React.forwardRef<
+    HTMLInputElement,
+    InputProps & {field: string; numbertype: 'int' | 'float'}
+>(({className, type, ...props}, ref) => {
     const {setValue} = useFormContext();
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,7 +16,7 @@ const NumberInput = (
             setValue(
                 props.field,
                 value
-                    ? props.type === 'float'
+                    ? props.numbertype === 'float'
                         ? parseFloat(value)
                         : parseInt(value)
                     : undefined,
@@ -30,16 +33,19 @@ const NumberInput = (
             e.target.focus();
         }, 0);
     };
-
     return (
-        <Input
-            placeholder="Delivery price"
-            {...props}
+        <input
+            className={cn(
+                'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+                className,
+            )}
             type="number"
             onWheel={numberInputOnWheelPreventChange}
             onChange={handleValueChange}
+            ref={ref}
+            {...props}
+            
         />
     );
-};
-
-export default NumberInput;
+});
+NumberInput.displayName = 'NumberInput';

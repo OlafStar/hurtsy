@@ -2,6 +2,7 @@ import {TRPCError} from '@trpc/server';
 
 import prismadb from '~lib/prismadb';
 import {createOfferSchema} from '~validations/offers';
+import {UserOffers} from '~types/offers';
 
 import {privateProcedure} from '../trpc';
 import {getUserCompany} from '../utils/getUserCompany';
@@ -56,4 +57,39 @@ export const offersProcedures = {
                 },
             });
         }),
+
+    getUserOffers: privateProcedure.query(async ({ctx}) => {
+        const company = await getUserCompany(ctx);
+
+        if (!company) {
+            throw new TRPCError({
+                code: 'NOT_FOUND',
+                message: 'User company not found',
+            });
+        }
+
+        const sendOffers = await prismadb.offer.findMany({
+            where: {
+                senderId: company.id,
+            },
+            include: {
+                sender: true,
+                receiver: true,
+                product: true,
+            },
+        });
+
+        const recivedOffers = await prismadb.offer.findMany({
+            where: {
+                receiverId: company.id,
+            },
+            include: {
+                sender: true,
+                receiver: true,
+                product: true,
+            },
+        });
+
+        return {sendOffers, recivedOffers} as UserOffers;
+    }),
 };

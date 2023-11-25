@@ -21,7 +21,7 @@ import {createOffer} from '~server/actions/offersActions';
 import {ProductWeb} from '~types/products';
 import {offerFormSchema} from '~validations/offers';
 
-import NumberInput from '../NumberInput';
+import {NumberInput} from '../NumberInput';
 
 const OfferForm = ({
     email,
@@ -103,7 +103,6 @@ const OfferForm = ({
                         <FormField
                             control={form.control}
                             name="quantity"
-                            defaultValue={undefined}
                             render={({field}) => (
                                 <FormItem>
                                     <Label htmlFor="quantity" className="text-left">
@@ -114,7 +113,8 @@ const OfferForm = ({
                                             className="col-span-3 h-6 text-xs"
                                             {...field}
                                             field="quantity"
-                                            type="int"
+                                            numbertype="int"
+                                            name={name}
                                         />
                                     </FormControl>
                                     <FormMessage />

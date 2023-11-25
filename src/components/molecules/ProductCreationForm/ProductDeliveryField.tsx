@@ -52,6 +52,7 @@ const ProductDeliveryField = <
                             step="0.01" // Set step to allow decimal values
                             placeholder="Delivery price"
                             {...field}
+                            name={name}
                             onWheel={numberInputOnWheelPreventChange}
                             onChange={handleValueChange}
                         />
