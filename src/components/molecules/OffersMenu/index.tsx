@@ -14,7 +14,7 @@ const OffersMenu = ({
     return (
         <div className="flex flex-col w-[300px] gap-8">
             <ChangeOffers />
-            <div className="flex flex-col gap-4 px-4">
+            <div className="flex flex-col gap-4 ">
                 {type === OffersSearchType.Recived &&
                     recivedOffers.map((item, index) => (
                         <React.Fragment key={index}>

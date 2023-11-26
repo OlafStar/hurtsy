@@ -4,7 +4,6 @@ export enum DashboardRoutes {
     OFFERS = '/dashboard/offers',
     REPRESENTATIVES = '/dashboard/representatives',
     PLANS = '/dashboard/plans',
-    MESSAGES = '/dashboard/messages',
     SETTINGS = '/dashboard/settings',
 }
 

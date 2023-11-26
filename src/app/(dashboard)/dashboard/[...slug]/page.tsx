@@ -4,7 +4,6 @@ import CompanyForm from '~components/molecules/CompanyForm';
 import CompanyEditForm from '~components/molecules/CompanyForm/CompanyEditForm';
 import ProductCreationForm from '~components/molecules/ProductCreationForm';
 import ProductEditForm from '~components/molecules/ProductCreationForm/CompanyEditForm';
-import Messages from '~components/organisms/Dashboard/Messages';
 import Offers from '~components/organisms/Dashboard/Offers';
 import Plans from '~components/organisms/Dashboard/Plans';
 import Products from '~components/organisms/Dashboard/Products';
@@ -59,8 +58,6 @@ const Page = async ({
             return <Representatives />;
         case AppRoutes.PLANS:
             return <Plans />;
-        case AppRoutes.MESSAGES:
-            return <Messages />;
         case AppRoutes.SETTINGS:
             return <Settings />;
         default:
