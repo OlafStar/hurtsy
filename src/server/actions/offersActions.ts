@@ -13,3 +13,9 @@ export const createOffer = async (
     await serverClient.createOffer({productId, message, quantity});
     revalidatePath(DashboardRoutes.OFFERS);
 };
+
+export const sendMessage = async (message: string, offerId: string) => {
+    console.log(message);
+    await serverClient.sendMessage({message, id: offerId});
+    revalidatePath(DashboardRoutes.OFFERS);
+};

@@ -100,11 +100,30 @@ model Offer {
   product    Product  @relation(fields: [productId], references: [id])
   sender     Company  @relation(fields: [senderId], references: [id], name: "OfferSender")
   receiver   Company  @relation(fields: [receiverId], references: [id], name: "OfferReceiver")
+  messages   Message[]
 
   @@index([productId])
   @@index([senderId])
   @@index([receiverId])
 }
+
+model Message {
+  id              String    @id @default(cuid())
+  offerId         String    // This holds the reference ID to an Offer
+  senderCompanyId String    // This holds the reference ID to the sender Company
+  content         String    // The textual content of the message
+  createdAt       DateTime  @default(now()) // Timestamp of when the message was created
+  updatedAt       DateTime  @updatedAt      // Timestamp of when the message was last updated
+
+  // Relations
+  offer           Offer     @relation(fields: [offerId], references: [id])
+  senderCompany   Company   @relation(fields: [senderCompanyId], references: [id])
+
+  @@index([offerId])
+  @@index([senderCompanyId])
+}
+
+
 
 
 model Company {
@@ -128,6 +147,7 @@ model Company {
   user             User            @relation(fields: [userId], references: [id])
   representatives  Representative[]
   products         Product[]
+  messages        Message[]
   @@index([userId])
 }
 

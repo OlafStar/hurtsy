@@ -11,6 +11,7 @@ import Products from '~components/organisms/Dashboard/Products';
 import Representatives from '~components/organisms/Dashboard/Representatives';
 import Settings from '~components/organisms/Dashboard/Settings';
 import YourCompany from '~components/organisms/Dashboard/YourCompany';
+import {SearchParamsType} from '~config/searchParams';
 // import {dashboardNavigation} from '~config/dashboard';
 import {serverClient} from '~server/trpc/serverClient';
 import {AppRoutes} from '~types/AppRoutes';
@@ -21,7 +22,13 @@ import {AppRoutes} from '~types/AppRoutes';
 //     }));
 // }
 
-const Page = async ({params: {slug}}: {params: {slug: string[]}}) => {
+const Page = async ({
+    params: {slug},
+    searchParams,
+}: {
+    params: {slug: string[]};
+    searchParams?: SearchParamsType;
+}) => {
     const completeSlug = `/dashboard/${slug.join('/')}`;
     const company = await serverClient.getUserCompany();
 
@@ -47,9 +54,7 @@ const Page = async ({params: {slug}}: {params: {slug: string[]}}) => {
         case `${AppRoutes.EDIT_PRODUCTS}/${slug[2]}`:
             return <ProductEditForm id={slug[2]} />;
         case AppRoutes.OFFERS:
-            return <Offers />;
-        case `${AppRoutes.OFFERS}/${slug[1]}`:
-            return <Offers id={slug[1]} />;
+            return <Offers searchParams={searchParams} />;
         case AppRoutes.REPRESENTATIVES:
             return <Representatives />;
         case AppRoutes.PLANS:

@@ -10,6 +10,8 @@ export enum SearchParams {
     CompanyID = 'companyId',
     PagePagination = 'page',
     PageSize = 'pageSize',
+    OfferSearch = 'os',
+    OfferId = 'oid'
 }
 
 export type SearchParamsType = {

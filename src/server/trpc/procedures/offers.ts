@@ -1,7 +1,8 @@
 import {TRPCError} from '@trpc/server';
+import {z} from 'zod';
 
 import prismadb from '~lib/prismadb';
-import {createOfferSchema} from '~validations/offers';
+import {createOfferSchema, messageAction} from '~validations/offers';
 import {UserOffers} from '~types/offers';
 
 import {privateProcedure} from '../trpc';
@@ -92,4 +93,114 @@ export const offersProcedures = {
 
         return {sendOffers, recivedOffers} as UserOffers;
     }),
+
+    sendMessage: privateProcedure
+        .input(messageAction)
+        .mutation(async ({ctx, input}) => {
+            const user = ctx.user;
+
+            if (!user || !user.id) {
+                throw new Error('Unauthorize');
+            }
+
+            const validatedInput = messageAction.safeParse(input);
+
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            if (!validatedInput.data.message) {
+                throw new TRPCError({
+                    code: 'INTERNAL_SERVER_ERROR',
+                    message: 'Message cannot be empty',
+                });
+            }
+
+            const userCompany = await getUserCompany(ctx);
+
+            if (!userCompany) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'User company not found',
+                });
+            }
+
+            const offers = await prismadb.offer.findMany({
+                where: {
+                    OR: [{receiverId: userCompany.id}, {senderId: userCompany.id}],
+                },
+            });
+
+            const offerExists = offers.some(
+                (item) => item.id === validatedInput.data.id,
+            );
+
+            if (!offerExists) {
+                throw new TRPCError({
+                    code: 'INTERNAL_SERVER_ERROR',
+                    message: 'This user dosent have acces to this offer',
+                });
+            }
+            await prismadb.message.create({
+                data: {
+                    offerId: validatedInput.data.id,
+                    senderCompanyId: userCompany.id,
+                    content: validatedInput.data.message,
+                },
+            });
+        }),
+
+    getOfferMessages: privateProcedure
+        .input(z.string())
+        .query(async ({ctx, input}) => {
+            const user = ctx.user;
+
+            if (!user || !user.id) {
+                throw new Error('Unauthorize');
+            }
+
+            const validatedInput = z.string().safeParse(input);
+
+            if (!validatedInput.success) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: validatedInput.error.message,
+                });
+            }
+
+            const userCompany = await getUserCompany(ctx);
+
+            if (!userCompany) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'User company not found',
+                });
+            }
+
+            const offers = await prismadb.offer.findMany({
+                where: {
+                    OR: [{receiverId: userCompany.id}, {senderId: userCompany.id}],
+                },
+            });
+
+            const offerExists = offers.some(
+                (item) => item.id === validatedInput.data,
+            );
+
+            if (!offerExists) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'Offer with the specified ID does not exist',
+                });
+            }
+
+            return await prismadb.message.findMany({
+                where: {
+                    offerId: validatedInput.data,
+                },
+            });
+        }),
 };

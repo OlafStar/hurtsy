@@ -14,3 +14,12 @@ export const offerFormSchema = z.object({
     ...formOfferContent.shape,
     email: z.string(),
 });
+
+export const messageForm = z.object({
+    message: z.string(),
+});
+
+export const messageAction = z.object({
+    message: z.string(),
+    id: z.string(),
+});
