@@ -14,8 +14,6 @@ import {PropsWithClassName} from '~types/generalTypes';
 import {ProductWeb} from '~types/products';
 import {cn} from '~utils/shadcn';
 import {getCurrentUser} from '~lib/session';
-import {serverClient} from '~server/trpc/serverClient';
-import {AppRoutes} from '~types/AppRoutes';
 
 import OfferForm from './OfferForm';
 
@@ -25,7 +23,6 @@ const ProductContact = async (
 ) => {
     const {company, className, button, disableDialog} = props;
     const user = await getCurrentUser();
-    const userCompany = await serverClient.getUserCompany();
 
     if (disableDialog) {
         return (
@@ -45,17 +42,13 @@ const ProductContact = async (
                     email={user?.email}
                 />
                 <div>
-                    {userCompany ? (
+                    {user ? (
                         <Button type="submit" form="offerForm" disabled={!user}>
                             {'Wyślij'}
                         </Button>
-                    ) : !user ? (
+                    ) : (
                         <Link href={'/login'}>
                             <Button type="button">{'Zaloguj'}</Button>
-                        </Link>
-                    ) : (
-                        <Link href={AppRoutes.ADD_COMPANY}>
-                            <Button type="button">{'Dodaj firmę'}</Button>
                         </Link>
                     )}
                 </div>
@@ -84,7 +77,7 @@ const ProductContact = async (
                     email={user?.email}
                 />
                 <DialogFooter>
-                    {userCompany ? (
+                    {user ? (
                         <Button
                             type="submit"
                             form="dialogOfferForm"
@@ -92,22 +85,13 @@ const ProductContact = async (
                         >
                             {'Wyślij'}
                         </Button>
-                    ) : !user ? (
+                    ) : (
                         <div className="flex flex-1 justify-between items-end">
                             <div className="text-xs opacity-50">
                                 {'Kontakt z tą firmą dostępny jest po zalogowaniu'}
                             </div>
                             <Link href={'/login'}>
                                 <Button type="button">{'Zaloguj'}</Button>
-                            </Link>
-                        </div>
-                    ) : (
-                        <div className="flex flex-1 justify-between items-end">
-                            <div className="text-xs opacity-50">
-                                {'Uzupełnij swój profil'}
-                            </div>
-                            <Link href={AppRoutes.ADD_COMPANY}>
-                                <Button type="button">{'Dodaj firmę'}</Button>
                             </Link>
                         </div>
                     )}

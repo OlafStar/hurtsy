@@ -20,7 +20,7 @@ const DashboardPageLink = ({
     classname,
 }: DashboardPageLinkProps) => {
     return (
-        <Link href={href} className={`${cn(classname)}`}>
+        <Link href={href === DashboardRoutes.OFFERS ? `${href}?os=recived` : href} className={`${cn(classname)}`}>
             <ClientBackground href={href}>
                 {icon && (
                     <Image

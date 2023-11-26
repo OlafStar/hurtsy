@@ -1,3 +1,4 @@
+import {Loader2} from 'lucide-react';
 import {Suspense} from 'react';
 
 import OfferContainer from '~components/molecules/OfferContainer';
@@ -14,7 +15,13 @@ const Offers = async ({searchParams}: PropsWithParams) => {
     return (
         <div className="flex min-h-[100vh]">
             <OffersMenu {...offers} type={searchParams?.os as OffersSearchType} />
-            <Suspense fallback={<div>{'loading'}</div>}>
+            <Suspense
+                fallback={
+                    <div className="flex-1 flex justify-center items-center">
+                        <Loader2 className="mr-4 h-4 w-4 animate-spin bg-mainBlue" />
+                    </div>
+                }
+            >
                 <OfferContainer
                     offer={allOffers.find((item) => item.id === searchParams?.oid)}
                     type={searchParams?.os as OffersSearchType}

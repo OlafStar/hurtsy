@@ -3,17 +3,23 @@ import {useRouter} from 'next/navigation';
 import React, {useState} from 'react';
 import {signIn} from 'next-auth/react';
 import Link from 'next/link';
+import {Loader2} from 'lucide-react';
 
 import Logo from '~components/atoms/Logo';
-import { DashboardRoutes } from '~types/AppRoutes';
+import {DashboardRoutes} from '~types/AppRoutes';
+import {useToast} from '~components/ui/use-toast';
 
 const RegisterPage = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsErrror] = useState(false);
     const router = useRouter();
+    const {toast} = useToast();
     const [data, setData] = useState({
         email: '',
         password: '',
     });
     const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
+        setIsLoading(true);
         e.preventDefault();
         const response = await signIn('credentials', {
             ...data,
@@ -23,7 +29,16 @@ const RegisterPage = () => {
         if (response?.ok) {
             router.refresh();
             router.push(DashboardRoutes.YOUR_COMPANY);
+        } else {
+            setIsErrror(true);
+            toast({
+                title: 'Błąd: Nieprawidłowe dane',
+                description:
+                    'Wprowadzona nazwa użytkownika lub hasło są nieprawidłowe. Proszę spróbować ponownie.',
+                variant: 'destructive',
+            });
         }
+        setIsLoading(false);
     };
     return (
         <>
@@ -62,7 +77,7 @@ const RegisterPage = () => {
                                     onChange={(e) => {
                                         setData({...data, email: e.target.value});
                                     }}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                                 />
                             </div>
                         </div>
@@ -99,12 +114,21 @@ const RegisterPage = () => {
                                 />
                             </div>
                         </div>
-
+                        {isError && (
+                            <div className="text-[#ff0000] text-xs">
+                                {
+                                    'Wprowadzona nazwa użytkownika lub hasło są nieprawidłowe.'
+                                }
+                            </div>
+                        )}
                         <div>
                             <button
                                 type="submit"
-                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
+                                {isLoading ? (
+                                    <Loader2 className="mr-4 h-4 w-4 animate-spin" />
+                                ) : null}
                                 {'Zaloguj'}
                             </button>
                         </div>
