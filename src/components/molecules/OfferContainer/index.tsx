@@ -14,14 +14,18 @@ const OfferContainer = async ({
 }) => {
     if (!offer) {
         return (
-            <div className="flex-1 flex justify-center items-center">
+            <div className="flex-1 flex justify-center items-center bg-[#f5f5f5]">
                 <div>{'Wybierz wiadomość'}</div>
             </div>
         );
     }
 
     if (!offer.product || !offer.receiver || !offer.sender) {
-        return <div>{'Przykro nam. Coś nie tak z tą wiadomością'}</div>;
+        return (
+            <div className="flex-1 flex justify-center items-center bg-[#f5f5f5]">
+                {'Przykro nam. Coś nie tak z tą wiadomością'}
+            </div>
+        );
     }
 
     const userCompany = await serverClient.getUserCompany();

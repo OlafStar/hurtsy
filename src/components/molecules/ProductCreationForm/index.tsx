@@ -14,6 +14,7 @@ import {
 import {ProductWeb} from '~types/products';
 import {useUserCompany} from '~hooks/useUserCompany';
 import {useToast} from '~components/ui/use-toast';
+import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 
 import FormFieldArray from '../FormFieldArray';
 import {createProduct} from '../../../server/actions/productAction';
@@ -30,6 +31,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
     const [allImages, setAllImages] = useState<Array<string>>([]);
 
     const {company} = useUserCompany();
+    const {refetch} = useUserCompanyProducts();
 
     const {toast} = useToast();
 
@@ -51,6 +53,7 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                 isEdit,
                 initialData?.id,
             );
+            await refetch();
         }
         toast({
             title: 'Success',

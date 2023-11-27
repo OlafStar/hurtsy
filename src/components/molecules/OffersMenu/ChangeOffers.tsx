@@ -1,45 +1,44 @@
 'use client';
-import {useEffect, useMemo} from 'react';
+import {useSearchParams} from 'next/navigation';
+import {useEffect} from 'react';
 
+import {Tabs, TabsList, TabsTrigger} from '~components/ui/tabs';
 import {OffersSearchType} from '~config/offers';
 import {useAddSearchParams} from '~hooks/useAddSearchParams';
 
 const ChangeOffers = () => {
-    const {currentSearchParams, updateParams} = useAddSearchParams();
+    const {updateParams} = useAddSearchParams();
+    const searchParams = useSearchParams();
 
     useEffect(() => {
-        if (!currentSearchParams.get('os')) {
-            updateParams({os: OffersSearchType.Send});
+        if (!searchParams.get('os')) {
+            updateParams({os: OffersSearchType.Recived});
         }
     }, []);
 
-    const currentTab = useMemo(() => {
-        return currentSearchParams.get('os')
-    }, [currentSearchParams]);
-
     return (
-        <div className="flex text-sm text-center">
-            <div
-                onClick={() => updateParams({os: OffersSearchType.Recived})}
-                className={`flex-1 py-4 cursor-pointer ${
-                    currentTab === OffersSearchType.Recived
-                        ? 'bg-white'
-                        : 'bg-[#f5f5f5]'
-                }`}
-            >
-                {'Otrzymane'}
+        <Tabs
+            defaultValue={
+                searchParams.get('os') === OffersSearchType.Recived
+                    ? OffersSearchType.Recived
+                    : OffersSearchType.Send
+            }
+            className="flex flex-col gap-6"
+            onValueChange={(value) => {
+                updateParams({os: value});
+            }}
+        >
+            <div className="flex flex-col gap-6">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value={OffersSearchType.Recived}>
+                        {'Otrzymane'}
+                    </TabsTrigger>
+                    <TabsTrigger value={OffersSearchType.Send}>
+                        {'Wysłane'}
+                    </TabsTrigger>
+                </TabsList>
             </div>
-            <div
-                onClick={() => updateParams({os: OffersSearchType.Send})}
-                className={`flex-1 py-4 cursor-pointer  ${
-                    currentTab === OffersSearchType.Send
-                        ? 'bg-white'
-                        : 'bg-[#f5f5f5]'
-                }`}
-            >
-                {'Wysłane'}
-            </div>
-        </div>
+        </Tabs>
     );
 };
 

@@ -28,7 +28,7 @@ export type ProductWeb = {
     description?: string | null;
     mainImage: string;
     images?: string[] | null;
-    category: CategoryWeb | null;
+    category: CategoryWeb;
     prices: PriceWeb[];
     deliveryPrice?: number | null;
     promotionDate?: string | null;

@@ -296,25 +296,43 @@ export const columns: ColumnDef<ProductWeb>[] = [
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             onClick={async () => {
-                                await mutateAsync({id: product.id});
-                                await refetch();
-                                toast({
-                                    title: 'Succes',
-                                    description: 'Product has been deleted',
-                                });
+                                try {
+                                    await mutateAsync({id: product.id});
+                                    await refetch();
+                                    toast({
+                                        title: 'Succes',
+                                        description: 'Produkt został usunięty',
+                                    });
+                                } catch (error) {
+                                    toast({
+                                        title: 'Error',
+                                        description:
+                                            'Wysąpił błąd z kopiowaniem produktu',
+                                        variant: 'destructive',
+                                    });
+                                }
                             }}
                         >
                             {'Delete product'}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={async () => {
-                                //@ts-expect-error
-                                await createProduct(product);
-                                await refetch();
-                                toast({
-                                    title: 'Succes',
-                                    description: 'Product has been copied',
-                                });
+                                try {
+                                    //@ts-expect-error
+                                    await createProduct(product);
+                                    await refetch();
+                                    toast({
+                                        title: 'Succes',
+                                        description: 'Skopiowano produkt',
+                                    });
+                                } catch (error) {
+                                    toast({
+                                        title: 'Error',
+                                        description:
+                                            'Wysąpił błąd z kopiowaniem produktu',
+                                        variant: 'destructive',
+                                    });
+                                }
                             }}
                         >
                             {'Copy product'}
