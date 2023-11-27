@@ -4,10 +4,13 @@ import Link from 'next/link';
 import React, {useState} from 'react';
 
 import Logo from '~components/atoms/Logo';
+import {useToast} from '~components/ui/use-toast';
 
 import {registerUserServer} from '../../../server/actions/action';
 
 const RegisterPage = () => {
+    const {toast} = useToast();
+
     const [data, setData] = useState({
         email: '',
         password: '',
@@ -15,7 +18,15 @@ const RegisterPage = () => {
 
     const registerUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await registerUserServer(data);
+        try {
+            await registerUserServer(data);
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: 'Wystąpił błąd przy rejestracji',
+                variant: 'destructive',
+            });
+        }
     };
 
     return (
@@ -92,7 +103,9 @@ const RegisterPage = () => {
                                 />
                             </div>
                         </div>
-
+                        <div className="text-xs text-center">
+                            {'Rejestrując się akceptujesz regulamin serwisu'}
+                        </div>
                         <div>
                             <button
                                 type="submit"

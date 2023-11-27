@@ -18,12 +18,12 @@ import useUserCompanyProducts from '~hooks/useUserCompanyProducts';
 
 import FormFieldArray from '../FormFieldArray';
 import {createProduct} from '../../../server/actions/productAction';
+import DescriptionField from '../DescriptionField';
 
 import ProductNameField from './ProductNameField';
 import ProductCategoriesFields from './ProductCategoriesFields';
 import ProductDeliveryField from './ProductDeliveryField';
 import ProductPhotosFields from './ProductPhotosField';
-import ProductDescriptionField from './ProductDescriptionField';
 
 type ProductCreationFormProps = {isEdit?: boolean; initialData?: ProductWeb};
 
@@ -147,9 +147,11 @@ const ProductCreationForm = ({isEdit, initialData}: ProductCreationFormProps) =>
                         }}
                     />
 
-                    <ProductDescriptionField
+                    <DescriptionField
                         control={form.control}
                         name="description"
+                        defaultValue={initialData?.description || undefined}
+                        label="Opis"
                     />
                 </form>
             </Form>

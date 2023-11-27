@@ -8,10 +8,6 @@ import {resendActiveToken} from '~server/actions/action';
 export default async function Page() {
     const user = await getCurrentUser();
 
-    if (!user) {
-        redirect('/login');
-    }
-
     if (user?.active) {
         redirect('/dashboard');
     }

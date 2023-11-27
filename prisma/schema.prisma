@@ -64,6 +64,7 @@ model PasswordResetToken {
   @@index([userId])
 }
 
+
 model Product {
   id               String         @id @default(cuid())
   name             String
@@ -73,6 +74,10 @@ model Product {
   category         Json
   prices           Json
   deliveryPrice    Float?
+  minQuantity    Int
+  maxQuantity    Int
+  minPrice    Float
+  maxPrice    Float
   customizations   Json
   customProperties Json
   companyId        String

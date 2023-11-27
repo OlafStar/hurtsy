@@ -11,21 +11,22 @@ import Tiptap from '~components/atoms/TipTap';
 
 import {FormFieldProps} from '../../../types/formFieldTypes';
 
-const ProductDescriptionField = <
+const DescriptionField = <
     TFieldValues extends FieldValues,
     TName extends FieldPath<TFieldValues>,
 >({
     control,
     name,
     defaultValue,
-}: FormFieldProps<TFieldValues, TName>) => {
+    label,
+}: FormFieldProps<TFieldValues, TName> & {label?: string}) => {
     return (
         <FormField
             control={control}
             name={name}
             render={({field}) => (
                 <FormItem>
-                    <FormLabel>{'Product Description'}</FormLabel>
+                    {label && <FormLabel>{label}</FormLabel>}
                     <FormControl>
                         <div>
                             <Tiptap
@@ -41,4 +42,4 @@ const ProductDescriptionField = <
     );
 };
 
-export default ProductDescriptionField;
+export default DescriptionField;

@@ -10,15 +10,8 @@ import Products from '~components/organisms/Dashboard/Products';
 import Settings from '~components/organisms/Dashboard/Settings';
 import YourCompany from '~components/organisms/Dashboard/YourCompany';
 import {SearchParamsType} from '~config/searchParams';
-// import {dashboardNavigation} from '~config/dashboard';
 import {serverClient} from '~server/trpc/serverClient';
 import {AppRoutes} from '~types/AppRoutes';
-
-// export async function generateStaticParams() {
-//     return dashboardNavigation.map((item) => ({
-//         slug: item.href,
-//     }));
-// }
 
 const Page = async ({
     params: {slug},
