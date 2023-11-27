@@ -66,14 +66,6 @@ const PricingPage = ({}: PricingPageProps) => {
                                         </td>
                                     ))}
                                 </tr>
-                                <tr className="border-b border-black border-opacity-5">
-                                    <td className="py-4">{'Przedstawiciele'}</td>
-                                    {PLANS.map((plan, index) => (
-                                        <td key={index} className="py-4 text-center">
-                                            {plan.availableRepresentatives}
-                                        </td>
-                                    ))}
-                                </tr>
                             </tbody>
                         </table>
                     </div>

@@ -42,7 +42,7 @@ const ProductPhotosFields = <
             </div>
             <div className="flex gap-4 h-[250px]">
                 <div>
-                    {mainImage.length > 0 ? (
+                    {mainImage[0] !== '' ? (
                         <img
                             className="w-[250px] h-[250px] object-contain"
                             src={mainImage[0]}

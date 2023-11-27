@@ -19,12 +19,3 @@ export type CompanyTypeWeb = {
     establishment: number;
     products?: ProductWeb[];
 };
-
-export type RepresentativeWeb = {
-    companyId: string;
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    image: string | undefined | null;
-};

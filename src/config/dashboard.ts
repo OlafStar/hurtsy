@@ -4,16 +4,12 @@ import SettingsIcon from '~assets/icons/settings.svg';
 import PlansIcon from '~assets/icons/plans.svg';
 import ProductIcon from '~assets/icons/products.svg';
 import OffersIcon from '~assets/icons/offers.svg';
-import MessagesIcon from '~assets/icons/message.svg';
-import RepresentativesIcon from '~assets/icons/representatives.svg';
 
 const routeToIconMap = {
     [DashboardRoutes.YOUR_COMPANY]: YourCompanyIcon,
     [DashboardRoutes.PRODUCTS]: ProductIcon,
     [DashboardRoutes.OFFERS]: OffersIcon,
-    [DashboardRoutes.REPRESENTATIVES]: RepresentativesIcon,
     [DashboardRoutes.PLANS]: PlansIcon,
-    [DashboardRoutes.MESSAGES]: MessagesIcon,
     [DashboardRoutes.SETTINGS]: SettingsIcon,
 };
 

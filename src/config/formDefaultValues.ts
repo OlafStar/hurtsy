@@ -69,6 +69,5 @@ export const generateDefaultValues = (initialData: ProductWeb) => {
                   ],
         id: initialData.id,
         companyId: initialData.companyId,
-        representativeId: initialData.representativeId,
     };
 };

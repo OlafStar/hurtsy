@@ -18,18 +18,12 @@ export const createProduct = async (
     id?: string,
 ) => {
     const parsedImages: Array<string> = JSON.parse(images);
-    const representatives = await serverClient.getUserCompanyRepresentatives();
 
-    const companyRepresentative = representatives.find(
-        (element) => element.name === company.name,
-    );
-    console.log(mainImage);
     if (isEdit && id) {
         if ([mainImage, ...parsedImages].length > 0) {
             const submitValues = {
                 companyId: company?.id || '',
                 ...values,
-                representativeId: companyRepresentative?.id || '',
                 mainImage: mainImage,
                 images: parsedImages,
                 id: id,
@@ -40,7 +34,6 @@ export const createProduct = async (
             const submitValues = {
                 companyId: company?.id || '',
                 ...values,
-                representativeId: companyRepresentative?.id || '',
                 id: id,
                 description: values.description,
             };
@@ -51,7 +44,6 @@ export const createProduct = async (
             const submitValues = {
                 companyId: company?.id || '',
                 ...values,
-                representativeId: companyRepresentative?.id || '',
                 mainImage: mainImage,
                 images: parsedImages,
                 description: values.description,
@@ -62,14 +54,13 @@ export const createProduct = async (
             const submitValues = {
                 companyId: company?.id || '',
                 ...values,
-                representativeId: companyRepresentative?.id || '',
                 description: values.description,
             };
             await serverClient.createProduct(submitValues);
         }
     }
 
-    revalidatePath("/");
+    revalidatePath('/');
     revalidatePath(AppRoutes.WEB_PRODUCTS);
     redirect(DashboardRoutes.PRODUCTS);
 };

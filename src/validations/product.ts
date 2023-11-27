@@ -91,7 +91,6 @@ const baseProductSchema = {
     deliveryPrice: z.number().optional(),
     customizations: z.array(customizationSchema),
     customProperties: z.array(customPropertiesSchema),
-    representativeId: z.string().optional(),
 };
 
 export const productFormSchema = z.object({

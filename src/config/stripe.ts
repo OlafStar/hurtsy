@@ -5,7 +5,6 @@ export const PLANS = [
         availableProducts: 10,
         availablePromotions: 0,
         availableBumps: 2,
-        availableRepresentatives: 1,
         support: {
             fullSupport: true,
             oneOnOneSupport: false,
@@ -25,7 +24,6 @@ export const PLANS = [
         availableProducts: 50,
         availablePromotions: 1,
         availableBumps: 10,
-        availableRepresentatives: 2,
         support: {
             fullSupport: true,
             oneOnOneSupport: false,
@@ -45,7 +43,6 @@ export const PLANS = [
         availableProducts: 100,
         availablePromotions: 5,
         availableBumps: 25,
-        availableRepresentatives: 4,
         support: {
             fullSupport: true,
             oneOnOneSupport: true,
@@ -65,7 +62,6 @@ export const PLANS = [
         availableProducts: 500,
         availablePromotions: 20,
         availableBumps: 100,
-        availableRepresentatives: 10,
         support: {
             fullSupport: true,
             oneOnOneSupport: true,

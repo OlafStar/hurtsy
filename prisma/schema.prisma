@@ -1,13 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -25,25 +22,23 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String   @unique
-  hashedPassword String
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  active         Boolean         @default(false)
-
-  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
-
-  images        Images[]
-  activateTokens ActivateToken[]
-  passwordResetTokens PasswordResetToken[]
-  sessions      Session[]
-  company       Company?
+  id                     String               @id @default(cuid())
+  email                  String               @unique
+  hashedPassword         String
+  emailVerified          DateTime?
+  image                  String?
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  active                 Boolean              @default(false)
+  stripeCustomerId       String?              @unique @map("stripe_customer_id")
+  stripeSubscriptionId   String?              @unique @map("stripe_subscription_id")
+  stripePriceId          String?              @map("stripe_price_id")
+  stripeCurrentPeriodEnd DateTime?            @map("stripe_current_period_end")
+  images                 Images[]
+  activateTokens         ActivateToken[]
+  passwordResetTokens    PasswordResetToken[]
+  sessions               Session[]
+  company                Company?
 }
 
 model ActivateToken {
@@ -53,66 +48,52 @@ model ActivateToken {
   updatedAt   DateTime  @updatedAt
   activatedAt DateTime?
   userId      String
-
-  user   User @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
 
 model PasswordResetToken {
-  id          Int       @id @default(autoincrement())
-  token       String    @unique
-  createdAt   DateTime  @default(now())
-  resetAt     DateTime?
-  userId      String
-
-  user   User @relation(fields: [userId], references: [id])
+  id        Int       @id @default(autoincrement())
+  token     String    @unique
+  createdAt DateTime  @default(now())
+  resetAt   DateTime?
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
 
-enum CompanyType {
-  Producent
-  Importer
-  Factory
-}
-
 model Product {
-  id                String   @id @default(cuid())
-  name              String
-  description       String?            @db.Text// Optional
-  mainImage         String            // Optional
-  images            Json               // Json type to represent a list of strings
-  category          Json   
-  prices            Json               // Array of objects of price, minQuantity, maxQuantity
-  deliveryPrice     Float?            // Optional value
-  customizations    Json               // Array of customization objects with name and minQuantity
-  customProperties  Json               // Array of custom properties with name and value
-  companyId         String
-  representativeId  String
-  promotedTo        DateTime?
-  createdAt         DateTime @default(now())
-
-  company           Company            @relation(fields: [companyId], references: [id])
-  representative    Representative     @relation(fields: [representativeId], references: [id])
-  offers        Offer[]
+  id               String         @id @default(cuid())
+  name             String
+  description      String?        @db.Text
+  mainImage        String
+  images           Json
+  category         Json
+  prices           Json
+  deliveryPrice    Float?
+  customizations   Json
+  customProperties Json
+  companyId        String
+  promotedTo       DateTime?
+  createdAt        DateTime       @default(now())
+  company          Company        @relation(fields: [companyId], references: [id])
+  offers           Offer[]
 
   @@index([companyId])
-  @@index([representativeId])
 }
 
 model Offer {
-  id         String   @id @default(cuid())
-  productId  String   // Assuming productId is a field holding the reference ID to Product
-  senderId   String   // Field to hold the reference ID for the sender Company
-  receiverId String   // Field to hold the reference ID for the receiver Company
+  id         String    @id @default(cuid())
+  productId  String
+  senderId   String
+  receiverId String
   message    String
   quantity   Int
-
-
-  product    Product  @relation(fields: [productId], references: [id])
-  sender     Company  @relation(fields: [senderId], references: [id], name: "OfferSender")
-  receiver   Company  @relation(fields: [receiverId], references: [id], name: "OfferReceiver")
+  product    Product   @relation(fields: [productId], references: [id])
+  sender     Company   @relation("OfferSender", fields: [senderId], references: [id])
+  receiver   Company   @relation("OfferReceiver", fields: [receiverId], references: [id])
   messages   Message[]
 
   @@index([productId])
@@ -121,69 +102,56 @@ model Offer {
 }
 
 model Message {
-  id              String    @id @default(cuid())
-  offerId         String    // This holds the reference ID to an Offer
-  senderCompanyId String    // This holds the reference ID to the sender Company
-  content         String    // The textual content of the message
-  createdAt       DateTime  @default(now()) // Timestamp of when the message was created
-  updatedAt       DateTime  @updatedAt      // Timestamp of when the message was last updated
-
-  // Relations
-  offer           Offer     @relation(fields: [offerId], references: [id])
-  senderCompany   Company   @relation(fields: [senderCompanyId], references: [id])
+  id              String   @id @default(cuid())
+  offerId         String
+  senderCompanyId String
+  content         String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  offer           Offer    @relation(fields: [offerId], references: [id])
+  senderCompany   Company  @relation(fields: [senderCompanyId], references: [id])
 
   @@index([offerId])
   @@index([senderCompanyId])
 }
 
-
-
-
 model Company {
-  id               String          @id @default(cuid())
-  userId           String          @unique
-  name             String
-  description       String?            @db.Text// Optional
-  type             CompanyType
-  mainProducts     Json?
-  city             String
-  street           String
-  postCode         String
-  image            String?
-  website          String?
-  phone            String
-  country          String
-  establishment    Int
-
-  sentOffers    Offer[] @relation("OfferSender")
-  receivedOffers Offer[] @relation("OfferReceiver")
-  user             User            @relation(fields: [userId], references: [id])
-  representatives  Representative[]
-  products         Product[]
+  id              String           @id @default(cuid())
+  userId          String           @unique
+  name            String
+  description     String?          @db.Text
+  type            CompanyType
+  mainProducts    Json?
+  city            String
+  street          String
+  postCode        String
+  image           String?
+  website         String?
+  phone           String
+  country         String
+  establishment   Int
+  sentOffers      Offer[]          @relation("OfferSender")
+  receivedOffers  Offer[]          @relation("OfferReceiver")
+  user            User             @relation(fields: [userId], references: [id])
+  products        Product[]
   messages        Message[]
+
   @@index([userId])
 }
 
-
-
-model Representative {
-  id        String   @id @default(cuid())
-  companyId String
-  name      String
-  email     String  
-  phone     String
-  image      String?
-  company   Company  @relation(fields: [companyId], references: [id])
-  products   Product[]
-  @@index([companyId])
-}
 
 model Images {
-  id String @id @default(uuid())
-  url String
-  createdAt     DateTime  @default(now())
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  url       String
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
+}
+
+enum CompanyType {
+  Producent
+  Importer
+  Factory
 }

@@ -38,10 +38,6 @@ export const companyProcedures = {
     createCompany: privateProcedure
         .input(companyCreationSchema)
         .mutation(async ({input, ctx}) => {
-            const {
-                user: {email},
-            } = ctx;
-
             const existingCompany = await getUserCompany(ctx);
 
             if (existingCompany) {
@@ -59,7 +55,7 @@ export const companyProcedures = {
                 });
             }
 
-            const company = await prismadb.company.create({
+            await prismadb.company.create({
                 data: {
                     name: validatedInput.data.companyName,
                     description: validatedInput.data.description,
@@ -75,31 +71,12 @@ export const companyProcedures = {
                     userId: ctx.user.id,
                 },
             });
-
-            if (!company) {
-                throw new TRPCError({
-                    code: 'INTERNAL_SERVER_ERROR',
-                    message: 'Error with creating company',
-                });
-            }
-
-            await prismadb.representative.create({
-                data: {
-                    companyId: company.id,
-                    name: company.name,
-                    email: email as string,
-                    phone: validatedInput.data.phoneNumber,
-                    image: validatedInput.data.image,
-                },
-            });
-
-            return company;
         }),
     editCompany: privateProcedure
         .input(companyCreationSchema)
         .mutation(async ({input, ctx}) => {
             const {
-                user: {email, id},
+                user: {id},
             } = ctx;
 
             // Validate input
@@ -120,35 +97,7 @@ export const companyProcedures = {
                 });
             }
 
-            const companyRepresentative = await prismadb.representative.findFirst({
-                where: {
-                    name: existingCompany.name,
-                },
-            });
-
-            if (companyRepresentative) {
-                await prismadb.representative.update({
-                    where: {
-                        id: companyRepresentative?.id,
-                    },
-                    data: {
-                        name: validatedInput.data.companyName,
-                        image: validatedInput.data.image,
-                    },
-                });
-            } else {
-                await prismadb.representative.create({
-                    data: {
-                        companyId: existingCompany.id,
-                        name: validatedInput.data.companyName,
-                        email: email as string,
-                        phone: validatedInput.data.phoneNumber,
-                        image: validatedInput.data.image,
-                    },
-                });
-            }
-
-            const company = await prismadb.company.update({
+            await prismadb.company.update({
                 data: {
                     name: validatedInput.data.companyName,
                     description: validatedInput.data.description,
@@ -167,8 +116,6 @@ export const companyProcedures = {
                     userId: id,
                 },
             });
-
-            return company;
         }),
     getCompanyCategories: publicProcedure
         .input(z.string())

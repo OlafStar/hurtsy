@@ -18,22 +18,6 @@ export const companyCreationSchema = z.object({
     type: z.enum(['Producent', 'Factory', 'Importer']),
 });
 
-export const representativeFormSchema = z.object({
-    name: stringField(2, 50),
-    email: stringField(2, 50),
-    phoneNumber: phoneField,
-    image: z.string().optional(),
-});
-
-export const getCompanyRepresentativesInput = z.object({
-    companyId: z.string(),
-});
-
-export const representativeEditSchema = z.object({
-    id: z.string(),
-    ...representativeFormSchema.shape,
-});
-
 export const getCompaniesFilterSchema = z.object({
     search: z.string().optional(),
     category: z.string().optional(),

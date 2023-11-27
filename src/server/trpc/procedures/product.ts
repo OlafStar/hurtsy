@@ -49,13 +49,6 @@ export const productProcedures = {
                 });
             }
 
-            const defaultRepresentative = await prismadb.representative.findMany({
-                where: {
-                    companyId: company.id,
-                    name: company.name,
-                },
-            });
-
             const product = await prismadb.product.create({
                 data: {
                     name: validatedInput.data.name,
@@ -74,9 +67,6 @@ export const productProcedures = {
                             : [],
                     customProperties: validatedInput.data.customProperties,
                     companyId: company.id,
-                    representativeId:
-                        validatedInput.data.representativeId ||
-                        defaultRepresentative[0].id,
                 },
             });
 
@@ -103,13 +93,6 @@ export const productProcedures = {
                 });
             }
 
-            const defaultRepresentative = await prismadb.representative.findMany({
-                where: {
-                    companyId: company.id,
-                    name: company.name,
-                },
-            });
-
             const product = await prismadb.product.update({
                 where: {
                     id: validatedInput.data.id,
@@ -131,9 +114,6 @@ export const productProcedures = {
                             : [],
                     customProperties: validatedInput.data.customProperties,
                     companyId: company.id,
-                    representativeId:
-                        validatedInput.data.representativeId ||
-                        defaultRepresentative[0].id,
                 },
             });
 

@@ -26,7 +26,6 @@ import {useUploadS3} from '~hooks/useUploadS3';
 import {useToast} from '~components/ui/use-toast';
 import {Dialog, DialogContent} from '~components/ui/dialog';
 import {Progress} from '~components/ui/progress';
-import useUserCompanyRepresentatives from '~hooks/useUserCompanyRepresentatives';
 import AddImage from '~components/atoms/AddImage';
 import {
     Select,
@@ -59,7 +58,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
         initialData?.phone ? initialData.phone : '',
     );
 
-    const {refetch: refetchRepresentative} = useUserCompanyRepresentatives();
     const {uploadImageToS3, uploadImagesToS3} = useUploadS3();
     const router = useRouter();
     const {toast} = useToast();
@@ -185,7 +183,6 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                         phoneNumber: phone,
                     });
                 }
-                await refetchRepresentative();
             } else {
                 if (mainImage.length > 0 && typeof mainImage[0] !== 'string') {
                     const key = await uploadImageToS3(mainImage[0]);

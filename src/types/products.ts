@@ -37,6 +37,5 @@ export type ProductWeb = {
     customizations?: CustomizationWeb[] | null;
     customProperties: CustomPropertiesWeb[];
     companyId: string;
-    representativeId: string;
     company?: CompanyTypeWeb;
 };

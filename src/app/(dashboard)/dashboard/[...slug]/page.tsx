@@ -7,7 +7,6 @@ import ProductEditForm from '~components/molecules/ProductCreationForm/CompanyEd
 import Offers from '~components/organisms/Dashboard/Offers';
 import Plans from '~components/organisms/Dashboard/Plans';
 import Products from '~components/organisms/Dashboard/Products';
-import Representatives from '~components/organisms/Dashboard/Representatives';
 import Settings from '~components/organisms/Dashboard/Settings';
 import YourCompany from '~components/organisms/Dashboard/YourCompany';
 import {SearchParamsType} from '~config/searchParams';
@@ -54,8 +53,6 @@ const Page = async ({
             return <ProductEditForm id={slug[2]} />;
         case AppRoutes.OFFERS:
             return <Offers searchParams={searchParams} />;
-        case AppRoutes.REPRESENTATIVES:
-            return <Representatives />;
         case AppRoutes.PLANS:
             return <Plans />;
         case AppRoutes.SETTINGS:
