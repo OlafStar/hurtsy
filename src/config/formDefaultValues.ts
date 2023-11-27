@@ -1,3 +1,4 @@
+import {CompanyTypeWeb} from '~types/company';
 import {ProductWeb} from '~types/products';
 
 export const productFormDefaultValues = {
@@ -69,5 +70,30 @@ export const generateDefaultValues = (initialData: ProductWeb) => {
                   ],
         id: initialData.id,
         companyId: initialData.companyId,
+    };
+};
+
+export const companyDefaults = {
+    companyName: undefined,
+    city: undefined,
+    phoneNumber: undefined,
+    address: undefined,
+    postalCode: undefined,
+    established: 2023,
+    website: undefined,
+};
+
+export const generateCompanyDefaults = (initialData: CompanyTypeWeb) => {
+    return {
+        companyName: initialData.name,
+        image: initialData.image || undefined,
+        address: initialData.street,
+        type: initialData.type,
+        city: initialData.city,
+        phoneNumber: initialData.phone,
+        postalCode: initialData.postCode,
+        country: initialData.country,
+        established: initialData.establishment,
+        website: initialData.website || undefined,
     };
 };

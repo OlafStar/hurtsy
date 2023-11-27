@@ -30,7 +30,7 @@ const ReusableNumberField = <
         let value = e.target.value;
 
         if (numberType === 'string') {
-            if (customReg ? customReg.test(value) : /^\d+$/.test(value)) {
+            if (customReg ? customReg.test(value) : /^\d*\.?\d{0,2}$/.test(value)) {
                 //@ts-expect-error
                 setValue(name, String(value));
 

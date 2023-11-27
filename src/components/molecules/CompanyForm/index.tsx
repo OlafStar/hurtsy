@@ -4,11 +4,15 @@ import {useForm} from 'react-hook-form';
 import * as z from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useState} from 'react';
+import {Loader2} from 'lucide-react';
 
 import {CompanyTypeWeb} from '~types/company';
 import {companyCreationSchema} from '~validations/company';
 import {Form} from '~/components/ui/form';
 import {Button} from '~/components/ui/button';
+import {useToast} from '~components/ui/use-toast';
+import {createCompany} from '~server/actions/companyAction';
+import {companyDefaults, generateCompanyDefaults} from '~config/formDefaultValues';
 
 import DescriptionField from '../DescriptionField';
 
@@ -24,37 +28,35 @@ type CompanyFormProps = {
 };
 
 const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
+    const [isLoading, setIsLoading] = useState(false);
     const [mainImage, setMainImage] = useState<string>('');
+
+    const {toast} = useToast();
 
     const form = useForm<z.infer<typeof companyCreationSchema>>({
         resolver: zodResolver(companyCreationSchema),
         defaultValues: initialData
-            ? {
-                  companyName: initialData.name,
-                  image: initialData.image || '',
-                  address: initialData.street,
-                  type: initialData.type,
-                  city: initialData.city,
-                  phoneNumber: initialData.phone,
-                  postalCode: initialData.postCode,
-                  country: initialData.country,
-                  established: initialData.establishment,
-                  website: initialData.website || '',
-              }
-            : {
-                  companyName: '',
-                  city: '',
-                  phoneNumber: '',
-                  address: '',
-                  postalCode: '',
-                  established: 2023,
-                  website: undefined,
-              },
+            ? generateCompanyDefaults(initialData)
+            : companyDefaults,
     });
 
     async function onSubmit(values: z.infer<typeof companyCreationSchema>) {
-        console.log(mainImage);
-        console.log(values);
+        setIsLoading(true);
+        try {
+            await createCompany(values, mainImage, isEdit);
+            toast({
+                title: 'Success',
+                description: `Firma została ${isEdit ? 'edytowana' : 'utworzona'}`,
+            });
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: `Wystąpił błąd z ${
+                    isEdit ? 'edytowaniem' : 'tworzeniem'
+                }`,
+            });
+        }
+        setIsLoading(false);
     }
 
     return (
@@ -71,8 +73,15 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                     </div>
                 </div>
                 <div className="flex gap-4 xs:flex-row flex-col">
-                    <Button form="companyForm" type="submit">
-                        {isEdit ? 'Edytuj' : 'Dodaj'}
+                    <Button
+                        form="companyForm"
+                        type="submit"
+                        className="flex items-center"
+                    >
+                        {isLoading ? (
+                            <Loader2 className="mr-4 h-4 w-4 animate-spin" />
+                        ) : null}
+                        <div>{isEdit ? 'Edytuj' : 'Dodaj'}</div>
                     </Button>
                 </div>
             </div>
