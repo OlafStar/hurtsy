@@ -41,7 +41,7 @@ const FAQ = () => {
                     <div key={index} className='max-w-[1300px]'>
                         <Accordion type="single" collapsible>
                             <AccordionItem value="item-1">
-                                <AccordionTrigger>{item.question}</AccordionTrigger>
+                                <AccordionTrigger className='text-left flex justify-between gap-4'>{item.question}</AccordionTrigger>
                                 <AccordionContent>{item.answer}</AccordionContent>
                             </AccordionItem>
                         </Accordion>

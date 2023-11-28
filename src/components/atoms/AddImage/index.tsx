@@ -14,6 +14,7 @@ type AddImageProps = {
     multiple: boolean;
     currentState?: Array<string>;
     onAcceptedImage: Dispatch<SetStateAction<string[]>>;
+    text?: string;
 };
 
 const AddImage = ({
@@ -21,6 +22,7 @@ const AddImage = ({
     multiple,
     onAcceptedImage,
     className,
+    text
 }: AddImageProps & PropsWithClassName) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(0);
@@ -38,7 +40,7 @@ const AddImage = ({
                 variant="ghost"
                 className={`${cn(className)}`}
             >
-                {'Dodaj zdjecie'}
+                {text ? text : 'Dodaj zdjecie'}
             </Button>
             <Dialog
                 open={isOpen}

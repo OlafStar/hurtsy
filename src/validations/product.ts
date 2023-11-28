@@ -88,7 +88,7 @@ const baseProductSchema = {
     images: z.array(z.string()).optional(),
     category: categorySchema,
     prices: pricesSchema,
-    deliveryPrice: z.number().optional(),
+    deliveryPrice: z.number().optional().nullable(),
     customizations: z.array(customizationSchema),
     customProperties: z.array(customPropertiesSchema),
 };
@@ -114,6 +114,7 @@ export const getProductFilterSchema = z.object({
     companyId: z.string().optional(),
     pagination: z.object({page: z.number(), pageSize: z.number()}),
     isPromoted: z.string().optional(),
+    minQuantity: z.number().optional(),
 });
 
 export const getPromotedProductFilterSchema = z.object({

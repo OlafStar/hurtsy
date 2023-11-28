@@ -156,18 +156,23 @@ const translations: {[key: string]: string} = {
     products: 'Produkty',
     companies: 'Firmy',
 
-    prices: "Ceny",
-    price: "Cena",
-    minQuantity: "Min. Ilość",
-    maxQuantity: "Max. Ilość",
+    prices: 'Ceny',
+    price: 'Cena',
+    minQuantity: 'Min. Ilość',
+    maxQuantity: 'Max. Ilość',
 
-    customizations: "Personalizacja",
-    name: "Nazwa",
+    customizations: 'Personalizacja',
+    name: 'Nazwa',
 
-    customProperties: "Kluczowe atrybuty",
-    value: "Wartość",
+    customProperties: 'Kluczowe atrybuty',
+    value: 'Wartość',
 
-    poland: "Polska"
+    poland: 'Polska',
+
+    mainImage: 'Zdjęcie',
+    category: 'Kategorie',
+    deliveryPrice: 'Cena dostawy',
+    promotedTo: 'Promowane',
 };
 
 //TODO CHANGE TO LOCALES

@@ -38,6 +38,7 @@ model User {
   activateTokens         ActivateToken[]
   passwordResetTokens    PasswordResetToken[]
   sessions               Session[]
+  premiumTokens          PremiumTokens[]
   company                Company?
 }
 
@@ -153,6 +154,26 @@ model Images {
   user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
+}
+
+model PremiumTokens {
+  id        Int       @id @default(autoincrement())
+  token     String    @unique
+  type      PremiumTokenType
+  createdAt DateTime  @default(now())
+  endsAt    DateTime  
+  usedAt   DateTime?
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+enum PremiumTokenType {
+  PromotionBase
+  PromotionBuyed
+  BumpBase
+  BumpBuyed
 }
 
 enum CompanyType {

@@ -40,78 +40,80 @@ const CompanyPage: React.FC<
                         <div className="text-2xl font-bold">{'Opis'}</div>
                         <InnerHTML html={props.description || ''} />
                     </div>
-                    <div className="flex flex-col gap-4 md:gap-8">
-                        <div className="hidden md:flex justify-between">
-                            <div className="font-bold text-2xl">
-                                {'Sprawdź produkty'}
-                            </div>
-                            <div>
-                                <Pagination
-                                    {...{
-                                        currentPage,
-                                        totalPages,
-                                        total: totalProduct,
-                                        pageSize: '10',
-                                    }}
-                                    hidePageSize
-                                />
-                            </div>
-                        </div>
-                        <div className="md:hidden flex justify-between">
-                            <div className=" items-center gap-4">
-                                <CategoriesSheet categories={categories}>
-                                    <div className="text-sm font-medium">
-                                        {'Kategorie'}
-                                    </div>
-                                </CategoriesSheet>
-                                <ClearFilterButton paramsToDelete={'all'}>
-                                    <XIcon className="h-4 w-4" />
-                                </ClearFilterButton>
-                            </div>
-                            <div>
-                                <Pagination
-                                    {...{
-                                        currentPage,
-                                        totalPages,
-                                        total: totalProduct,
-                                        pageSize: '10',
-                                    }}
-                                    hidePageSize
-                                />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-x-8">
-                            <div className="hidden md:flex flex-col gap-4 min-w-[184px]">
-                                {categories.map((item) => (
-                                    <CategoriesButton
-                                        key={item.mainCategory}
-                                        {...item}
+                    {products.length > 0 && (
+                        <div className="flex flex-col gap-4 md:gap-8">
+                            <div className="hidden md:flex justify-between">
+                                <div className="font-bold text-2xl">
+                                    {'Sprawdź produkty'}
+                                </div>
+                                <div>
+                                    <Pagination
+                                        {...{
+                                            currentPage,
+                                            totalPages,
+                                            total: totalProduct,
+                                            pageSize: '10',
+                                        }}
+                                        hidePageSize
                                     />
-                                ))}
+                                </div>
                             </div>
-                            <Suspense fallback={<Loader />}>
-                                <div className="grid sm:grid-cols-3 xl:grid-cols-5 gap-4">
-                                    {products.map((item, index) => (
-                                        <CompanyProductCard
-                                            key={index}
-                                            {...(item as ProductWeb)}
+                            <div className="md:hidden flex justify-between">
+                                <div className=" items-center gap-4">
+                                    <CategoriesSheet categories={categories}>
+                                        <div className="text-sm font-medium">
+                                            {'Kategorie'}
+                                        </div>
+                                    </CategoriesSheet>
+                                    <ClearFilterButton paramsToDelete={'all'}>
+                                        <XIcon className="h-4 w-4" />
+                                    </ClearFilterButton>
+                                </div>
+                                <div>
+                                    <Pagination
+                                        {...{
+                                            currentPage,
+                                            totalPages,
+                                            total: totalProduct,
+                                            pageSize: '10',
+                                        }}
+                                        hidePageSize
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-x-8">
+                                <div className="hidden md:flex flex-col gap-4 min-w-[184px]">
+                                    {categories.map((item) => (
+                                        <CategoriesButton
+                                            key={item.mainCategory}
+                                            {...item}
                                         />
                                     ))}
                                 </div>
-                            </Suspense>
+                                <Suspense fallback={<Loader />}>
+                                    <div className="grid sm:grid-cols-3 xl:grid-cols-5 gap-4">
+                                        {products.map((item, index) => (
+                                            <CompanyProductCard
+                                                key={index}
+                                                {...(item as ProductWeb)}
+                                            />
+                                        ))}
+                                    </div>
+                                </Suspense>
+                            </div>
+                            <div className="xs:hidden">
+                                <Pagination
+                                    {...{
+                                        currentPage,
+                                        totalPages,
+                                        total: totalProduct,
+                                        pageSize: '10',
+                                    }}
+                                    hidePageSize
+                                />
+                            </div>
                         </div>
-                        <div className="xs:hidden">
-                            <Pagination
-                                {...{
-                                    currentPage,
-                                    totalPages,
-                                    total: totalProduct,
-                                    pageSize: '10',
-                                }}
-                                hidePageSize
-                            />
-                        </div>
-                    </div>
+                    )}
                 </div>
                 <div></div>
             </div>

@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react';
 
 import AddImage from '~components/atoms/AddImage';
 import {getImgBeforeUpload} from '~utils/getImgBeforeUpload';
+import {cn} from '~utils/shadcn';
 
 import {FormFieldProps} from '../../../types/formFieldTypes';
 
@@ -36,6 +37,7 @@ const ProductPhotosFields = <
                         multiple={true}
                         currentState={images}
                         onAcceptedImage={setImages}
+                        text='Dodaj dodatkowe zdjęcia'
                     />
                 </div>
                 <div className="w-full h-[1px] bg-black opacity-10" />
@@ -49,7 +51,16 @@ const ProductPhotosFields = <
                             onClick={() => setMainImage([])}
                         />
                     ) : (
-                        <AddImage multiple={false} onAcceptedImage={setMainImage} />
+                        <AddImage
+                            className={`w-full xs:w-[250px] xs:h-[250px] border ${
+                                !mainImage[0] && formState.isSubmitted
+                                    ? cn('border-[#ff0000]')
+                                    : cn('border-black border-opacity-10`')
+                            } `}
+                            multiple={false}
+                            onAcceptedImage={setMainImage}
+                            text="Dodaj główne zdjęcie produktu (wymagane)"
+                        />
                     )}
                 </div>
 

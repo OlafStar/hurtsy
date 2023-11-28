@@ -24,6 +24,7 @@ const DescriptionField = <
         <FormField
             control={control}
             name={name}
+            defaultValue={defaultValue}
             render={({field}) => (
                 <FormItem>
                     {label && <FormLabel>{label}</FormLabel>}

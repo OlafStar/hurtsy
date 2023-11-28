@@ -15,7 +15,6 @@ import {SearchParamsType} from '~config/searchParams';
 import {serverClient} from '~server/trpc/serverClient';
 import {AppRoutes} from '~types/AppRoutes';
 import {ProductWeb} from '~types/products';
-import {filterProducts} from '~utils/filterProduct';
 
 type ProductsPageProps = {
     searchParams?: SearchParamsType;
@@ -41,18 +40,16 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
                 ? parseInt(searchParams?.pageSize as string)
                 : 10,
         },
-    });
-
-    const filters = {
         price: searchParams?.price
             ? parseFloat(searchParams?.price as string)
             : undefined,
-        minQuantity: searchParams?.price
+        minQuantity: searchParams?.minQuantity
             ? parseInt(searchParams?.minQuantity as string)
             : undefined,
-    };
+    });
 
-    const filteredProducts = filterProducts(products, filters);
+    console.log(searchParams?.minQuantity);
+
     return (
         <div className="flex flex-col gap-8 min-h-[100%]">
             <div className="flex pt-0 lg:pt-4">
@@ -70,8 +67,8 @@ const ProductsPage = async ({searchParams}: ProductsPageProps) => {
                         <ProductsCompanySwitch />
                     </div>
                     <div className="flex flex-col gap-6 min-h-full">
-                        {filteredProducts.length > 0 ? (
-                            filteredProducts.map((item, index) => (
+                        {products.length > 0 ? (
+                            products.map((item, index) => (
                                 <React.Fragment key={index}>
                                     <ProductCard {...(item as ProductWeb)} />
                                     {products.length - 1 > index && (

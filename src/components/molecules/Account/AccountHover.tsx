@@ -14,7 +14,7 @@ const AccountHover = ({children}: PropsWithChildren) => {
         <div className="flex w-full flex-col items-start justify-between rounded-md sm:flex-row sm:items-center">
             <DropdownMenu open={open} onOpenChange={setOpen}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className='flex gap-4'>
                         {children}
                     </Button>
                 </DropdownMenuTrigger>

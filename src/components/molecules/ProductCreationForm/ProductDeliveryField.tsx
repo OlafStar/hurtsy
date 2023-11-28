@@ -1,4 +1,4 @@
-import {FieldPath, FieldValues, useFormContext} from 'react-hook-form';
+import {FieldPath, FieldValues} from 'react-hook-form';
 
 import {
     FormControl,
@@ -19,25 +19,6 @@ const ProductDeliveryField = <
     name,
     defaultValue,
 }: FormFieldProps<TFieldValues, TName>) => {
-    const {setValue} = useFormContext();
-
-    const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (/^\d*\.?\d{0,2}$/.test(value)) {
-            setValue('deliveryPrice', value ? parseFloat(value) : undefined);
-        }
-    };
-
-    const numberInputOnWheelPreventChange = (e: any) => {
-        e.target.blur();
-
-        e.stopPropagation();
-
-        setTimeout(() => {
-            e.target.focus();
-        }, 0);
-    };
-
     return (
         <FormField
             control={control}
@@ -48,13 +29,16 @@ const ProductDeliveryField = <
                     <FormLabel>{'Delivery price'}</FormLabel>
                     <FormControl>
                         <Input
-                            type="number" // Set input type as number
-                            step="0.01" // Set step to allow decimal values
-                            placeholder="Delivery price"
+                            type="number"
                             {...field}
-                            name={name}
-                            onWheel={numberInputOnWheelPreventChange}
-                            onChange={handleValueChange}
+                            onChange={(event) => {
+                                if (event.target.value === '') {
+                                    return field.onChange(event.target.value);
+                                }
+                                return field.onChange(+event.target.value);
+                            }}
+                            //@ts-expect-error
+                            onWheel={(e) => e.target.blur()}
                         />
                     </FormControl>
                     <FormMessage />

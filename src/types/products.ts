@@ -28,6 +28,10 @@ export type ProductWeb = {
     description?: string | null;
     mainImage: string;
     images?: string[] | null;
+    minQuantity: number;
+    maxQuantity: number;
+    minPrice: number;
+    maxPrice: number;
     category: CategoryWeb;
     prices: PriceWeb[];
     deliveryPrice?: number | null;

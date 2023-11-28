@@ -47,7 +47,7 @@ const ProductCategoriesFields = <
                 name={name}
                 render={({field}) => (
                     <FormItem className="flex flex-col">
-                        <FormLabel>{'Main Category'}</FormLabel>
+                        <FormLabel>{'Kategorie'}</FormLabel>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <FormControl>
@@ -67,13 +67,13 @@ const ProductCategoriesFields = <
                                 </FormControl>
                             </PopoverTrigger>
 
-                            <PopoverContent className="p-0">
+                            <PopoverContent className="p-0 h-[300px]">
                                 <Command>
                                     <CommandInput placeholder="Search category..." />
                                     <CommandEmpty>
                                         {'No category found.'}
                                     </CommandEmpty>
-                                    <CommandGroup>
+                                    <CommandGroup className='overflow-y-scroll'>
                                         {Object.values(Category)
                                             .filter(
                                                 (value) => typeof value === 'string',

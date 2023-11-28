@@ -12,6 +12,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
 } from '~/components/ui/dropdown-menu';
+import {translateEnumValueToPolish} from '~utils/enumValueTranslations';
 
 interface DataTableViewOptionsProps<TData> {
     table: Table<TData>;
@@ -33,7 +34,7 @@ const DataTableColumnOptions = <TData,>({
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[150px]">
-                <DropdownMenuLabel>{"Przełącz kolumny"}</DropdownMenuLabel>
+                <DropdownMenuLabel>{'Przełącz kolumny'}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {table
                     .getAllColumns()
@@ -43,6 +44,7 @@ const DataTableColumnOptions = <TData,>({
                             column.getCanHide(),
                     )
                     .map((column) => {
+                        console.log(column);
                         return (
                             <DropdownMenuCheckboxItem
                                 key={column.id}
@@ -52,7 +54,7 @@ const DataTableColumnOptions = <TData,>({
                                     column.toggleVisibility(!!value)
                                 }
                             >
-                                {column.id}
+                                {translateEnumValueToPolish(column.id)}
                             </DropdownMenuCheckboxItem>
                         );
                     })}

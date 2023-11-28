@@ -137,7 +137,9 @@ export const columns: ColumnDef<ProductWeb>[] = [
         cell: ({row}) => {
             return (
                 <div className="font-medium">
-                    {parseNumberToCurrency(row.getValue('deliveryPrice'))}
+                    {row.getValue('deliveryPrice')
+                        ? parseNumberToCurrency(row.getValue('deliveryPrice'))
+                        : 'Do negocjacji'}
                 </div>
             );
         },
@@ -200,7 +202,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
             return (
                 <DataTableColumnHeader
                     column={column}
-                    title="Promowane do"
+                    title="Promowane"
                     disableSort
                 />
             );
@@ -313,7 +315,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
                                 }
                             }}
                         >
-                            {'Delete product'}
+                            {'Usuń produkt'}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={async () => {
@@ -335,7 +337,7 @@ export const columns: ColumnDef<ProductWeb>[] = [
                                 }
                             }}
                         >
-                            {'Copy product'}
+                            {'Kopiuj produkt'}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

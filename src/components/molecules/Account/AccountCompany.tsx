@@ -13,13 +13,13 @@ const AccountCompany = async () => {
 
     return company ? (
         <AccountHover>
+            <div className="whitespace-nowrap">{company.name}</div>
             <Avatar>
                 <AvatarImage src={company.image || ''} className="object-contain" />
                 <AvatarFallback>
                     <User />
                 </AvatarFallback>
             </Avatar>
-            <div className="whitespace-nowrap">{company.name}</div>
         </AccountHover>
     ) : (
         <>

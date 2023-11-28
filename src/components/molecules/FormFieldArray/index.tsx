@@ -92,15 +92,18 @@ const FormFieldArray = <
                                                     <FormControl>
                                                         <Input
                                                             type={inputType}
-                                                            min={
-                                                                inputType ===
-                                                                'number'
-                                                                    ? 0
-                                                                    : undefined
-                                                            }
                                                             {...field}
-                                                            onChange={(event) =>
-                                                                field.onChange(
+                                                            onChange={(event) => {
+                                                                if (
+                                                                    event.target
+                                                                        .value === ''
+                                                                ) {
+                                                                    return field.onChange(
+                                                                        event.target
+                                                                            .value,
+                                                                    );
+                                                                }
+                                                                return field.onChange(
                                                                     inputType ===
                                                                         'number'
                                                                         ? +event
@@ -109,7 +112,11 @@ const FormFieldArray = <
                                                                         : event
                                                                               .target
                                                                               .value,
-                                                                )
+                                                                );
+                                                            }}
+                                                            onWheel={(e) =>
+                                                                //@ts-expect-error
+                                                                e.target.blur()
                                                             }
                                                         />
                                                     </FormControl>

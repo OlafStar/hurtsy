@@ -90,101 +90,97 @@ const CompanyForm = ({isEdit, initialData}: CompanyFormProps) => {
                     id="companyForm"
                     name="companyForm"
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="flex-1"
+                    className="space-y-2 max-w-[800px] w-full mx-auto flex flex-col gap-10"
                 >
-                    <div className="grid lg:grid-cols-2 gap-x-4">
-                        <div className="flex flex-col gap-5">
-                            <div className="flex flex-col xs:flex-row w-full gap-4">
-                                <CompanyPhotoFields
-                                    control={form.control}
-                                    name="image"
-                                    setImage={setMainImage}
-                                />
-                                <div className="flex-1 flex flex-col gap-3">
-                                    <CompanyReusableField
-                                        control={form.control}
-                                        name="companyName"
-                                        defaultValue={initialData?.name || ''}
-                                        label="Nazwa firmy"
-                                        placeholder="Nazwa firmy"
-                                    />
-                                    <CompanyTypeField
-                                        control={form.control}
-                                        name="type"
-                                        defaultValue={initialData?.type || undefined}
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 xs:flex gap-3">
+                    <div className="flex flex-col gap-5">
+                        <div className="flex flex-col xs:flex-row w-full gap-4">
+                            <CompanyPhotoFields
+                                control={form.control}
+                                name="image"
+                                setImage={setMainImage}
+                            />
+                            <div className="flex-1 flex flex-col gap-3">
                                 <CompanyReusableField
                                     control={form.control}
-                                    name="address"
-                                    defaultValue={initialData?.street || ''}
-                                    label="Adres"
-                                    placeholder="Ulica i numer"
+                                    name="companyName"
+                                    defaultValue={initialData?.name || ''}
+                                    label="Nazwa firmy"
+                                    placeholder="Nazwa firmy"
                                 />
-                                <ReusableNumberField
+                                <CompanyTypeField
                                     control={form.control}
-                                    name="postalCode"
-                                    defaultValue={initialData?.postCode || ''}
-                                    label="Kod pocztowy"
-                                    placeholder="00-000"
-                                    numberType="string"
-                                    customReg={RegExp(/^\d*\-?\d{0,3}$/)}
-                                    formatFunction={(value) => {
-                                        const pattern = /(\d{2})(\d{3})/;
-                                        const replacement = '$1-$2';
-                                        return value.replace(pattern, replacement);
-                                    }}
-                                />
-                                <CompanyReusableField
-                                    control={form.control}
-                                    name="city"
-                                    defaultValue={initialData?.city || ''}
-                                    label="Miasto"
-                                    placeholder="Miasto"
+                                    name="type"
+                                    defaultValue={initialData?.type || undefined}
                                 />
                             </div>
-                            <div className="flex gap-3 w-full">
-                                <CountryField
-                                    control={form.control}
-                                    name="country"
-                                    defaultValue={initialData?.country || ''}
-                                />
-                                <ReusableNumberField
-                                    control={form.control}
-                                    name="established"
-                                    defaultValue={initialData?.establishment}
-                                    label="Rok założenia"
-                                    placeholder="Rok założenia"
-                                    numberType="int"
-                                />
-                                <ReusableNumberField
-                                    control={form.control}
-                                    name="phoneNumber"
-                                    defaultValue={initialData?.phone}
-                                    label="Numer telefonu"
-                                    placeholder="123123123"
-                                    numberType="string"
-                                />
-                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 xs:flex gap-3">
                             <CompanyReusableField
                                 control={form.control}
-                                name="website"
-                                defaultValue={initialData?.website || undefined}
-                                label="Strona internetowa"
-                                placeholder="Strona internetowa"
+                                name="address"
+                                defaultValue={initialData?.street || ''}
+                                label="Adres"
+                                placeholder="Ulica i numer"
                             />
-                            <div className="h-full flex-1 pt-5 lg:pt-0">
-                                <DescriptionField
-                                    control={form.control}
-                                    name="description"
-                                    defaultValue={
-                                        initialData?.description || undefined
-                                    }
-                                    label="Opis"
-                                />
-                            </div>
+                            <ReusableNumberField
+                                control={form.control}
+                                name="postalCode"
+                                defaultValue={initialData?.postCode || ''}
+                                label="Kod pocztowy"
+                                placeholder="00-000"
+                                numberType="string"
+                                customReg={RegExp(/^\d*\-?\d{0,3}$/)}
+                                formatFunction={(value) => {
+                                    const pattern = /(\d{2})(\d{3})/;
+                                    const replacement = '$1-$2';
+                                    return value.replace(pattern, replacement);
+                                }}
+                            />
+                            <CompanyReusableField
+                                control={form.control}
+                                name="city"
+                                defaultValue={initialData?.city || ''}
+                                label="Miasto"
+                                placeholder="Miasto"
+                            />
+                        </div>
+                        <div className="flex gap-3 w-full flex-col xs:flex-row">
+                            <CountryField
+                                control={form.control}
+                                name="country"
+                                defaultValue={initialData?.country || ''}
+                            />
+                            <ReusableNumberField
+                                control={form.control}
+                                name="established"
+                                defaultValue={initialData?.establishment}
+                                label="Rok założenia"
+                                placeholder="Rok założenia"
+                                numberType="int"
+                            />
+                            <ReusableNumberField
+                                control={form.control}
+                                name="phoneNumber"
+                                defaultValue={initialData?.phone}
+                                label="Numer telefonu"
+                                placeholder="123123123"
+                                numberType="string"
+                            />
+                        </div>
+                        <CompanyReusableField
+                            control={form.control}
+                            name="website"
+                            defaultValue={initialData?.website || undefined}
+                            label="Strona internetowa"
+                            placeholder="Strona internetowa"
+                        />
+                        <div className="h-full flex-1 pt-5 lg:pt-0">
+                            <DescriptionField
+                                control={form.control}
+                                name="description"
+                                defaultValue={initialData?.description || undefined}
+                                label="Opis"
+                            />
                         </div>
                     </div>
                 </form>

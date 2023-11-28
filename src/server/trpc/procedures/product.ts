@@ -49,7 +49,17 @@ export const productProcedures = {
                 });
             }
 
-            const product = await prismadb.product.create({
+            const allPrices = validatedInput.data.prices.map((p) => p.price);
+            const allMinQuantities = validatedInput.data.prices.map(
+                (p) => p.minQuantity,
+            );
+
+            const minPrice = Math.min(...allPrices);
+            const maxPrice = Math.max(...allPrices);
+            const minQuantity = Math.min(...allMinQuantities);
+            const maxQuantity = Math.max(...allMinQuantities);
+
+            await prismadb.product.create({
                 data: {
                     name: validatedInput.data.name,
                     description: validatedInput.data.description,
@@ -57,6 +67,10 @@ export const productProcedures = {
                     images: [...(validatedInput.data.images || [])],
                     category: validatedInput.data.category,
                     prices: validatedInput.data.prices,
+                    minPrice,
+                    maxPrice,
+                    minQuantity,
+                    maxQuantity,
                     deliveryPrice: validatedInput.data.deliveryPrice,
                     customizations:
                         validatedInput.data.customizations.length > 0
@@ -69,8 +83,6 @@ export const productProcedures = {
                     companyId: company.id,
                 },
             });
-
-            return product;
         }),
     editProduct: privateProcedure
         .input(editProductFormSchema)
@@ -93,7 +105,17 @@ export const productProcedures = {
                 });
             }
 
-            const product = await prismadb.product.update({
+            const allPrices = validatedInput.data.prices.map((p) => p.price);
+            const allMinQuantities = validatedInput.data.prices.map(
+                (p) => p.minQuantity,
+            );
+
+            const minPrice = Math.min(...allPrices);
+            const maxPrice = Math.max(...allPrices);
+            const minQuantity = Math.min(...allMinQuantities);
+            const maxQuantity = Math.max(...allMinQuantities);
+
+            await prismadb.product.update({
                 where: {
                     id: validatedInput.data.id,
                 },
@@ -104,6 +126,10 @@ export const productProcedures = {
                     images: [...(validatedInput.data.images || [])],
                     category: validatedInput.data.category,
                     prices: validatedInput.data.prices,
+                    minPrice,
+                    maxPrice,
+                    minQuantity,
+                    maxQuantity,
                     deliveryPrice: validatedInput.data.deliveryPrice,
                     customizations:
                         validatedInput.data.customizations.length > 0
@@ -116,8 +142,6 @@ export const productProcedures = {
                     companyId: company.id,
                 },
             });
-
-            return product;
         }),
     getUserCompanyProducts: privateProcedure
         .input(z.boolean().optional())
@@ -157,14 +181,14 @@ export const productProcedures = {
             };
         }
 
-        const counter = await prismadb.product.count({
+        const productCounter = await prismadb.product.count({
             where: {
                 companyId: company.id,
             },
         });
 
         return {
-            current: counter,
+            current: productCounter,
             max: ctx.subscriptionPlan.availableProducts,
         };
     }),
@@ -277,6 +301,8 @@ export const productProcedures = {
                 companyId,
                 pagination: {page, pageSize},
                 isPromoted,
+                price,
+                minQuantity,
             } = validatedInput.data;
 
             // Initialize the AND array to hold all AND conditions
@@ -347,6 +373,23 @@ export const productProcedures = {
                 whereClause.AND.push({
                     promotedTo: {
                         gte: new Date(),
+                    },
+                });
+            }
+
+            if (price) {
+                whereClause.AND.push({
+                    maxPrice: {
+                        lte: price,
+                    },
+                });
+            }
+
+            if (minQuantity) {
+                console.log('procedure', minQuantity);
+                whereClause.AND.push({
+                    minQuantity: {
+                        lte: minQuantity,
                     },
                 });
             }

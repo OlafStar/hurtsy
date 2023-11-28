@@ -1,6 +1,5 @@
 'use server';
 
-import {getTRPCErrorFromUnknown} from '@trpc/server';
 import {revalidatePath} from 'next/cache';
 import {redirect} from 'next/navigation';
 import {z} from 'zod';
@@ -14,40 +13,35 @@ export const createCompany = async (
     mainImage: string,
     isEdit?: boolean,
 ) => {
-    try {
-        if (isEdit) {
-            if (mainImage.length > 0) {
-                await serverClient.editCompany({
-                    ...values,
-                    image: mainImage,
-                    description: values.description,
-                });
-            } else {
-                await serverClient.editCompany({
-                    ...values,
-                    description: values.description,
-                });
-            }
+    if (isEdit) {
+        if (mainImage.length > 0) {
+            await serverClient.editCompany({
+                ...values,
+                image: mainImage,
+                description: values.description,
+            });
         } else {
-            if (mainImage.length > 0) {
-                await serverClient.createCompany({
-                    ...values,
-                    image: mainImage,
-                    description: values.description,
-                });
-            } else {
-                await serverClient.createCompany({
-                    ...values,
-                    description: values.description,
-                });
-            }
+            await serverClient.editCompany({
+                ...values,
+                description: values.description,
+            });
         }
-
-        revalidatePath('/');
-        revalidatePath(AppRoutes.YOUR_COMPANY);
-        redirect(DashboardRoutes.YOUR_COMPANY);
-    } catch (error) {
-        const trpcError = getTRPCErrorFromUnknown(error);
-        throw new Error(trpcError.message);
+    } else {
+        if (mainImage.length > 0) {
+            await serverClient.createCompany({
+                ...values,
+                image: mainImage,
+                description: values.description,
+            });
+        } else {
+            await serverClient.createCompany({
+                ...values,
+                description: values.description,
+            });
+        }
     }
+
+    revalidatePath('/');
+    revalidatePath(AppRoutes.YOUR_COMPANY);
+    redirect(DashboardRoutes.YOUR_COMPANY);
 };
