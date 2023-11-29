@@ -7,7 +7,7 @@ import {NavigationMenuDemo} from './NavigationMenu';
 
 const SiteNavigation = () => {
     return (
-        <div className="w-full flex flex-col pt-4">
+        <div className="w-full flex flex-col pt-4 container px-4 md:px-8">
             <div className="flex flex-col gap-4">
                 <div className="flex justify-between items-center md:px-4 md:gap-4">
                     <Logo />

@@ -15,7 +15,7 @@ const ProductPage = (props: ProductWeb) => {
     const {category, description, customProperties, company} = props;
 
     return (
-        <div className="flex justify-between pt-8">
+        <div className="flex justify-between pt-8 container px-4 md:px-8">
             <div className="w-full flex flex-col flex-1 gap-8 ">
                 <div className="overflow-x-scroll scroll hide-scrollbar">
                     <div className="flex gap-1 flex-shrink-0">

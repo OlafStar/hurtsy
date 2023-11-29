@@ -35,8 +35,8 @@ const CompaniesPage = async ({searchParams}: CompaniesPageProps) => {
     });
 
     return (
-        <div className="flex flex-col gap-8 min-h-[100%]">
-            <div className="flex pt-0 lg:pt-4">
+        <div className="flex flex-col gap-8 min-h-[100vh]">
+            <div className="flex pt-0 lg:pt-4 container px-4 md:px-8">
                 <Filters params={searchParams} className="hidden lg:flex" />
                 <div className="flex flex-col flex-1 lg:px-4 gap-2 sm:gap-5">
                     <div className="flex justify-between lg:justify-end">

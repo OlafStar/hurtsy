@@ -34,7 +34,7 @@ const questions = [
 
 const FAQ = () => {
     return (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 container px-4 md:px-8">
             <div className="text-3xl font-bold">{'Często zadawane pytania'}</div>
             <div className="flex flex-col gap-4 w-full">
                 {questions.map((item, index) => (

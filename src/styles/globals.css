@@ -98,4 +98,25 @@
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
     }
+
+    .gradient {
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 100%;
+            z-index: 10;
+        }
+
+        &::before {
+            left: 0;
+            background: linear-gradient(to right, white, transparent);
+        }
+
+        &::after {
+            right: 0;
+            background: linear-gradient(to left, white, transparent);
+        }
+    }
 }

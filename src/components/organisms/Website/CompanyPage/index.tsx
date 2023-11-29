@@ -32,7 +32,7 @@ const CompanyPage: React.FC<
     const categories = await serverClient.getCompanyCategories(props.id);
 
     return (
-        <div className="pt-9 flex flex-col gap-8">
+        <div className="pt-9 flex flex-col gap-8 container px-4 md:px-8">
             <CompanyPageHeader {...props} />
             <div>
                 <div className="flex flex-col gap-8">

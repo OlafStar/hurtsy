@@ -7,7 +7,7 @@ interface DashboardLayoutLayoutProps {
 
 export default async function MainLayout({children}: DashboardLayoutLayoutProps) {
     return (
-        <main className="flex min-h-screen flex-col container px-4 md:px-8 ">
+        <main className="flex min-h-screen flex-col ">
             <SiteNavigation />
             {children}
             <Footer />

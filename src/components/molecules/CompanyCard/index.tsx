@@ -21,7 +21,7 @@ const CompanyCard = ({
                     <div className="flex flex-col xs:flex-row gap-3">
                         <div className="h-full flex xs:block justify-center items-center">
                             <img
-                                className="h-full aspect-square max-h-[328px]  xs:max-h-[128px] object-contain"
+                                className="h-full aspect-square max-w-[328px]  xs:max-w-[128px] object-contain"
                                 src={image || ''}
                                 alt={`${name}-logo`}
                             />

@@ -21,8 +21,6 @@ import {createOffer} from '~server/actions/offersActions';
 import {ProductWeb} from '~types/products';
 import {offerFormSchema} from '~validations/offers';
 
-import {NumberInput} from '../NumberInput';
-
 const OfferForm = ({
     email,
     id,
@@ -88,7 +86,6 @@ const OfferForm = ({
                                     </Label>
                                     <FormControl>
                                         <Input
-                                            className="col-span-3 h-6 text-xs"
                                             defaultValue={email}
                                             disabled={email ? true : false}
                                             {...field}
@@ -109,12 +106,21 @@ const OfferForm = ({
                                         {'Liczba produktów'}
                                     </Label>
                                     <FormControl>
-                                        <NumberInput
-                                            className="col-span-3 h-6 text-xs"
+                                        <Input
+                                            type="number"
                                             {...field}
-                                            field="quantity"
-                                            numbertype="int"
-                                            name={name}
+                                            onChange={(event) => {
+                                                if (event.target.value === '') {
+                                                    return field.onChange(
+                                                        event.target.value,
+                                                    );
+                                                }
+                                                return field.onChange(
+                                                    +event.target.value,
+                                                );
+                                            }}
+                                            //@ts-expect-error
+                                            onWheel={(e) => e.target.blur()}
                                         />
                                     </FormControl>
                                     <FormMessage />
