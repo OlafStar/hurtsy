@@ -12,7 +12,7 @@ const DashboardNavigation = () => {
     const {company} = useUserCompany();
 
     return (
-        <aside className="hidden px-6 py-4 bg-white border-r border-fafafa justify-between flex-col md:flex">
+        <aside className="hidden px-6 py-4 bg-white border-r border-fafafa justify-between flex-col lg:flex">
             <div className="flex flex-col gap-10">
                 <Logo className="text-4xl" />
                 <div className="gap-4 flex-col md:flex">

@@ -14,7 +14,7 @@ const MainPromotedProducts = async () => {
     }
 
     return (
-        <div className="flex flex-col gap-12 container px-4 md:px-8">
+        <div className="flex flex-col gap-12">
             <div className="flex justify-between items-center text-left gap-4">
                 <div className="text-2xl xs:text-3xl font-bold">{'Wyróżnione produkty'}</div>
                 <Link href={`${AppRoutes.WEB_PRODUCTS}?isPromoted=true`}>

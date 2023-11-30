@@ -119,4 +119,9 @@
             background: linear-gradient(to left, white, transparent);
         }
     }
+
+    .min-h-subtract-navigation {
+        height: calc(100vh - 121px);
+    }
+    
 }
