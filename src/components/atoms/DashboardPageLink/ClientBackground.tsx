@@ -20,7 +20,7 @@ const ClientBackground = ({children, href}: ClientBackgroundProps) => {
 
     return (
         <div
-            className={`w-48 h-10 px-4 flex gap-4 items-center justify-start ${activeClass}`}
+            className={`w-full lg:w-48 h-10 px-4 flex gap-4 items-center justify-start ${activeClass}`}
         >
             {children}
         </div>
