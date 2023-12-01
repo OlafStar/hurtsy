@@ -13,7 +13,7 @@ type CompanyDashboardProfileProps = {
 const CompanyDashboardProfile = async ({company}: CompanyDashboardProfileProps) => {
     const user = await getCurrentUser();
     return (
-        <div className="p-4 flex flex-col gap-6 max-w-[800px]">
+        <div className="py-4 lg:p-4 flex flex-col gap-6 max-w-[800px]">
             <div className="flex justify-between sm:items-center flex-col sm:flex-row gap-4">
                 <div className="flex flex-col gap-1">
                     <div className="text-xl font-bold">{'Profil firmy'}</div>

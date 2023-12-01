@@ -7,7 +7,7 @@ const Products = async () => {
     const initialCounter = await serverClient.getUserProductsCount();
     return (
         <div className="">
-            <div className="p-4">
+            <div className="py-4 lg:p-4">
                 <ProductTabs
                     promotedChildren={
                         <ProductsDataTable

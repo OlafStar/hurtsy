@@ -20,10 +20,7 @@ const DashboardSheet = async ({children}: PropsWithChildren) => {
     return (
         <Sheet>
             <SheetTrigger>{children}</SheetTrigger>
-            <SheetContent
-                side="left"
-                className="md:hidden h-max-[100vh] overflow-y-scroll"
-            >
+            <SheetContent side="left" className="h-max-[100vh] overflow-y-scroll">
                 <SheetHeader className="text-left h-full gap-8">
                     <SheetTitle>
                         <Logo className="text-4xl" />

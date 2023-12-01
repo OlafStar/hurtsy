@@ -2,6 +2,8 @@ import React from 'react';
 
 import {UserOffers} from '~types/offers';
 import {OffersSearchType} from '~config/offers';
+import {PropsWithClassName} from '~types/generalTypes';
+import {cn} from '~utils/shadcn';
 
 import OfferLink from './OfferLink';
 import ChangeOffers from './ChangeOffers';
@@ -10,9 +12,10 @@ const OffersMenu = ({
     sendOffers,
     recivedOffers,
     type,
-}: UserOffers & {type: OffersSearchType}) => {
+    className,
+}: UserOffers & {type: OffersSearchType} & PropsWithClassName) => {
     return (
-        <div className="flex flex-col w-[300px] gap-8">
+        <div className={`flex flex-col w-full lg:w-[300px] gap-8 ${cn(className)}`}>
             <ChangeOffers />
 
             {type === OffersSearchType.Recived && recivedOffers.length === 0 ? (
