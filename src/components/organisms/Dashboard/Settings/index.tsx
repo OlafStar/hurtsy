@@ -1,5 +1,7 @@
+import SettingsPage from '~components/molecules/SettingsPage';
+
 const Settings = () => {
-    return <div></div>;
+    return <SettingsPage />;
 };
 
 export default Settings;

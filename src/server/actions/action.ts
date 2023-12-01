@@ -64,7 +64,10 @@ export const resendActiveToken = async () => {
     await client.messages.create(process.env.MAILGUN_DOMAIN || '', messageData);
 };
 
-export const resetPassword = async (email: string) => {
+export const resetPassword = async (
+    email: string,
+    disableRedirect?: boolean,
+) => {
     const user = await prismadb.user.findUnique({
         where: {
             email,
@@ -103,7 +106,18 @@ export const resetPassword = async (email: string) => {
     };
 
     await client.messages.create(process.env.MAILGUN_DOMAIN || '', messageData);
-    redirect('forgot-password/success');
+    if (!disableRedirect) {
+        redirect('forgot-password/success');
+    }
+};
+
+export const resetCurrentUserPassword = async () => {
+    const user = await getCurrentUser();
+    if (!user) {
+        throw new Error('Not authenticated');
+    }
+
+    await resetPassword(user.email, true);
 };
 
 export const setNewPassword = async (
