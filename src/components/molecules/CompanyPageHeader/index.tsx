@@ -1,6 +1,7 @@
 import {CompanyTypeWeb} from '~types/company';
 
 import CompanyProductSearchBar from '../CompanyProductSearchBar';
+import CompanyImage from '~components/atoms/CompanyImage';
 
 const CompanyPageHeader = ({
     image,
@@ -14,8 +15,8 @@ const CompanyPageHeader = ({
     return (
         <div className="flex flex-col gap-8 md:gap-0 md:flex-row md:justify-between md:items-center">
             <div className="flex flex-col xs:flex-row gap-4">
-                <img
-                    src={image || ''}
+                <CompanyImage
+                    src={image ?? undefined}
                     alt={`${name}-logo`}
                     className="xs:w-[148px] aspect-square object-contain"
                 />

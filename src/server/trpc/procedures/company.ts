@@ -96,6 +96,7 @@ export const companyProcedures = {
                     message: 'Company not found',
                 });
             }
+            console.log('new image', validatedInput.data.image);
 
             await prismadb.company.update({
                 data: {
@@ -103,7 +104,7 @@ export const companyProcedures = {
                     description: validatedInput.data.description,
                     city: validatedInput.data.city,
                     phone: validatedInput.data.phoneNumber,
-                    image: validatedInput.data.image,
+                    image: validatedInput.data.image ?? null,
                     website: validatedInput.data.website,
                     street: validatedInput.data.address,
                     postCode: validatedInput.data.postalCode,

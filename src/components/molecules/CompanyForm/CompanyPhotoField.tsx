@@ -34,11 +34,7 @@ const CompanyPhotoFields = <
                 />
             ) : (
                 <AddImage
-                    className={`w-full xs:w-[148px] xs:h-[148px] border ${
-                        !mainImage[0] && formState.isSubmitted
-                            ? cn('border-[#ff0000]')
-                            : cn('border-black border-opacity-10`')
-                    } `}
+                    className={`w-full xs:w-[148px] xs:h-[148px] border  border-black border-opacity-10`}
                     multiple={false}
                     onAcceptedImage={setMainImage}
                 />

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import CompanyImage from '~components/atoms/CompanyImage';
 
 import {AppRoutes} from '~types/AppRoutes';
 import {CompanyTypeWeb} from '~types/company';
@@ -12,7 +13,7 @@ const CompanyCard = ({
     id,
     products,
     type,
-    establishment
+    establishment,
 }: CompanyTypeWeb) => {
     return (
         <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
@@ -20,9 +21,9 @@ const CompanyCard = ({
                 <div>
                     <div className="flex flex-col xs:flex-row gap-3">
                         <div className="h-full flex xs:block justify-center items-center">
-                            <img
+                            <CompanyImage
                                 className="h-full aspect-square max-w-[328px]  xs:max-w-[128px] object-contain"
-                                src={image || ''}
+                                src={image ?? undefined}
                                 alt={`${name}-logo`}
                             />
                         </div>
@@ -44,7 +45,9 @@ const CompanyCard = ({
                                     <div>{`${type}`}</div>
                                 </div>
                                 <div className="flex gap-1 text-xs">
-                                    <div className=" opacity-50">{'Działa od: '}</div>
+                                    <div className=" opacity-50">
+                                        {'Działa od: '}
+                                    </div>
                                     <div>{`${establishment} r.`}</div>
                                 </div>
                             </div>

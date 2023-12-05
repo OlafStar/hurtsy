@@ -21,13 +21,23 @@ export function NavigationMenuDemo() {
         <NavigationMenu skipDelayDuration={0}>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <div className='block md:hidden'>
+                    <div className="block md:hidden">
                         <CategoriesSheet>
-                            <div className="font-medium text-sm p-2">{'Kategorie'}</div>
+                            <div className="flex gap-2">
+                                <img src={'/categories.svg'} alt={'categories'} />
+                                <div className="font-medium text-sm p-2">
+                                    {'Kategorie'}
+                                </div>
+                            </div>
                         </CategoriesSheet>
                     </div>
-                    <div className='hidden md:block'>
-                        <NavigationMenuTrigger>{'Kategorie'}</NavigationMenuTrigger>
+                    <div className="hidden md:block">
+                        <NavigationMenuTrigger>
+                            <div className="flex gap-2">
+                                <img src={'/categories.svg'} alt={'categories'} />
+                                <div>{'Kategorie'}</div>
+                            </div>
+                        </NavigationMenuTrigger>
                         <NavigationMenuContent className="hidden md:block">
                             <div className="flex flex-col p-4 flex-wrap  w-[416px] h-[400px]">
                                 {Object.entries(Category).map(([item, cat]) => (

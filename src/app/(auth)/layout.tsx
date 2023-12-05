@@ -1,6 +1,7 @@
 import {redirect} from 'next/navigation';
 
 import {getCurrentUser} from '~lib/session';
+import {serverClient} from '~server/trpc/serverClient';
 import {AppRoutes} from '~types/AppRoutes';
 
 interface AuthLayoutProps {

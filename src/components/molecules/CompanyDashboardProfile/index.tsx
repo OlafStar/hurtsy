@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import CompanyImage from '~components/atoms/CompanyImage';
 
 import {Button} from '~components/ui/button';
 import {getCurrentUser} from '~lib/session';
@@ -38,8 +39,8 @@ const CompanyDashboardProfile = async ({company}: CompanyDashboardProfileProps) 
 
             <div className="flex flex-col gap-6">
                 <div className="grid sm:grid-cols-2 items-center">
-                    <img
-                        src={company.image || ''}
+                    <CompanyImage
+                        src={company.image ?? undefined}
                         alt={'company-logo'}
                         className="w-64 h-64 object-contain rounded-sm"
                     />

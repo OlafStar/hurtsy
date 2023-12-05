@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import {User} from 'lucide-react';
 
 import {serverClient} from '~server/trpc/serverClient';
 import {Avatar, AvatarFallback, AvatarImage} from '~components/ui/avatar';
@@ -17,17 +16,14 @@ const AccountCompany = async () => {
             <Avatar>
                 <AvatarImage src={company.image || ''} className="object-contain" />
                 <AvatarFallback>
-                    <User />
+                    <img src="/company-placeholder.png" alt="company" />
                 </AvatarFallback>
             </Avatar>
         </AccountHover>
     ) : (
         <>
             <Link href={AppRoutes.ADD_COMPANY}>
-                <Button
-                    variant="default"
-                    className="border-[#000000] rounded-full"
-                >
+                <Button variant="default" className="border-[#000000] rounded-full">
                     {'Dodaj firme'}
                 </Button>
             </Link>
